@@ -1,0 +1,106 @@
+---
+import type { Translations } from '../i18n/index'
+
+interface Props {
+  t: Translations
+}
+
+const { t } = Astro.props
+---
+<section class="services section" id="serveis">
+  <div class="container">
+    <div class="section-title">
+      <span class="section-label">{t.serveis_label}</span>
+      <h2>{t.serveis_h2}</h2>
+      <p>{t.serveis_sub}</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2C8 2 5 5 5 9c0 2.5 1.2 4.7 3 6.1V18h8v-2.9c1.8-1.4 3-3.6 3-6.1 0-4-3-7-7-7z"/>
+            <path d="M9 18v2a1 1 0 001 1h4a1 1 0 001-1v-2"/>
+          </svg>
+        </div>
+        <h3>{t.s1_title}</h3>
+        <p>{t.s1_text}</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+            <line x1="9" y1="9" x2="9.01" y2="9" stroke-linecap="round" stroke-width="3"/>
+            <line x1="15" y1="9" x2="15.01" y2="9" stroke-linecap="round" stroke-width="3"/>
+          </svg>
+        </div>
+        <h3>{t.s2_title}</h3>
+        <p>{t.s2_text}</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+          </svg>
+        </div>
+        <h3>{t.s3_title}</h3>
+        <p>{t.s3_text}</p>
+      </div>
+    </div>
+    <div class="modalities">
+      <div class="modality-pill">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>{t.mod1}</span>
+      </div>
+      <div class="modality-pill">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>{t.mod2}</span>
+      </div>
+      <div class="modality-pill">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
+        <span>{t.mod3}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .services { background: var(--bg-card); }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 32px; }
+  .service-card {
+    background: var(--white);
+    border-radius: var(--r);
+    padding: 32px 28px;
+    border: 1px solid var(--pink-light);
+    transition: all 0.25s;
+  }
+  .service-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(207, 58, 105, 0.12); }
+  .service-icon {
+    width: 52px; height: 52px;
+    background: var(--pink-pale);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .service-icon svg { width: 26px; height: 26px; stroke: var(--pink); fill: none; stroke-width: 1.8; }
+  .service-card h3 { color: var(--text); margin-bottom: 10px; }
+  .service-card p { color: var(--text-soft); font-size: 0.94rem; line-height: 1.6; }
+  .modalities { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .modality-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg);
+    border: 1.5px solid var(--pink-light);
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray);
+  }
+  .modality-pill svg { width: 17px; height: 17px; stroke: var(--pink); fill: none; stroke-width: 2; flex-shrink: 0; }
+
+  @media (max-width: 960px) { .services-grid { grid-template-columns: 1fr; } }
+</style>

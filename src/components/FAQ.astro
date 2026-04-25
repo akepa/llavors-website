@@ -1,0 +1,110 @@
+---
+import type { Translations } from '../i18n/index'
+
+interface Props {
+  t: Translations
+}
+
+const { t } = Astro.props
+
+const items = [
+  { q: t.faq1_q, a: t.faq1_a },
+  { q: t.faq2_q, a: t.faq2_a },
+  { q: t.faq3_q, a: t.faq3_a },
+  { q: t.faq4_q, a: t.faq4_a },
+  { q: t.faq5_q, a: t.faq5_a },
+  { q: t.faq6_q, a: t.faq6_a },
+]
+---
+<section class="faq section" id="faq">
+  <div class="container">
+    <div class="section-title" style="text-align:center">
+      <span class="section-label">{t.faq_label}</span>
+      <h2>{t.faq_h2}</h2>
+    </div>
+    <div class="faq-list">
+      {items.map((item, i) => (
+        <div class="faq-item">
+          <button class="faq-q" data-faq={i} aria-expanded="false">
+            <span>{item.q}</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-a" id={`faq-${i}`} role="region">
+            {item.a}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq { background: var(--bg-dark); }
+  .faq-list { max-width: 740px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid rgba(87, 87, 84, 0.15); }
+  .faq-q {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 22px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    transition: color 0.2s;
+  }
+  .faq-q:hover, .faq-q.active { color: var(--pink); }
+  .faq-icon {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s;
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+  .faq-q.active .faq-icon {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: var(--white);
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.25s;
+    font-size: 0.97rem;
+    color: var(--text-soft);
+    line-height: 1.7;
+  }
+  .faq-a.open { max-height: 300px; padding-bottom: 20px; }
+</style>
+
+<script is:inline>
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isActive = btn.classList.contains('active')
+      document.querySelectorAll('.faq-q').forEach(b => {
+        b.classList.remove('active')
+        b.setAttribute('aria-expanded', 'false')
+        const ans = document.getElementById('faq-' + b.dataset.faq)
+        if (ans) ans.classList.remove('open')
+      })
+      if (!isActive) {
+        btn.classList.add('active')
+        btn.setAttribute('aria-expanded', 'true')
+        const ans = document.getElementById('faq-' + btn.dataset.faq)
+        if (ans) ans.classList.add('open')
+      }
+    })
+  })
+</script>
