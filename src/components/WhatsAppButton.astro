@@ -24,23 +24,24 @@ const waUrl = 'https://wa.me/34614337743?text=Hola%2C%20m%27agradaria%20demanar%
     bottom: 24px;
     right: 24px;
     z-index: 200;
-    display: flex;
-    align-items: center;
   }
   .wa-label {
+    position: absolute;
+    right: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%) translateX(10px);
     background: var(--text);
     color: var(--bg);
     padding: 8px 14px 8px 16px;
-    border-radius: 50px 0 0 50px;
+    border-radius: 50px;
     font-size: 0.85rem;
     font-weight: 700;
     opacity: 0;
-    transform: translateX(10px);
     transition: all 0.25s;
     pointer-events: none;
     white-space: nowrap;
   }
-  .wa-fab:hover .wa-label { opacity: 1; transform: translateX(0); }
+  .wa-fab:hover .wa-label { opacity: 1; transform: translateY(-50%) translateX(0); }
   .wa-btn {
     width: 56px;
     height: 56px;
