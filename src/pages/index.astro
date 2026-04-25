@@ -1,16 +1,29 @@
 ---
-import '../styles/global.css';
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/Header.astro'
+import Hero from '../components/Hero.astro'
+import Services from '../components/Services.astro'
+import About from '../components/About.astro'
+import HowItWorks from '../components/HowItWorks.astro'
+import Testimonials from '../components/Testimonials.astro'
+import BookingPlaceholder from '../components/BookingPlaceholder.astro'
+import FAQ from '../components/FAQ.astro'
+import Footer from '../components/Footer.astro'
+import { getTranslations } from '../i18n/index'
+
+const lang = 'ca' as const
+const t = getTranslations(lang)
 ---
-<html lang="ca">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Llavors Logopèdia</title>
-  </head>
-  <body>
-    <h1>Llavors Logopèdia</h1>
-    <p>Especialista en logopèdia infantil i d'adults. Pròximament, la nova web.</p>
-  </body>
-</html>
+<BaseLayout lang={lang}>
+  <Header t={t} lang={lang} />
+  <main>
+    <Hero t={t} />
+    <Services t={t} />
+    <About t={t} />
+    <HowItWorks t={t} />
+    <Testimonials t={t} />
+    <BookingPlaceholder t={t} />
+    <FAQ t={t} />
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>

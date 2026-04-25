@@ -1,0 +1,131 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import type { Lang, Translations } from '../i18n/index'
+
+interface Props {
+  t: Translations
+  lang: Lang
+}
+
+const { t, lang } = Astro.props
+const base = import.meta.env.BASE_URL
+---
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src={`${base}images/logo.png`} alt="Llavors Logopèdia" width="120" height="36" class="footer-logo" />
+        <p>{t.footer_desc}</p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/llavors.de.llet" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="white" stroke="none"/></svg>
+          </a>
+          <a href="https://www.facebook.com/angelamillet.logopedadomicili/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/%C3%A0ngela-alonso-a2015240/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="https://wa.me/34614337743" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="white" stroke="none" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>{t.footer_serveis_h}</h4>
+        <ul>
+          <li><a href="#serveis">{t.footer_s1}</a></li>
+          <li><a href="#serveis">{t.footer_s2}</a></li>
+          <li><a href="#serveis">{t.footer_s3}</a></li>
+          <li><a href="#serveis">{t.footer_s4}</a></li>
+          <li><a href="#serveis">{t.footer_s5}</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>{t.footer_nav_h}</h4>
+        <ul>
+          <li><a href="#inici">{t.footer_n1}</a></li>
+          <li><a href="#sobre-mi">{t.footer_n2}</a></li>
+          <li><a href="#com-funciona">{t.footer_n3}</a></li>
+          <li><a href={getRelativeLocaleUrl(lang, '/blog')}>{t.footer_n4}</a></li>
+          <li><a href="#faq">{t.footer_n5}</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>{t.footer_contact_h}</h4>
+        <ul>
+          <li><a href="mailto:logopeda.angela@gmail.com">logopeda.angela@gmail.com</a></li>
+          <li><a href="tel:+34614337743">614 33 77 43</a></li>
+          <li><a href="https://www.instagram.com/llavors.de.llet" target="_blank" rel="noopener noreferrer">@llavors.de.llet</a></li>
+          <li style="margin-top:8px">
+            <a href="#reserva" class="btn btn-outline-pink" style="font-size:0.85rem;padding:10px 20px">{t.nav_cta}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>{t.footer_copy}</span>
+      <div class="footer-legal">
+        <a href="#">{t.legal1}</a>
+        <a href="#">{t.legal2}</a>
+        <a href="#">{t.legal3}</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer { background: var(--text); color: var(--bg); padding: 64px 0 32px; }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(242, 233, 225, 0.1);
+    margin-bottom: 32px;
+  }
+  .footer-logo { filter: brightness(0) invert(1); margin-bottom: 16px; }
+  .footer-brand p { font-size: 0.88rem; opacity: 0.65; line-height: 1.6; max-width: 220px; }
+  .footer-social { display: flex; gap: 12px; margin-top: 20px; }
+  .social-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: rgba(242, 233, 225, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .social-icon:hover { background: var(--pink); }
+  .social-icon svg { width: 17px; height: 17px; stroke: var(--bg); fill: none; stroke-width: 2; }
+  .footer-col h4 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 16px;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col a { font-size: 0.9rem; opacity: 0.75; transition: opacity 0.2s; }
+  .footer-col a:hover { opacity: 1; }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.82rem;
+    opacity: 0.5;
+  }
+  .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
+  .footer-legal a { opacity: 0.8; }
+  .footer-legal a:hover { opacity: 1; }
+
+  @media (max-width: 960px) { .footer-top { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) {
+    .footer-top { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+  }
+</style>

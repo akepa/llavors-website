@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import { getTranslations } from '../i18n/index'
+
+const lang = 'ca' as const
+const t = getTranslations(lang)
+---
+<BaseLayout lang={lang} title="Mamà Informada · Llavors Logopèdia">
+  <Header t={t} lang={lang} />
+  <main class="blog-placeholder">
+    <div class="container">
+      <span class="section-label">{t.blog_label}</span>
+      <h1 set:html={t.blog_h1} />
+      <p>{t.blog_sub}</p>
+      <a href="/" class="btn btn-primary" style="margin-top:2rem">{t.blog_back}</a>
+    </div>
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>
+
+<style>
+  .blog-placeholder {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    padding: 80px 0;
+  }
+  .blog-placeholder h1 {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    margin: 10px 0 16px;
+  }
+  .blog-placeholder h1 :global(em) { color: var(--pink); font-style: italic; }
+  .blog-placeholder p { color: var(--text-soft); font-size: 1.05rem; max-width: 480px; }
+</style>

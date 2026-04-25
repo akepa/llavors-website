@@ -25,3 +25,9 @@ pnpm-debug.log*
 
 # claude code session state
 .claude/
+
+.aitools/
+!.aitools/specs/
+!.aitools/specs/**
+!.aitools/plans/
+!.aitools/plans/**

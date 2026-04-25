@@ -33,7 +33,7 @@
 ## Estructura de ramas
 
 ```
-main          → producción (desplegado automáticamente)
+master          → producción (desplegado automáticamente)
 develop       → integración
 slice/N-nombre → rama de trabajo por slice
 ```
@@ -74,7 +74,7 @@ slice/N-nombre → rama de trabajo por slice
    name: Deploy to GitHub Pages
    on:
      push:
-       branches: [main]
+       branches: [master]
    jobs:
      deploy:
        runs-on: ubuntu-latest
@@ -102,7 +102,7 @@ slice/N-nombre → rama de trabajo por slice
 
 ### Validación
 - [ ] `npm run build` sin errores en local
-- [ ] Push a `main` dispara el workflow
+- [ ] Push a `master` dispara el workflow
 - [ ] `https://llavorslogopedia.com` carga la página placeholder
 
 ---

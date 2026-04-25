@@ -1,0 +1,68 @@
+---
+import type { Translations } from '../i18n/index'
+
+interface Props {
+  t: Translations
+}
+
+const { t } = Astro.props
+
+const steps = [
+  { num: '01', h: t.step1_h, p: t.step1_p, icon: '<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>' },
+  { num: '02', h: t.step2_h, p: t.step2_p, icon: '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>' },
+  { num: '03', h: t.step3_h, p: t.step3_p, icon: '<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>' },
+  { num: '04', h: t.step4_h, p: t.step4_p, icon: '<polyline points="20 6 9 17 4 12"/>' },
+]
+---
+<section class="how section" id="com-funciona">
+  <div class="container">
+    <div class="section-title">
+      <span class="section-label">{t.com_label}</span>
+      <h2>{t.com_h2}</h2>
+      <p>{t.com_sub}</p>
+    </div>
+    <div class="steps-grid">
+      {steps.map(step => (
+        <div class="step">
+          <div class="step-num" aria-hidden="true">{step.num}</div>
+          <div class="step-dot" aria-hidden="true">
+            <svg viewBox="0 0 24 24" set:html={step.icon} />
+          </div>
+          <h3>{step.h}</h3>
+          <p>{step.p}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .how { background: var(--pink); color: var(--white); }
+  .how .section-label { color: rgba(255, 255, 255, 0.7); }
+  .how h2 { color: var(--white); }
+  .how .section-title p { color: rgba(255, 255, 255, 0.75); }
+  .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.2);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .step-dot {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .step-dot svg { width: 22px; height: 22px; stroke: var(--white); fill: none; stroke-width: 2; }
+  .step h3 { color: var(--white); margin-bottom: 10px; font-size: 1.1rem; }
+  .step p { color: rgba(255, 255, 255, 0.78); font-size: 0.93rem; line-height: 1.6; }
+
+  @media (max-width: 960px) { .steps-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .steps-grid { grid-template-columns: 1fr; } }
+</style>
