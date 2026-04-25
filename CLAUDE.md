@@ -21,7 +21,7 @@ Web estática construida con **Astro 6** (TypeScript strict). Se despliega autom
 ### Slices de desarrollo
 
 El proyecto se desarrolla en slices independientes (ver `.aitools/llavors-dev-plan.md`):
-- Slice 0: Infraestructura base ← en curso
+- Slice 0: Infraestructura base ✓
 - Slice 1: Landing estática (contenido real, sin integraciones)
 - Slice 2: Reserva de citas (Calendly embed)
 - Slice 3: Formulario de contacto (Formspree/Web3Forms)
