@@ -1,0 +1,50 @@
+---
+import type { Translations } from '../i18n/index'
+
+interface Props {
+  t: Translations
+}
+
+const { t } = Astro.props
+
+const cards = [
+  { text: t.t1_text, author: t.t1_author, sub: t.t1_sub },
+  { text: t.t2_text, author: t.t2_author, sub: t.t2_sub },
+  { text: t.t3_text, author: t.t3_author, sub: t.t3_sub },
+]
+---
+<section class="testimonials section" id="testimonis">
+  <div class="container">
+    <div class="section-title">
+      <span class="section-label">{t.testi_label}</span>
+      <h2>{t.testi_h2}</h2>
+      <p>{t.testi_sub}</p>
+    </div>
+    <div class="testimonials-grid">
+      {cards.map(card => (
+        <div class="testi-card">
+          <div class="testi-stars" aria-label="5 estrelles">★★★★★</div>
+          <p class="testi-text">{card.text}</p>
+          <div class="testi-author">{card.author} <span>{card.sub}</span></div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonials { background: var(--bg-dark); }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .testi-card {
+    background: var(--white);
+    border-radius: var(--r);
+    padding: 32px 28px;
+    border: 1px solid rgba(207, 58, 105, 0.08);
+  }
+  .testi-stars { color: var(--pink); font-size: 1.05rem; letter-spacing: 2px; margin-bottom: 16px; }
+  .testi-text { color: var(--text-soft); font-size: 0.95rem; line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+  .testi-author { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+  .testi-author span { color: var(--text-soft); font-weight: 400; }
+
+  @media (max-width: 960px) { .testimonials-grid { grid-template-columns: 1fr; } }
+</style>
