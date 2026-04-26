@@ -91,6 +91,7 @@ function getSlotsForDay(dateStr) {
   var parts = dateStr.split('-').map(Number);
   var year = parts[0], month = parts[1], day = parts[2];
 
+  // Assumes Apps Script timezone matches Angela's Google Account (Europe/Madrid).
   var dayStart = new Date(year, month - 1, day, 0, 0, 0);
   var dayEnd   = new Date(year, month - 1, day, 23, 59, 59);
 
@@ -134,7 +135,17 @@ function bookSlot(data) {
   var phone = data.phone || '';
   var notes = data.notes || '';
   var lang  = data.lang || 'ca';
+  if (lang !== 'ca' && lang !== 'es') lang = 'ca';
 
+  if (!name || !email || !date || !time) {
+    return { ok: false, error: 'missing_fields' };
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { ok: false, error: 'invalid_email' };
+  }
+
+  // Note: check-then-act is not atomic. Double-bookings are extremely unlikely
+  // for a small practice but possible under simultaneous load. Acceptable for v1.
   // Verify slot is still available
   var available = getSlotsForDay(date);
   if (available.indexOf(time) === -1) {
