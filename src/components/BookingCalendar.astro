@@ -336,13 +336,22 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
 </style>
 
 <script>
+  interface I18n {
+    selectDay: string; available: string; loading: string; noSlots: string
+    name: string; namePh: string; email: string; emailPh: string
+    phone: string; phonePh: string; notes: string; notesPh: string
+    privacy: string; privacyLink: string; back: string; confirm: string
+    successTitle: string; successText: string; error: string; slotTaken: string
+  }
+
   const widget = document.getElementById('booking-widget') as HTMLElement | null
   if (!widget) throw new Error('booking-widget not found')
 
   const API_URL  = widget.dataset.apiUrl!
   const LANG     = widget.dataset.lang as 'ca' | 'es'
-  const i18n     = JSON.parse(widget.dataset.i18n!)
+  const i18n     = JSON.parse(widget.dataset.i18n!) as I18n
   if (!API_URL) throw new Error('booking-widget: missing data-api-url')
+  if (LANG !== 'ca' && LANG !== 'es') throw new Error('booking-widget: invalid lang')
 
   // State
   let currentYear  = new Date().getFullYear()
@@ -350,7 +359,6 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   let availableDays: string[] = []
   let selectedDate  = ''
   let selectedTime  = ''
-  let currentSlotsDate = ''
 
   // DOM refs
   const monthLabel      = document.getElementById('month-label')!
@@ -380,6 +388,8 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   async function loadMonth(year: number, month: number) {
     monthLabel.textContent = monthName(year, month)
     renderCalendarLoading()
+    prevBtn.setAttribute('disabled', '')
+    nextBtn.setAttribute('disabled', '')
     try {
       const res = await fetch(`${API_URL}?action=days&year=${year}&month=${month}`)
       const data = await res.json()
@@ -389,6 +399,9 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     } catch {
       availableDays = []
       renderCalendar(year, month)
+    } finally {
+      prevBtn.removeAttribute('disabled')
+      nextBtn.removeAttribute('disabled')
     }
   }
 
@@ -447,7 +460,6 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   }
 
   function renderSlots(date: string, slots: string[]) {
-    currentSlotsDate = date
     const parts = date.split('-').map(Number)
     const d     = new Date(parts[0], parts[1] - 1, parts[2])
     const dayNames   = LANG === 'ca' ? DAY_NAMES_CA   : DAY_NAMES_ES
@@ -462,11 +474,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
       return
     }
 
-    const endTimes = slots.map((t: string) => {
-      const [h, m] = t.split(':').map(Number)
-      const end = new Date(0, 0, 0, h, m + 30)
-      return String(end.getHours()).padStart(2,'0') + ':' + String(end.getMinutes()).padStart(2,'0')
-    })
+    const endTimes = slots.map((t: string) => addMinutes(t, 30))
 
     slotsList.innerHTML =
       `<p class="slots-header">${i18n.available}</p>` +
@@ -486,6 +494,12 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   function show(el: HTMLElement) { el.classList.remove('hidden') }
   function hide(el: HTMLElement) { el.classList.add('hidden') }
 
+  function addMinutes(timeStr: string, mins: number): string {
+    const [h, m] = timeStr.split(':').map(Number)
+    const total = h * 60 + m + mins
+    return String(Math.floor(total / 60) % 24).padStart(2,'0') + ':' + String(total % 60).padStart(2,'0')
+  }
+
   // Placeholder text
   placeholderText.textContent = i18n.selectDay
 
@@ -502,7 +516,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     const btn = (e.target as HTMLElement).closest('.slot-btn')
     if (!btn) return
     const time = (btn as HTMLElement).dataset.time!
-    selectSlot(currentSlotsDate, time)
+    selectSlot(selectedDate, time)
   })
 
   // Month navigation
@@ -539,6 +553,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     const btnConfirm = document.getElementById('btn-confirm') as HTMLButtonElement
 
     errorEl.classList.add('hidden')
+    if (!selectedDate || !selectedTime) return
     if (!name || !email || !notes || !privacy) return
 
     btnConfirm.disabled = true
@@ -578,9 +593,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     show(formWrap)
 
     const parts = date.split('-').map(Number)
-    const [h, m] = time.split(':').map(Number)
-    const end = new Date(0, 0, 0, h, m + 30)
-    const endStr = String(end.getHours()).padStart(2,'0') + ':' + String(end.getMinutes()).padStart(2,'0')
+    const endStr = addMinutes(time, 30)
     const dayNames = LANG === 'ca' ? DAY_NAMES_CA : DAY_NAMES_ES
     const monthNames = LANG === 'ca' ? MONTH_NAMES_CA : MONTH_NAMES_ES
     const d = new Date(parts[0], parts[1]-1, parts[2])
@@ -614,7 +627,6 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     btnConfirm.textContent = i18n.confirm
 
     document.getElementById('form-error')!.classList.add('hidden')
-    document.getElementById('success-title')!.textContent = i18n.successTitle
   }
 
   // Boot
