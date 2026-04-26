@@ -16,7 +16,7 @@ function doGet(e) {
     if (action === 'days') {
       var year = parseInt(e.parameter.year, 10);
       var month = parseInt(e.parameter.month, 10); // 1-based
-      result = { availableDays: getAvailableDays(year, month) };
+      result = getAvailableMonth(year, month);
 
     } else if (action === 'slots') {
       var date = e.parameter.date; // 'YYYY-MM-DD'
@@ -52,9 +52,9 @@ function doPost(e) {
 // Lógica principal
 // ============================================================
 
-function getAvailableDays(year, month) {
+function getAvailableMonth(year, month) {
   var availCal = getAvailabilityCalendar();
-  if (!availCal) return [];
+  if (!availCal) return { availableDays: [], slots: {} };
 
   var start = new Date(year, month - 1, 1);
   var end = new Date(year, month, 1);
@@ -63,7 +63,6 @@ function getAvailableDays(year, month) {
   var today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // Collect unique days that have at least one availability event
   var daysSet = {};
   availEvents.forEach(function(ev) {
     var d = new Date(ev.getStartTime());
@@ -73,15 +72,17 @@ function getAvailableDays(year, month) {
     }
   });
 
-  // Keep only days that still have free slots
-  var result = [];
+  var availableDays = [];
+  var slots = {};
   Object.keys(daysSet).forEach(function(dateStr) {
-    if (getSlotsForDay(dateStr).length > 0) {
-      result.push(dateStr);
+    var daySlots = getSlotsForDay(dateStr);
+    if (daySlots.length > 0) {
+      availableDays.push(dateStr);
+      slots[dateStr] = daySlots;
     }
   });
 
-  return result.sort();
+  return { availableDays: availableDays.sort(), slots: slots };
 }
 
 function getSlotsForDay(dateStr) {

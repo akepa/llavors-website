@@ -61,6 +61,9 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
           successText: t.book_success_text,
           error:       t.book_error,
           slotTaken:   t.book_slot_taken,
+          nameRequired:    t.book_name_required,
+          emailRequired:   t.book_email_required,
+          notesRequired:   t.book_notes_required,
           privacyRequired: t.book_privacy_required,
         })}
       >
@@ -303,6 +306,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     background: var(--bg); color: var(--text);
     transition: border-color 0.15s; box-sizing: border-box;
   }
+  .form-group textarea { resize: none; display: block; width: 100%; }
   .form-group input:focus, .form-group textarea:focus {
     outline: none; border-color: var(--pink);
   }
@@ -345,9 +349,15 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
 
   @media (max-width: 700px) {
     #booking-widget { grid-template-columns: 1fr; }
-    .calendar-pane { border-right: none; border-bottom: 1px solid var(--bg-dark); }
+    .calendar-pane {
+      border-right: none;
+      border-bottom: 1px solid var(--bg-dark);
+      padding: 20px 16px;
+    }
+    .slots-pane { padding: 20px 16px; }
     .booking-options { flex-direction: column; align-items: stretch; }
     .booking-option { justify-content: center; }
+    .form-actions { flex-direction: column; }
   }
 </style>
 
@@ -358,7 +368,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     phone: string; phonePh: string; notes: string; notesPh: string
     privacy: string; privacyLink: string; back: string; confirm: string
     successTitle: string; successText: string; error: string; slotTaken: string
-    privacyRequired: string
+    nameRequired: string; emailRequired: string; notesRequired: string; privacyRequired: string
   }
 
   const widget = document.getElementById('booking-widget') as HTMLElement | null
@@ -373,6 +383,8 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   let currentYear  = new Date().getFullYear()
   let currentMonth = new Date().getMonth() + 1 // 1-based
   let availableDays: string[] = []
+  let slotsCache: Record<string, string[]> = {}
+  const monthCache: Record<string, { availableDays: string[], slots: Record<string, string[]> }> = {}
   let selectedDate  = ''
   let selectedTime  = ''
 
@@ -404,16 +416,29 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
 
   async function loadMonth(year: number, month: number) {
     monthLabel.textContent = monthName(year, month)
+
+    const cacheKey = `${year}-${month}`
+    const cached = monthCache[cacheKey]
+    if (cached) {
+      availableDays = cached.availableDays
+      slotsCache    = cached.slots
+      renderCalendar(year, month)
+      return
+    }
+
     availableDays = []
+    slotsCache = {}
     renderCalendar(year, month)
     show(calLoadingEl)
     try {
       const res = await fetch(`${API_URL}?action=days&year=${year}&month=${month}`)
       const data = await res.json()
       if (data.error) return
-      // Only update if the user is still on the same month
+      const entry = { availableDays: data.availableDays ?? [], slots: data.slots ?? {} }
+      monthCache[cacheKey] = entry  // always cache, regardless of current view
       if (year === currentYear && month === currentMonth) {
-        availableDays = data.availableDays ?? []
+        availableDays = entry.availableDays
+        slotsCache    = entry.slots
         renderCalendar(year, month)
       }
     } catch { /* silently ignore — calendar stays with no available days */ }
@@ -457,6 +482,15 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     selectedDate = date
     selectedTime = ''
     renderCalendar(currentYear, currentMonth)
+
+    if (slotsCache[date] !== undefined) {
+      hide(slotsPlaceholder); hide(formWrap); hide(successWrap)
+      show(slotsList)
+      renderSlots(date, slotsCache[date])
+      return
+    }
+
+    // Fallback: fetch individually (e.g. cache miss after month reload race)
     showSlotsLoading()
     try {
       const res = await fetch(`${API_URL}?action=slots&date=${date}`)
@@ -586,12 +620,19 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
 
     errorEl.classList.add('hidden')
     if (!selectedDate || !selectedTime) return
+
+    const nameEl  = form.querySelector('#book-name')  as HTMLInputElement
+    const emailEl = form.querySelector('#book-email') as HTMLInputElement
+    const notesEl = form.querySelector('#book-notes') as HTMLTextAreaElement
+
+    if (!name)  { errorEl.textContent = i18n.nameRequired;  errorEl.classList.remove('hidden'); nameEl.focus();  return }
+    if (!email) { errorEl.textContent = i18n.emailRequired; errorEl.classList.remove('hidden'); emailEl.focus(); return }
+    if (!notes) { errorEl.textContent = i18n.notesRequired; errorEl.classList.remove('hidden'); notesEl.focus(); return }
     if (!privacy) {
       errorEl.textContent = i18n.privacyRequired
       errorEl.classList.remove('hidden')
       return
     }
-    if (!name || !email || !notes) return
 
     btnConfirm.disabled = true
     btnConfirm.textContent = i18n.loading
@@ -665,6 +706,17 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
 
     document.getElementById('form-error')!.classList.add('hidden')
   }
+
+  // Clear validation error as soon as the offending field is filled
+  const _errorEl = document.getElementById('form-error')!
+  ;['book-name', 'book-email', 'book-notes'].forEach(id => {
+    document.getElementById(id)!.addEventListener('input', e => {
+      if ((e.target as HTMLInputElement).value.trim()) _errorEl.classList.add('hidden')
+    })
+  })
+  ;(document.getElementById('book-privacy') as HTMLInputElement).addEventListener('change', e => {
+    if ((e.target as HTMLInputElement).checked) _errorEl.classList.add('hidden')
+  })
 
   // Boot
   loadMonth(currentYear, currentMonth)
