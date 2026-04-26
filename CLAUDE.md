@@ -4,9 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-- `npm run dev` — servidor de desarrollo en `localhost:4321`
+- `npm run dev` — servidor de desarrollo en `localhost:4321/llavors-website/`
 - `npm run build` — build de producción a `./dist/`
 - `npm run preview` — previsualizar el build local
+
+### Ejecutar npm desde las herramientas
+
+Node.js **no está en el PATH** del entorno de herramientas. Para ejecutar cualquier comando npm usar **PowerShell** (no Bash) con el PATH ampliado:
+
+```powershell
+$env:PATH = "C:\Program Files\nodejs\;" + $env:PATH; npm run dev
+```
+
+El servidor arranca en `http://localhost:4321/llavors-website/` en unos 2 segundos. Lanzarlo siempre en background (`run_in_background: true`) y leer el output para confirmar que está listo.
 
 ## Architecture
 
@@ -37,3 +47,15 @@ El proyecto se desarrolla en slices independientes (ver `.aitools/llavors-dev-pl
 ### Fuente de verdad del diseño
 
 Los specs y planes están en `.aitools/`.
+
+## Herramientas
+
+Para cualquier operación sobre archivos, usar siempre las herramientas internas en este orden de preferencia:
+
+- **Read** — leer archivos (no `cat`, `head`, `tail`)
+- **Write** — crear o reescribir archivos (no `echo`, heredocs)
+- **Edit** — modificar fragmentos de archivos existentes (no `sed`, `awk`)
+- **Grep** — buscar en contenido (no `grep`, `rg`)
+- **Glob** — buscar archivos por patrón (no `find`, `ls`)
+
+Reservar Bash/PowerShell únicamente para operaciones de shell que no tengan herramienta dedicada (git, npm, etc.).
