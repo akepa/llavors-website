@@ -73,7 +73,7 @@ const ca = {
   res_o3: 'Sense compromís',
   cal_title: 'Widget de Calendly',
   cal_text: "Aquí s'integrarà el teu calendari de Calendly. Afegeix el teu codi d'embed per activar les reserves en línia.",
-  cal_btn: 'Mentrestant, escriu-me per WhatsApp',
+  cal_btn: 'Escriu-me per WhatsApp',
 
   faq_label: 'Dubtes',
   faq_h2: 'Preguntes freqüents',

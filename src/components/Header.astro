@@ -9,6 +9,13 @@ interface Props {
 
 const { t, lang } = Astro.props
 const base = import.meta.env.BASE_URL
+const home = getRelativeLocaleUrl(lang, '/')
+
+// Canonical path: current pathname without base and without locale prefix
+const pathWithoutBase = Astro.url.pathname.slice(base.length - 1) || '/'
+const canonicalPath = (lang !== 'ca' && pathWithoutBase.startsWith(`/${lang}`))
+  ? pathWithoutBase.slice(`/${lang}`.length) || '/'
+  : pathWithoutBase
 ---
 <nav>
   <div class="nav-inner">
@@ -16,45 +23,35 @@ const base = import.meta.env.BASE_URL
       <img src={`${base}images/logo.png`} alt="Llavors Logopèdia" height="52" />
     </a>
     <ul class="nav-links">
-      <li><a href="#serveis">{t.nav_serveis}</a></li>
-      <li><a href="#sobre-mi">{t.nav_sobre}</a></li>
-      <li><a href="#com-funciona">{t.nav_com}</a></li>
+      <li><a href={home + '#serveis'}>{t.nav_serveis}</a></li>
+      <li><a href={home + '#sobre-mi'}>{t.nav_sobre}</a></li>
+      <li><a href={home + '#com-funciona'}>{t.nav_com}</a></li>
       <li><a href={getRelativeLocaleUrl(lang, '/blog')}>{t.nav_blog}</a></li>
     </ul>
     <div class="nav-right">
       <div class="lang-switcher">
         <a
-          href={getRelativeLocaleUrl('ca', '/')}
+          href={getRelativeLocaleUrl('ca', canonicalPath)}
           class={`lang-btn${lang === 'ca' ? ' active' : ''}`}
         >VAL</a>
         <a
-          href={getRelativeLocaleUrl('es', '/')}
+          href={getRelativeLocaleUrl('es', canonicalPath)}
           class={`lang-btn${lang === 'es' ? ' active' : ''}`}
         >ES</a>
       </div>
-      <a href="#reserva" class="btn btn-primary">{t.nav_cta}</a>
+      <a href={home + '#reserva'} class="btn btn-primary">{t.nav_cta}</a>
       <button class="hamburger" id="hamburger" aria-label="Menú">
         <span></span><span></span><span></span>
       </button>
     </div>
   </div>
   <div class="mobile-menu" id="mobile-menu">
-    <a href="#serveis">{t.nav_serveis}</a>
-    <a href="#sobre-mi">{t.nav_sobre}</a>
-    <a href="#com-funciona">{t.nav_com}</a>
+    <a href={home + '#serveis'}>{t.nav_serveis}</a>
+    <a href={home + '#sobre-mi'}>{t.nav_sobre}</a>
+    <a href={home + '#com-funciona'}>{t.nav_com}</a>
     <a href={getRelativeLocaleUrl(lang, '/blog')}>{t.nav_blog}</a>
-    <a href="#reserva">{t.nav_reservar}</a>
-    <div class="lang-switcher mobile-lang">
-      <a
-        href={getRelativeLocaleUrl('ca', '/')}
-        class={`lang-btn${lang === 'ca' ? ' active' : ''}`}
-      >VAL</a>
-      <a
-        href={getRelativeLocaleUrl('es', '/')}
-        class={`lang-btn${lang === 'es' ? ' active' : ''}`}
-      >ES</a>
-    </div>
-    <a href="#reserva" class="btn btn-primary">{t.nav_cta}</a>
+    <a href={home + '#reserva'}>{t.nav_reservar}</a>
+    <a href={home + '#reserva'} class="btn btn-primary">{t.nav_cta}</a>
   </div>
 </nav>
 
@@ -137,13 +134,11 @@ const base = import.meta.env.BASE_URL
     color: var(--gray);
     border-bottom: 1px solid var(--pink-light);
   }
-  .mobile-lang { margin: 16px 0 8px; align-self: flex-start; border-bottom: none !important; padding: 0 !important; }
   .mobile-menu .btn { text-align: center; justify-content: center; margin-top: 8px; border-bottom: none; padding: 14px 28px; }
 
   @media (max-width: 960px) {
     .nav-links,
-    .nav-right .btn-primary,
-    .nav-right .lang-switcher { display: none; }
+    .nav-right .btn-primary { display: none; }
     .nav-right { gap: 8px; }
     .hamburger { display: flex; }
   }
@@ -154,8 +149,28 @@ const base = import.meta.env.BASE_URL
   const mobileMenu = document.getElementById('mobile-menu')
   if (hamburger && mobileMenu) {
     hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'))
-    mobileMenu.querySelectorAll('a[href^="#"]').forEach(a => {
+    mobileMenu.querySelectorAll('a:not([href$="/blog"])').forEach(a => {
       a.addEventListener('click', () => mobileMenu.classList.remove('open'))
     })
   }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const sections = Array.from(document.querySelectorAll('section[id]'))
+    const langBtns = Array.from(document.querySelectorAll('.lang-btn'))
+
+    langBtns.forEach(btn => { btn.dataset.baseHref = btn.getAttribute('href') })
+
+    const visible = new Set()
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        e.isIntersecting ? visible.add(e.target.id) : visible.delete(e.target.id)
+      })
+      const top = sections.find(s => visible.has(s.id))
+      const hash = top ? '#' + top.id : ''
+      langBtns.forEach(btn => btn.setAttribute('href', btn.dataset.baseHref + hash))
+    }, { threshold: 0 })
+
+    sections.forEach(s => observer.observe(s))
+  })
 </script>

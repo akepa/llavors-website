@@ -73,7 +73,7 @@ const es = {
   res_o3: 'Sin compromiso',
   cal_title: 'Widget de Calendly',
   cal_text: 'Aquí se integrará tu calendario de Calendly. Añade tu código de embed para activar las reservas en línea.',
-  cal_btn: 'Mientras tanto, escríbeme por WhatsApp',
+  cal_btn: 'Escríbeme por WhatsApp',
 
   faq_label: 'Dudas',
   faq_h2: 'Preguntas frecuentes',
