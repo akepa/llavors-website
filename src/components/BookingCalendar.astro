@@ -342,6 +342,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   const API_URL  = widget.dataset.apiUrl!
   const LANG     = widget.dataset.lang as 'ca' | 'es'
   const i18n     = JSON.parse(widget.dataset.i18n!)
+  if (!API_URL) throw new Error('booking-widget: missing data-api-url')
 
   // State
   let currentYear  = new Date().getFullYear()
@@ -349,6 +350,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   let availableDays: string[] = []
   let selectedDate  = ''
   let selectedTime  = ''
+  let currentSlotsDate = ''
 
   // DOM refs
   const monthLabel      = document.getElementById('month-label')!
@@ -378,11 +380,16 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   async function loadMonth(year: number, month: number) {
     monthLabel.textContent = monthName(year, month)
     renderCalendarLoading()
-
-    const res = await fetch(`${API_URL}?action=days&year=${year}&month=${month}`)
-    const data = await res.json()
-    availableDays = data.availableDays ?? []
-    renderCalendar(year, month)
+    try {
+      const res = await fetch(`${API_URL}?action=days&year=${year}&month=${month}`)
+      const data = await res.json()
+      if (data.error) { availableDays = []; renderCalendar(year, month); return }
+      availableDays = data.availableDays ?? []
+      renderCalendar(year, month)
+    } catch {
+      availableDays = []
+      renderCalendar(year, month)
+    }
   }
 
   function renderCalendarLoading() {
@@ -416,13 +423,6 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     }
 
     calDays.innerHTML = html
-
-    calDays.querySelectorAll('.cal-day.available').forEach(el => {
-      el.addEventListener('click', () => {
-        const date = (el as HTMLElement).dataset.date!
-        selectDay(date)
-      })
-    })
   }
 
   async function selectDay(date: string) {
@@ -430,10 +430,14 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     selectedTime = ''
     renderCalendar(currentYear, currentMonth)
     showSlotsLoading()
-
-    const res   = await fetch(`${API_URL}?action=slots&date=${date}`)
-    const data  = await res.json()
-    renderSlots(date, data.slots ?? [])
+    try {
+      const res = await fetch(`${API_URL}?action=slots&date=${date}`)
+      const data = await res.json()
+      if (data.error) { renderSlots(date, []); return }
+      renderSlots(date, data.slots ?? [])
+    } catch {
+      renderSlots(date, [])
+    }
   }
 
   function showSlotsLoading() {
@@ -443,6 +447,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   }
 
   function renderSlots(date: string, slots: string[]) {
+    currentSlotsDate = date
     const parts = date.split('-').map(Number)
     const d     = new Date(parts[0], parts[1] - 1, parts[2])
     const dayNames   = LANG === 'ca' ? DAY_NAMES_CA   : DAY_NAMES_ES
@@ -471,13 +476,6 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
         `<button class="slot-btn" data-time="${s}" type="button">${s}–${endTimes[i]}</button>`
       ).join('') +
       `</div>`
-
-    slotsList.querySelectorAll('.slot-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const time = (btn as HTMLElement).dataset.time!
-        selectSlot(date, time)
-      })
-    })
   }
 
   function selectSlot(date: string, time: string) {
@@ -490,6 +488,22 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
 
   // Placeholder text
   placeholderText.textContent = i18n.selectDay
+
+  // Delegated listener — calendar days
+  calDays.addEventListener('click', (e) => {
+    const el = (e.target as HTMLElement).closest('.cal-day.available')
+    if (!el) return
+    const date = (el as HTMLElement).dataset.date!
+    selectDay(date)
+  })
+
+  // Delegated listener — slot buttons
+  slotsList.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.slot-btn')
+    if (!btn) return
+    const time = (btn as HTMLElement).dataset.time!
+    selectSlot(currentSlotsDate, time)
+  })
 
   // Month navigation
   prevBtn.addEventListener('click', () => {
@@ -506,10 +520,101 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     loadMonth(currentYear, currentMonth)
   })
 
-  // Stub for Task 5
+  // Back button
+  document.getElementById('btn-back')!.addEventListener('click', () => {
+    hide(formWrap)
+    selectDay(selectedDate)
+  })
+
+  // Form submit
+  document.getElementById('booking-form')!.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const form      = e.target as HTMLFormElement
+    const name      = (form.querySelector('#book-name') as HTMLInputElement).value.trim()
+    const email     = (form.querySelector('#book-email') as HTMLInputElement).value.trim()
+    const phone     = (form.querySelector('#book-phone') as HTMLInputElement).value.trim()
+    const notes     = (form.querySelector('#book-notes') as HTMLTextAreaElement).value.trim()
+    const privacy   = (form.querySelector('#book-privacy') as HTMLInputElement).checked
+    const errorEl   = document.getElementById('form-error')!
+    const btnConfirm = document.getElementById('btn-confirm') as HTMLButtonElement
+
+    errorEl.classList.add('hidden')
+    if (!name || !email || !notes || !privacy) return
+
+    btnConfirm.disabled = true
+    btnConfirm.textContent = i18n.loading
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ date: selectedDate, time: selectedTime, name, email, phone, notes, lang: LANG })
+      })
+      const data = await res.json()
+
+      if (data.ok) {
+        hide(formWrap)
+        const successText = document.getElementById('success-text')!
+        successText.textContent = i18n.successText + ' ' + email
+        document.getElementById('success-title')!.textContent = i18n.successTitle
+        show(successWrap)
+      } else {
+        const msg = data.error === 'slot_taken' ? i18n.slotTaken : i18n.error
+        errorEl.textContent = msg
+        errorEl.classList.remove('hidden')
+        btnConfirm.disabled = false
+        btnConfirm.textContent = i18n.confirm
+      }
+    } catch {
+      errorEl.textContent = i18n.error
+      errorEl.classList.remove('hidden')
+      btnConfirm.disabled = false
+      btnConfirm.textContent = i18n.confirm
+    }
+  })
+
   function showBookingForm(date: string, time: string) {
-    // implemented in Task 5
-    console.log('showBookingForm', date, time)
+    hide(slotsPlaceholder); hide(slotsList); hide(successWrap)
+    show(formWrap)
+
+    const parts = date.split('-').map(Number)
+    const [h, m] = time.split(':').map(Number)
+    const end = new Date(0, 0, 0, h, m + 30)
+    const endStr = String(end.getHours()).padStart(2,'0') + ':' + String(end.getMinutes()).padStart(2,'0')
+    const dayNames = LANG === 'ca' ? DAY_NAMES_CA : DAY_NAMES_ES
+    const monthNames = LANG === 'ca' ? MONTH_NAMES_CA : MONTH_NAMES_ES
+    const d = new Date(parts[0], parts[1]-1, parts[2])
+    document.getElementById('booking-selected-time')!.textContent =
+      dayNames[d.getDay()] + ', ' + parts[2] + ' de ' + monthNames[parts[1]-1] + ' de ' + parts[0] + ' · ' + time + '–' + endStr
+
+    const labelName  = document.getElementById('label-name')!
+    const labelEmail = document.getElementById('label-email')!
+    const labelPhone = document.getElementById('label-phone')!
+    const labelNotes = document.getElementById('label-notes')!
+    const nameInput  = document.getElementById('book-name') as HTMLInputElement
+    const emailInput = document.getElementById('book-email') as HTMLInputElement
+    const phoneInput = document.getElementById('book-phone') as HTMLInputElement
+    const notesInput = document.getElementById('book-notes') as HTMLTextAreaElement
+    const privText   = document.getElementById('privacy-text')!
+    const privLink   = document.getElementById('privacy-link') as HTMLAnchorElement
+    const btnBack    = document.getElementById('btn-back') as HTMLButtonElement
+    const btnConfirm = document.getElementById('btn-confirm') as HTMLButtonElement
+
+    labelName.textContent  = i18n.name + ' *'
+    labelEmail.textContent = i18n.email + ' *'
+    labelPhone.textContent = i18n.phone
+    labelNotes.textContent = i18n.notes + ' *'
+    nameInput.placeholder  = i18n.namePh
+    emailInput.placeholder = i18n.emailPh
+    phoneInput.placeholder = i18n.phonePh
+    notesInput.placeholder = i18n.notesPh
+    privText.textContent   = i18n.privacy + ' '
+    privLink.textContent   = i18n.privacyLink
+    btnBack.textContent    = i18n.back
+    btnConfirm.textContent = i18n.confirm
+
+    document.getElementById('form-error')!.classList.add('hidden')
+    document.getElementById('success-title')!.textContent = i18n.successTitle
   }
 
   // Boot
