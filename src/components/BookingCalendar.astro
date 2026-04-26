@@ -334,3 +334,184 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     .booking-option { justify-content: center; }
   }
 </style>
+
+<script>
+  const widget = document.getElementById('booking-widget') as HTMLElement | null
+  if (!widget) throw new Error('booking-widget not found')
+
+  const API_URL  = widget.dataset.apiUrl!
+  const LANG     = widget.dataset.lang as 'ca' | 'es'
+  const i18n     = JSON.parse(widget.dataset.i18n!)
+
+  // State
+  let currentYear  = new Date().getFullYear()
+  let currentMonth = new Date().getMonth() + 1 // 1-based
+  let availableDays: string[] = []
+  let selectedDate  = ''
+  let selectedTime  = ''
+
+  // DOM refs
+  const monthLabel      = document.getElementById('month-label')!
+  const calDays         = document.getElementById('calendar-days')!
+  const prevBtn         = document.getElementById('prev-month')!
+  const nextBtn         = document.getElementById('next-month')!
+  const slotsPlaceholder= document.getElementById('slots-placeholder')!
+  const slotsList       = document.getElementById('slots-list')!
+  const formWrap        = document.getElementById('booking-form-wrap')!
+  const successWrap     = document.getElementById('booking-success')!
+  const placeholderText = document.getElementById('slots-placeholder-text')!
+
+  const MONTH_NAMES_CA = ['Gener','Febrer','Març','Abril','Maig','Juny','Juliol','Agost','Setembre','Octubre','Novembre','Desembre']
+  const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+  const DAY_NAMES_CA   = ['Diumenge','Dilluns','Dimarts','Dimecres','Dijous','Divendres','Dissabte']
+  const DAY_NAMES_ES   = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado']
+
+  function monthName(year: number, month: number) {
+    const names = LANG === 'ca' ? MONTH_NAMES_CA : MONTH_NAMES_ES
+    return names[month - 1] + ' ' + year
+  }
+
+  function toDateStr(y: number, m: number, d: number) {
+    return y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0')
+  }
+
+  async function loadMonth(year: number, month: number) {
+    monthLabel.textContent = monthName(year, month)
+    renderCalendarLoading()
+
+    const res = await fetch(`${API_URL}?action=days&year=${year}&month=${month}`)
+    const data = await res.json()
+    availableDays = data.availableDays ?? []
+    renderCalendar(year, month)
+  }
+
+  function renderCalendarLoading() {
+    let html = ''
+    for (let i = 0; i < 35; i++) html += '<div class="cal-day disabled" style="opacity:0.3"></div>'
+    calDays.innerHTML = html
+  }
+
+  function renderCalendar(year: number, month: number) {
+    const today    = new Date(); today.setHours(0,0,0,0)
+    const firstDay = new Date(year, month - 1, 1).getDay() // 0=Sun
+    const offset   = (firstDay + 6) % 7  // shift so Monday=0
+    const daysInMonth = new Date(year, month, 0).getDate()
+
+    let html = ''
+    for (let i = 0; i < offset; i++) html += '<div class="cal-day empty"></div>'
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = toDateStr(year, month, d)
+      const date    = new Date(year, month - 1, d)
+      const isPast  = date < today
+      const isAvail = availableDays.includes(dateStr)
+      const isSel   = dateStr === selectedDate
+
+      let cls = 'cal-day'
+      if (isPast)       cls += ' disabled'
+      else if (isAvail) cls += ' available' + (isSel ? ' selected' : '')
+      else              cls += ' disabled'
+
+      html += `<div class="${cls}" data-date="${dateStr}">${d}</div>`
+    }
+
+    calDays.innerHTML = html
+
+    calDays.querySelectorAll('.cal-day.available').forEach(el => {
+      el.addEventListener('click', () => {
+        const date = (el as HTMLElement).dataset.date!
+        selectDay(date)
+      })
+    })
+  }
+
+  async function selectDay(date: string) {
+    selectedDate = date
+    selectedTime = ''
+    renderCalendar(currentYear, currentMonth)
+    showSlotsLoading()
+
+    const res   = await fetch(`${API_URL}?action=slots&date=${date}`)
+    const data  = await res.json()
+    renderSlots(date, data.slots ?? [])
+  }
+
+  function showSlotsLoading() {
+    hide(slotsPlaceholder); hide(formWrap); hide(successWrap)
+    slotsList.innerHTML = `<p class="slots-header">${i18n.available}</p><p style="font-size:0.9rem;color:var(--gray)">${i18n.loading}</p>`
+    show(slotsList)
+  }
+
+  function renderSlots(date: string, slots: string[]) {
+    const parts = date.split('-').map(Number)
+    const d     = new Date(parts[0], parts[1] - 1, parts[2])
+    const dayNames   = LANG === 'ca' ? DAY_NAMES_CA   : DAY_NAMES_ES
+    const monthNames = LANG === 'ca' ? MONTH_NAMES_CA : MONTH_NAMES_ES
+    const dateLabel  = dayNames[d.getDay()] + ', ' + parts[2] + ' de ' + monthNames[parts[1]-1]
+
+    if (slots.length === 0) {
+      slotsList.innerHTML =
+        `<p class="slots-header">${i18n.available}</p>` +
+        `<p class="slots-date">${dateLabel}</p>` +
+        `<p style="font-size:0.9rem;color:var(--gray)">${i18n.noSlots}</p>`
+      return
+    }
+
+    const endTimes = slots.map((t: string) => {
+      const [h, m] = t.split(':').map(Number)
+      const end = new Date(0, 0, 0, h, m + 30)
+      return String(end.getHours()).padStart(2,'0') + ':' + String(end.getMinutes()).padStart(2,'0')
+    })
+
+    slotsList.innerHTML =
+      `<p class="slots-header">${i18n.available}</p>` +
+      `<p class="slots-date">${dateLabel} · hora peninsular (Madrid)</p>` +
+      `<div class="slots-scroll">` +
+      slots.map((s: string, i: number) =>
+        `<button class="slot-btn" data-time="${s}" type="button">${s}–${endTimes[i]}</button>`
+      ).join('') +
+      `</div>`
+
+    slotsList.querySelectorAll('.slot-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const time = (btn as HTMLElement).dataset.time!
+        selectSlot(date, time)
+      })
+    })
+  }
+
+  function selectSlot(date: string, time: string) {
+    selectedTime = time
+    showBookingForm(date, time)
+  }
+
+  function show(el: HTMLElement) { el.classList.remove('hidden') }
+  function hide(el: HTMLElement) { el.classList.add('hidden') }
+
+  // Placeholder text
+  placeholderText.textContent = i18n.selectDay
+
+  // Month navigation
+  prevBtn.addEventListener('click', () => {
+    const now = new Date()
+    if (currentYear === now.getFullYear() && currentMonth === now.getMonth() + 1) return
+    currentMonth--
+    if (currentMonth < 1) { currentMonth = 12; currentYear-- }
+    loadMonth(currentYear, currentMonth)
+  })
+
+  nextBtn.addEventListener('click', () => {
+    currentMonth++
+    if (currentMonth > 12) { currentMonth = 1; currentYear++ }
+    loadMonth(currentYear, currentMonth)
+  })
+
+  // Stub for Task 5
+  function showBookingForm(date: string, time: string) {
+    // implemented in Task 5
+    console.log('showBookingForm', date, time)
+  }
+
+  // Boot
+  loadMonth(currentYear, currentMonth)
+</script>
