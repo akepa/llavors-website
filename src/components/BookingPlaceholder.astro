@@ -82,5 +82,8 @@ const { t } = Astro.props
   }
   .calendly-wrap p { font-size: 0.9rem; max-width: 320px; text-align: center; }
 
-  @media (max-width: 600px) { .booking-options { flex-direction: column; align-items: center; } }
+  @media (max-width: 600px) {
+    .booking-options { flex-direction: column; align-items: stretch; }
+    .booking-option { justify-content: center; }
+  }
 </style>
