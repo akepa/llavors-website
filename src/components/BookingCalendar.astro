@@ -61,12 +61,16 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
           successText: t.book_success_text,
           error:       t.book_error,
           slotTaken:   t.book_slot_taken,
+          privacyRequired: t.book_privacy_required,
         })}
       >
         <div class="calendar-pane">
           <div class="calendar-header">
             <button id="prev-month" aria-label="Mes anterior" type="button">&#8592;</button>
-            <span id="month-label"></span>
+            <span class="month-wrap">
+              <span id="month-label"></span>
+              <span id="cal-loading" class="cal-loading hidden" aria-label="Carregant disponibilitat"></span>
+            </span>
             <button id="next-month" aria-label="Mes següent" type="button">&#8594;</button>
           </div>
           <div class="calendar-grid">
@@ -209,7 +213,19 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     color: var(--text); transition: background 0.15s;
   }
   .calendar-header button:hover { background: var(--bg); }
-  #month-label { flex: 1; }
+  .month-wrap { flex: 1; display: flex; align-items: center; gap: 6px; }
+
+  @keyframes cal-blink {
+    0%, 80%, 100% { opacity: 0.15; }
+    40%           { opacity: 1; }
+  }
+  .cal-loading {
+    display: inline-block; width: 5px; height: 5px;
+    border-radius: 50%; background: var(--pink);
+    box-shadow: 8px 0 0 var(--pink), 16px 0 0 var(--pink);
+    animation: cal-blink 1.2s infinite ease-in-out;
+    margin-left: 4px; flex-shrink: 0;
+  }
 
   .calendar-grid {
     display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
@@ -222,21 +238,21 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   #calendar-days {
     display: contents;
   }
-  .cal-day {
+  :global(.cal-day) {
     aspect-ratio: 1; display: flex; align-items: center;
     justify-content: center; border-radius: 10px;
     font-size: 0.9rem; cursor: default;
     transition: background 0.15s;
   }
-  .cal-day.available {
-    background: var(--pink-light, #f0faf5);
-    color: var(--green, #2d6a4f);
+  :global(.cal-day.available) {
+    background: var(--pink-light);
+    color: var(--pink);
     font-weight: 600; cursor: pointer;
   }
-  .cal-day.available:hover { background: var(--pink, #52b788); color: var(--white); }
-  .cal-day.selected { background: var(--green, #2d6a4f) !important; color: var(--white) !important; }
-  .cal-day.disabled { color: var(--gray, #aaa); text-decoration: line-through; }
-  .cal-day.empty { }
+  :global(.cal-day.available:hover) { background: var(--pink); color: var(--white); }
+  :global(.cal-day.selected) { background: var(--pink) !important; color: var(--white) !important; }
+  :global(.cal-day.disabled) { color: var(--gray); opacity: 0.4; }
+  :global(.cal-day.empty) { }
 
   /* Panel derecho */
   .slots-pane {
@@ -255,47 +271,47 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   }
   .slots-placeholder p { font-size: 0.9rem; text-align: center; max-width: 200px; }
 
-  .slots-header { font-weight: 700; margin-bottom: 4px; }
-  .slots-date { font-size: 0.85rem; color: var(--gray); margin-bottom: 16px; }
-  .slots-scroll { overflow-y: auto; max-height: 320px; display: flex; flex-direction: column; gap: 8px; }
-  .slot-btn {
+  :global(.slots-header) { font-weight: 700; margin-bottom: 4px; }
+  :global(.slots-date) { font-size: 0.85rem; color: var(--gray); margin-bottom: 16px; }
+  :global(.slots-scroll) { overflow-y: auto; max-height: 320px; display: flex; flex-direction: column; gap: 8px; }
+  :global(.slot-btn) {
     width: 100%; padding: 12px; border: 1.5px solid var(--bg-dark);
     border-radius: 12px; background: var(--white); cursor: pointer;
     font-size: 0.95rem; font-weight: 500; color: var(--text);
     transition: all 0.15s; text-align: center;
   }
-  .slot-btn:hover {
-    border-color: var(--green, #2d6a4f);
-    color: var(--green, #2d6a4f);
+  :global(.slot-btn:hover) {
+    border-color: var(--pink);
+    color: var(--pink);
   }
 
   /* Formulario */
   .booking-selected-time {
-    border-left: 3px solid var(--green, #2d6a4f);
+    border-left: 3px solid var(--pink);
     padding-left: 12px; margin-bottom: 16px;
     font-weight: 600; font-size: 0.95rem;
   }
   .form-group { margin-bottom: 12px; text-align: left; }
   .form-group label {
-    display: block; font-size: 0.8rem;
+    display: block; font-size: 0.9rem;
     font-weight: 600; margin-bottom: 4px;
     color: var(--text);
   }
   .form-group input, .form-group textarea {
     width: 100%; padding: 10px 12px; border: 1.5px solid var(--bg-dark);
-    border-radius: 10px; font-size: 0.9rem; font-family: inherit;
+    border-radius: 10px; font-size: 0.95rem; font-family: inherit;
     background: var(--bg); color: var(--text);
     transition: border-color 0.15s; box-sizing: border-box;
   }
   .form-group input:focus, .form-group textarea:focus {
-    outline: none; border-color: var(--green, #2d6a4f);
+    outline: none; border-color: var(--pink);
   }
   .form-check {
     display: flex; align-items: flex-start; gap: 8px;
-    margin-bottom: 12px; font-size: 0.82rem;
+    margin-bottom: 12px; font-size: 0.9rem;
   }
   .form-check input { margin-top: 3px; flex-shrink: 0; }
-  .form-check a { color: var(--green, #2d6a4f); }
+  .form-check a { color: var(--pink); }
   .form-error {
     background: #fef2f2; color: #dc2626;
     border-radius: 8px; padding: 8px 12px;
@@ -319,10 +335,10 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   }
   .booking-success svg {
     width: 48px; height: 48px;
-    stroke: var(--green, #2d6a4f); stroke-width: 2.5;
+    stroke: var(--pink); stroke-width: 2.5;
     fill: none;
   }
-  .booking-success h3 { color: var(--green, #2d6a4f); font-size: 1.1rem; }
+  .booking-success h3 { color: var(--pink); font-size: 1.1rem; }
   .booking-success p { font-size: 0.9rem; color: var(--text-soft); }
 
   .hidden { display: none !important; }
@@ -342,6 +358,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     phone: string; phonePh: string; notes: string; notesPh: string
     privacy: string; privacyLink: string; back: string; confirm: string
     successTitle: string; successText: string; error: string; slotTaken: string
+    privacyRequired: string
   }
 
   const widget = document.getElementById('booking-widget') as HTMLElement | null
@@ -369,6 +386,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   const formWrap        = document.getElementById('booking-form-wrap')!
   const successWrap     = document.getElementById('booking-success')!
   const placeholderText = document.getElementById('slots-placeholder-text')!
+  const calLoadingEl    = document.getElementById('cal-loading')!
 
   const MONTH_NAMES_CA = ['Gener','Febrer','Març','Abril','Maig','Juny','Juliol','Agost','Setembre','Octubre','Novembre','Desembre']
   const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
@@ -386,22 +404,20 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
 
   async function loadMonth(year: number, month: number) {
     monthLabel.textContent = monthName(year, month)
-    renderCalendarLoading()
-    prevBtn.setAttribute('disabled', '')
-    nextBtn.setAttribute('disabled', '')
+    availableDays = []
+    renderCalendar(year, month)
+    show(calLoadingEl)
     try {
       const res = await fetch(`${API_URL}?action=days&year=${year}&month=${month}`)
       const data = await res.json()
-      if (data.error) { availableDays = []; renderCalendar(year, month); return }
-      availableDays = data.availableDays ?? []
-      renderCalendar(year, month)
-    } catch {
-      availableDays = []
-      renderCalendar(year, month)
-    } finally {
-      prevBtn.removeAttribute('disabled')
-      nextBtn.removeAttribute('disabled')
-    }
+      if (data.error) return
+      // Only update if the user is still on the same month
+      if (year === currentYear && month === currentMonth) {
+        availableDays = data.availableDays ?? []
+        renderCalendar(year, month)
+      }
+    } catch { /* silently ignore — calendar stays with no available days */ }
+    finally { hide(calLoadingEl) }
   }
 
   function renderCalendarLoading() {
@@ -465,11 +481,19 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     const monthNames = LANG === 'ca' ? MONTH_NAMES_CA : MONTH_NAMES_ES
     const dateLabel  = dayNames[d.getDay()] + ', ' + parts[2] + ' de ' + monthNames[parts[1]-1]
 
+    const cutoff = new Date(Date.now() + 24 * 60 * 60 * 1000)
+    slots = slots.filter(t => {
+      const [h, m] = t.split(':').map(Number)
+      return new Date(parts[0], parts[1]-1, parts[2], h, m) >= cutoff
+    })
+
     if (slots.length === 0) {
-      slotsList.innerHTML =
-        `<p class="slots-header">${i18n.available}</p>` +
-        `<p class="slots-date">${dateLabel}</p>` +
-        `<p style="font-size:0.9rem;color:var(--gray)">${i18n.noSlots}</p>`
+      // Day had slots in the API but all are within 24h — remove it from the calendar
+      availableDays = availableDays.filter(d => d !== date)
+      selectedDate = ''
+      renderCalendar(currentYear, currentMonth)
+      hide(slotsList)
+      show(slotsPlaceholder)
       return
     }
 
@@ -518,18 +542,27 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     selectSlot(selectedDate, time)
   })
 
+  function clearSelection() {
+    selectedDate = ''
+    selectedTime = ''
+    hide(slotsList); hide(formWrap); hide(successWrap)
+    show(slotsPlaceholder)
+  }
+
   // Month navigation
   prevBtn.addEventListener('click', () => {
     const now = new Date()
     if (currentYear === now.getFullYear() && currentMonth === now.getMonth() + 1) return
     currentMonth--
     if (currentMonth < 1) { currentMonth = 12; currentYear-- }
+    clearSelection()
     loadMonth(currentYear, currentMonth)
   })
 
   nextBtn.addEventListener('click', () => {
     currentMonth++
     if (currentMonth > 12) { currentMonth = 1; currentYear++ }
+    clearSelection()
     loadMonth(currentYear, currentMonth)
   })
 
@@ -553,7 +586,12 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
 
     errorEl.classList.add('hidden')
     if (!selectedDate || !selectedTime) return
-    if (!name || !email || !notes || !privacy) return
+    if (!privacy) {
+      errorEl.textContent = i18n.privacyRequired
+      errorEl.classList.remove('hidden')
+      return
+    }
+    if (!name || !email || !notes) return
 
     btnConfirm.disabled = true
     btnConfirm.textContent = i18n.loading

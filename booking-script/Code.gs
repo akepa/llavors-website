@@ -110,11 +110,11 @@ function getSlotsForDay(dateStr) {
   var primaryCal = CalendarApp.getDefaultCalendar();
   var busyEvents = primaryCal.getEvents(dayStart, dayEnd);
 
-  var now = new Date();
+  var cutoff = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
   return allSlots.filter(function(slotStart) {
-    // Skip slots in the past
-    if (slotStart <= now) return false;
+    // Skip slots within 24h from now (first appointment requires 24h notice)
+    if (slotStart <= cutoff) return false;
 
     var slotEnd = new Date(slotStart.getTime() + SLOT_MINUTES * 60 * 1000);
 
@@ -167,7 +167,7 @@ function bookSlot(data) {
     description: description.join('\n')
   });
 
-  sendConfirmationEmail(name, email, date, time, lang);
+  sendConfirmationEmail(name, email, date, time, lang, phone, notes);
 
   return { ok: true };
 }
@@ -186,7 +186,7 @@ function generateSlots(start, end) {
   return slots;
 }
 
-function sendConfirmationEmail(name, email, date, time, lang) {
+function sendConfirmationEmail(name, email, date, time, lang, phone, notes) {
   var parts = date.split('-').map(Number);
   var timeParts = time.split(':').map(Number);
   var startTime = new Date(parts[0], parts[1] - 1, parts[2], timeParts[0], timeParts[1], 0);
@@ -203,33 +203,49 @@ function sendConfirmationEmail(name, email, date, time, lang) {
   var m  = parts[1] - 1;
   var y  = parts[0];
 
+  var fromAddr = 'info@llavorslogopedia.com';
+  var whatsapp = 'https://wa.me/34614337743';
+
+  // Confirmation to patient
   if (lang === 'ca') {
-    MailApp.sendEmail({
-      to: email,
-      subject: 'Cita confirmada — Llavors Logopèdia',
-      body:
-        'Hola ' + name + ',\n\n' +
-        'La teua primera cita amb Àngela Alonso està confirmada.\n\n' +
-        '📅 ' + weekdaysCa[wd] + ', ' + d + ' de ' + monthsCa[m] + ' de ' + y + ' a les ' + time + '–' + endStr + '\n' +
-        '⏱ Durada: 30 minuts\n\n' +
-        'Si necessites canviar o cancel·lar la cita, posa\'t en contacte\n' +
-        'a través de logopeda.angela@gmail.com o WhatsApp.\n\n' +
-        'Fins aviat,\nÀngela Alonso — Llavors Logopèdia'
-    });
+    GmailApp.sendEmail(email, 'Cita confirmada — Llavors Logopèdia',
+      'Hola ' + name + ',\n\n' +
+      'La teua primera cita amb Àngela Alonso està confirmada.\n\n' +
+      '📅 ' + weekdaysCa[wd] + ', ' + d + ' de ' + monthsCa[m] + ' de ' + y + ' a les ' + time + '–' + endStr + '\n' +
+      '⏱ Durada: 30 minuts\n\n' +
+      'Si necessites canviar o cancel·lar la cita, posa\'t en contacte:\n' +
+      '📧 ' + fromAddr + '\n' +
+      '💬 WhatsApp: ' + whatsapp + '\n\n' +
+      'Fins aviat,\nÀngela Alonso — Llavors Logopèdia',
+      { from: fromAddr }
+    );
   } else {
-    MailApp.sendEmail({
-      to: email,
-      subject: 'Cita confirmada — Llavors Logopèdia',
-      body:
-        'Hola ' + name + ',\n\n' +
-        'Tu primera cita con Àngela Alonso está confirmada.\n\n' +
-        '📅 ' + weekdaysEs[wd] + ', ' + d + ' de ' + monthsEs[m] + ' de ' + y + ' a las ' + time + '–' + endStr + '\n' +
-        '⏱ Duración: 30 minutos\n\n' +
-        'Si necesitas cambiar o cancelar la cita, contacta a través\n' +
-        'de logopeda.angela@gmail.com o WhatsApp.\n\n' +
-        'Hasta pronto,\nÀngela Alonso — Llavors Logopèdia'
-    });
+    GmailApp.sendEmail(email, 'Cita confirmada — Llavors Logopèdia',
+      'Hola ' + name + ',\n\n' +
+      'Tu primera cita con Àngela Alonso está confirmada.\n\n' +
+      '📅 ' + weekdaysEs[wd] + ', ' + d + ' de ' + monthsEs[m] + ' de ' + y + ' a las ' + time + '–' + endStr + '\n' +
+      '⏱ Duración: 30 minutos\n\n' +
+      'Si necesitas cambiar o cancelar la cita, contacta:\n' +
+      '📧 ' + fromAddr + '\n' +
+      '💬 WhatsApp: ' + whatsapp + '\n\n' +
+      'Hasta pronto,\nÀngela Alonso — Llavors Logopèdia',
+      { from: fromAddr }
+    );
   }
+
+  // Notification to Àngela
+  GmailApp.sendEmail('logopeda.angela@gmail.com',
+    'Nova cita — ' + name + ' · ' + weekdaysCa[wd] + ' ' + d + '/' + (m+1) + ' ' + time,
+    'S\'ha reservat una nova primera cita:\n\n' +
+    'Nom: ' + name + '\n' +
+    'Data: ' + weekdaysCa[wd] + ', ' + d + ' de ' + monthsCa[m] + ' de ' + y + '\n' +
+    'Hora: ' + time + '–' + endStr + '\n' +
+    'Email: ' + email + '\n' +
+    (phone ? 'Telèfon: ' + phone + '\n' : '') +
+    (notes ? 'Motiu: ' + notes + '\n' : '') +
+    'Idioma preferit: ' + (lang === 'ca' ? 'Valencià' : 'Castellà'),
+    { from: fromAddr }
+  );
 }
 
 function getAvailabilityCalendar() {
