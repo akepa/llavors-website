@@ -33,7 +33,7 @@ Web estática construida con **Astro 6** (TypeScript strict). Se despliega autom
 El proyecto se desarrolla en slices independientes (ver `.aitools/llavors-dev-plan.md`):
 - Slice 0: Infraestructura base ✓
 - Slice 1: Landing estática ✓
-- Slice 2: Reserva de citas (Calendly embed)
+- Slice 2: Reserva de citas (Google Calendar + Apps Script)
 - Slice 3: Formulario de contacto (Formspree/Web3Forms)
 - Slice 4: Legal y privacidad (RGPD)
 - Slice 5: SEO básico
@@ -46,7 +46,8 @@ El proyecto se desarrolla en slices independientes (ver `.aitools/llavors-dev-pl
 
 ### Fuente de verdad del diseño
 
-Los specs y planes están en `.aitools/`.
+- Specs de diseño → `.aitools/specs/`
+- Plan de desarrollo → `.aitools/llavors-dev-plan.md`
 
 ## Idioma
 
