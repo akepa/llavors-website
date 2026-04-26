@@ -21,7 +21,7 @@
 | Framework | **Astro** | Estático, rápido, fácil de mantener |
 | Hosting v1 | **GitHub Pages** | Gratuito, deploy via GitHub Actions |
 | Hosting v2+ | **Vercel** | Migración cuando se necesite backend |
-| Citas | **Calendly** (free tier) | Widget embed |
+| Citas | **Google Calendar + Apps Script** | Widget custom + backend gratuït |
 | Formulario | **Formspree** o **Web3Forms** | Sin backend propio |
 | Reseñas v1 | Hardcodeadas | Contenido estático |
 | Reseñas v2 | **Google Business API** + widget Doctoralia | Requiere Vercel |
@@ -180,46 +180,50 @@ Abrir siempre en `target="_blank" rel="noopener noreferrer"`.
 
 ---
 
-## Slice 2 — Reserva de citas (Calendly)
+## Slice 2 — Reserva de primera cita (Google Calendar + Apps Script)
 
-**Objetivo:** Los pacientes pueden reservar cita directamente desde la web.
+> ⚠️ Diseño completo en `.aitools/specs/slice2-booking-design.md`
+
+**Objetivo:** Els pacients poden reservar la primera cita (30 minuts) directament des de la web, amb un widget custom integrat en el disseny.
+
+### Arquitectura
+
+- **"Disponibilitat Llavors"** — Google Calendar dedicat on Àngela crea blocs de temps disponible
+- **Google Apps Script** — backend gratuït que llegeix disponibilitat i crea cites
+- **BookingCalendar.astro** — component Astro interactiu (island) amb 3 estats: calendari → slots → formulari
 
 ### Prerequisitos
 
-- Àngela tiene cuenta Calendly creada (free tier)
-- Calendly configurado con: disponibilidad semanal, duración de sesión, nombre del evento ("Cita de Logopedia")
-- URL del evento Calendly disponible
+- Àngela crea el Google Calendar "Disponibilitat Llavors" des del seu compte
+- El Apps Script es desplega i Àngela l'autoritza (una sola vegada)
+- `BOOKING_API_URL` configurat com a GitHub Secret
 
 ### Tareas
 
-1. Sustituir `BookingPlaceholder.astro` por `BookingCalendly.astro`
+1. Crear Google Apps Script amb tres endpoints:
+   - `GET ?action=days` — dies del mes amb slots disponibles
+   - `GET ?action=slots&date=` — slots de 30 min per a un dia
+   - `POST` — crear reserva + enviar email de confirmació
 
-2. Embed inline de Calendly (sin popup, mejor UX):
-   ```html
-   <!-- En el componente BookingCalendly.astro -->
-   <div
-     class="calendly-inline-widget"
-     data-url="https://calendly.com/USUARIO/EVENTO"
-     style="min-width:320px;height:700px;">
-   </div>
-   <script
-     type="text/javascript"
-     src="https://assets.calendly.com/assets/external/widget.js"
-     async>
-   </script>
-   ```
+2. Sustituir `BookingPlaceholder.astro` por `BookingCalendar.astro`
 
-3. Asegurarse de que la sección tiene `id="reservar"` para que el botón CTA del hero haga scroll correcto:
-   ```html
-   <section id="reservar">...</section>
-   ```
+3. Implementar els tres estats del widget (calendari, slots, formulari)
+
+4. Email de confirmació al pacient en l'idioma actiu (VAL/ES)
+
+5. Configurar `BOOKING_API_URL` com a GitHub Secret i injectar-lo en build time
+
+6. Actualitzar textos de la web: durada de sessió → "30 minuts (primera cita)"
 
 ### Validación
-- [ ] El widget de Calendly carga correctamente
-- [ ] Se puede completar una reserva de prueba end-to-end
-- [ ] Àngela recibe email de confirmación
-- [ ] El paciente recibe email de confirmación
-- [ ] El botón "Reservar cita" del header hace scroll a la sección
+- [ ] El calendari pinta correctament els dies amb disponibilitat
+- [ ] Els slots es generen bé descomptant les cites ja existents
+- [ ] Es pot completar una reserva end-to-end
+- [ ] El pacient rep email de confirmació en l'idioma correcte
+- [ ] La descripció de l'event inclou l'idioma preferit del pacient
+- [ ] El widget funciona en mòbil (375px) i escriptori (1280px)
+- [ ] El botó "Reservar cita" del header fa scroll a la secció
+- [ ] No hi ha credencials en el codi ni en el repositori
 
 ---
 
