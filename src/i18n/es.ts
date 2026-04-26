@@ -136,6 +136,9 @@ const es = {
   book_success_text: 'Te enviaremos un correo de confirmación a',
   book_error: 'Se ha producido un error. Inténtalo de nuevo.',
   book_slot_taken: 'Este horario ya no está disponible. Elige otro.',
+  book_name_required: 'El nombre es obligatorio.',
+  book_email_required: 'El correo electrónico es obligatorio.',
+  book_notes_required: 'El motivo de consulta es obligatorio.',
   book_privacy_required: 'Debes aceptar la política de privacidad para continuar.',
 } as const
 

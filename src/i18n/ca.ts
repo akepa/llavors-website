@@ -136,6 +136,9 @@ const ca = {
   book_success_text: 'T\'enviarem un correu de confirmació a',
   book_error: 'S\'ha produït un error. Torna-ho a intentar.',
   book_slot_taken: 'Aquest horari ja no està disponible. Tria\'n un altre.',
+  book_name_required: 'El nom és obligatori.',
+  book_email_required: 'El correu electrònic és obligatori.',
+  book_notes_required: 'El motiu de consulta és obligatori.',
   book_privacy_required: 'Has d\'acceptar la política de privacitat per continuar.',
 } as const
 
