@@ -1,0 +1,336 @@
+---
+import type { Translations } from '../i18n/index'
+import type { Lang } from '../i18n/index'
+
+interface Props {
+  t: Translations
+  lang: Lang
+}
+
+const { t, lang } = Astro.props
+const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
+---
+
+<section class="booking section" id="reserva">
+  <div class="container">
+
+    <div class="section-title" style="text-align:center">
+      <span class="section-label">{t.res_label}</span>
+      <h2>{t.res_h2}</h2>
+      <p style="margin: 0 auto">{t.res_sub}</p>
+    </div>
+
+    <div class="booking-options">
+      <div class="booking-option">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>{t.res_o1}</span>
+      </div>
+      <div class="booking-option">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>{t.res_o2}</span>
+      </div>
+      <div class="booking-option">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        <span>{t.res_o3}</span>
+      </div>
+    </div>
+
+    {apiUrl ? (
+      <div
+        id="booking-widget"
+        data-api-url={apiUrl}
+        data-lang={lang}
+        data-i18n={JSON.stringify({
+          selectDay:   t.book_select_day,
+          available:   t.book_available,
+          loading:     t.book_loading,
+          noSlots:     t.book_no_slots,
+          name:        t.book_name,
+          namePh:      t.book_name_ph,
+          email:       t.book_email,
+          emailPh:     t.book_email_ph,
+          phone:       t.book_phone,
+          phonePh:     t.book_phone_ph,
+          notes:       t.book_notes,
+          notesPh:     t.book_notes_ph,
+          privacy:     t.book_privacy,
+          privacyLink: t.book_privacy_link,
+          back:        t.book_back,
+          confirm:     t.book_confirm,
+          successTitle:t.book_success_title,
+          successText: t.book_success_text,
+          error:       t.book_error,
+          slotTaken:   t.book_slot_taken,
+        })}
+      >
+        <div class="calendar-pane">
+          <div class="calendar-header">
+            <button id="prev-month" aria-label="Mes anterior" type="button">&#8592;</button>
+            <span id="month-label"></span>
+            <button id="next-month" aria-label="Mes següent" type="button">&#8594;</button>
+          </div>
+          <div class="calendar-grid">
+            <div class="weekday">L</div>
+            <div class="weekday">M</div>
+            <div class="weekday">X</div>
+            <div class="weekday">J</div>
+            <div class="weekday">V</div>
+            <div class="weekday">S</div>
+            <div class="weekday">D</div>
+            <div id="calendar-days"></div>
+          </div>
+        </div>
+
+        <div class="slots-pane">
+          <div id="slots-placeholder" class="slots-placeholder">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <p id="slots-placeholder-text"></p>
+          </div>
+          <div id="slots-list" class="slots-list hidden"></div>
+          <div id="booking-form-wrap" class="booking-form-wrap hidden">
+            <div id="booking-selected-time" class="booking-selected-time"></div>
+            <form id="booking-form" novalidate>
+              <div class="form-group">
+                <label for="book-name" id="label-name"></label>
+                <input id="book-name" name="name" type="text" required autocomplete="name" />
+              </div>
+              <div class="form-group">
+                <label for="book-email" id="label-email"></label>
+                <input id="book-email" name="email" type="email" required autocomplete="email" />
+              </div>
+              <div class="form-group">
+                <label for="book-phone" id="label-phone"></label>
+                <input id="book-phone" name="phone" type="tel" autocomplete="tel" />
+              </div>
+              <div class="form-group">
+                <label for="book-notes" id="label-notes"></label>
+                <textarea id="book-notes" name="notes" rows="3" required></textarea>
+              </div>
+              <div class="form-check">
+                <input id="book-privacy" name="privacy" type="checkbox" required />
+                <label for="book-privacy">
+                  <span id="privacy-text"></span>
+                  <a href="/privacitat" id="privacy-link" target="_blank" rel="noopener noreferrer"></a>
+                </label>
+              </div>
+              <div id="form-error" class="form-error hidden"></div>
+              <div class="form-actions">
+                <button type="button" id="btn-back" class="btn-back"></button>
+                <button type="submit" id="btn-confirm" class="btn btn-primary"></button>
+              </div>
+            </form>
+          </div>
+          <div id="booking-success" class="booking-success hidden">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <h3 id="success-title"></h3>
+            <p id="success-text"></p>
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div class="calendly-wrap">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <strong>{t.cal_title}</strong>
+        <p>{t.cal_text}</p>
+        <a href="https://wa.me/34614337743" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          {t.cal_btn}
+        </a>
+      </div>
+    )}
+
+  </div>
+</section>
+
+<style>
+  .booking { background: var(--bg); text-align: center; }
+
+  .booking-options {
+    display: flex; justify-content: center; flex-wrap: wrap;
+    gap: 16px; margin-bottom: 40px;
+  }
+  .booking-option {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg-card); border-radius: 50px;
+    padding: 10px 20px; font-size: 0.9rem; font-weight: 600;
+    color: var(--gray); border: 1px solid var(--bg-dark);
+  }
+  .booking-option svg {
+    width: 18px; height: 18px;
+    stroke: var(--pink); fill: none; stroke-width: 2;
+  }
+
+  /* Fallback (sin API URL) */
+  .calendly-wrap {
+    max-width: 700px; margin: 0 auto;
+    background: var(--white); border-radius: 24px;
+    border: 1.5px solid var(--pink-light); min-height: 300px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px; padding: 48px;
+    color: var(--text-soft);
+  }
+  .calendly-wrap svg {
+    width: 52px; height: 52px;
+    stroke: var(--pink-light); fill: none; stroke-width: 1.5;
+  }
+  .calendly-wrap strong {
+    display: block; font-size: 1.1rem;
+    color: var(--text); font-family: 'Playfair Display', serif;
+  }
+  .calendly-wrap p { font-size: 0.9rem; max-width: 320px; text-align: center; }
+
+  /* Widget principal */
+  #booking-widget {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: var(--white);
+    border-radius: 24px;
+    border: 1.5px solid var(--bg-dark);
+    overflow: hidden;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  /* Calendario */
+  .calendar-pane {
+    padding: 28px;
+    border-right: 1px solid var(--bg-dark);
+  }
+  .calendar-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; font-weight: 700; font-size: 1rem;
+  }
+  .calendar-header button {
+    background: none; border: 1px solid var(--bg-dark);
+    border-radius: 8px; width: 32px; height: 32px;
+    cursor: pointer; font-size: 1rem; display: flex;
+    align-items: center; justify-content: center;
+    color: var(--text); transition: background 0.15s;
+  }
+  .calendar-header button:hover { background: var(--bg); }
+  #month-label { flex: 1; }
+
+  .calendar-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+  }
+  .weekday {
+    text-align: center; font-size: 0.75rem;
+    font-weight: 600; color: var(--gray);
+    padding: 6px 0;
+  }
+  #calendar-days {
+    display: contents;
+  }
+  .cal-day {
+    aspect-ratio: 1; display: flex; align-items: center;
+    justify-content: center; border-radius: 10px;
+    font-size: 0.9rem; cursor: default;
+    transition: background 0.15s;
+  }
+  .cal-day.available {
+    background: var(--pink-light, #f0faf5);
+    color: var(--green, #2d6a4f);
+    font-weight: 600; cursor: pointer;
+  }
+  .cal-day.available:hover { background: var(--pink, #52b788); color: var(--white); }
+  .cal-day.selected { background: var(--green, #2d6a4f) !important; color: var(--white) !important; }
+  .cal-day.disabled { color: var(--gray, #aaa); text-decoration: line-through; }
+  .cal-day.empty { }
+
+  /* Panel derecho */
+  .slots-pane {
+    padding: 28px;
+    display: flex; flex-direction: column;
+  }
+
+  .slots-placeholder {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 12px; color: var(--text-soft);
+  }
+  .slots-placeholder svg {
+    width: 40px; height: 40px;
+    stroke: var(--pink-light); fill: none; stroke-width: 1.5;
+  }
+  .slots-placeholder p { font-size: 0.9rem; text-align: center; max-width: 200px; }
+
+  .slots-header { font-weight: 700; margin-bottom: 4px; }
+  .slots-date { font-size: 0.85rem; color: var(--gray); margin-bottom: 16px; }
+  .slots-scroll { overflow-y: auto; max-height: 320px; display: flex; flex-direction: column; gap: 8px; }
+  .slot-btn {
+    width: 100%; padding: 12px; border: 1.5px solid var(--bg-dark);
+    border-radius: 12px; background: var(--white); cursor: pointer;
+    font-size: 0.95rem; font-weight: 500; color: var(--text);
+    transition: all 0.15s; text-align: center;
+  }
+  .slot-btn:hover {
+    border-color: var(--green, #2d6a4f);
+    color: var(--green, #2d6a4f);
+  }
+
+  /* Formulario */
+  .booking-selected-time {
+    border-left: 3px solid var(--green, #2d6a4f);
+    padding-left: 12px; margin-bottom: 16px;
+    font-weight: 600; font-size: 0.95rem;
+  }
+  .form-group { margin-bottom: 12px; text-align: left; }
+  .form-group label {
+    display: block; font-size: 0.8rem;
+    font-weight: 600; margin-bottom: 4px;
+    color: var(--text);
+  }
+  .form-group input, .form-group textarea {
+    width: 100%; padding: 10px 12px; border: 1.5px solid var(--bg-dark);
+    border-radius: 10px; font-size: 0.9rem; font-family: inherit;
+    background: var(--bg); color: var(--text);
+    transition: border-color 0.15s; box-sizing: border-box;
+  }
+  .form-group input:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--green, #2d6a4f);
+  }
+  .form-check {
+    display: flex; align-items: flex-start; gap: 8px;
+    margin-bottom: 12px; font-size: 0.82rem;
+  }
+  .form-check input { margin-top: 3px; flex-shrink: 0; }
+  .form-check a { color: var(--green, #2d6a4f); }
+  .form-error {
+    background: #fef2f2; color: #dc2626;
+    border-radius: 8px; padding: 8px 12px;
+    font-size: 0.85rem; margin-bottom: 10px;
+  }
+  .form-actions { display: flex; gap: 8px; margin-top: 4px; }
+  .btn-back {
+    background: none; border: 1.5px solid var(--bg-dark);
+    border-radius: 12px; padding: 12px 16px; cursor: pointer;
+    font-size: 0.85rem; color: var(--gray);
+    transition: all 0.15s; white-space: nowrap;
+  }
+  .btn-back:hover { border-color: var(--text); color: var(--text); }
+  #btn-confirm { flex: 1; }
+
+  /* Éxito */
+  .booking-success {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 12px; text-align: center;
+  }
+  .booking-success svg {
+    width: 48px; height: 48px;
+    stroke: var(--green, #2d6a4f); stroke-width: 2.5;
+    fill: none;
+  }
+  .booking-success h3 { color: var(--green, #2d6a4f); font-size: 1.1rem; }
+  .booking-success p { font-size: 0.9rem; color: var(--text-soft); }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 700px) {
+    #booking-widget { grid-template-columns: 1fr; }
+    .calendar-pane { border-right: none; border-bottom: 1px solid var(--bg-dark); }
+    .booking-options { flex-direction: column; align-items: stretch; }
+    .booking-option { justify-content: center; }
+  }
+</style>
