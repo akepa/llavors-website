@@ -25,6 +25,8 @@ jobs:
         run: npm ci
       - name: Build site
         run: npm run build
+        env:
+          PUBLIC_BOOKING_API_URL: ${{ secrets.BOOKING_API_URL }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
