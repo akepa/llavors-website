@@ -350,7 +350,6 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   const API_URL  = widget.dataset.apiUrl!
   const LANG     = widget.dataset.lang as 'ca' | 'es'
   const i18n     = JSON.parse(widget.dataset.i18n!) as I18n
-  if (!API_URL) throw new Error('booking-widget: missing data-api-url')
   if (LANG !== 'ca' && LANG !== 'es') throw new Error('booking-widget: invalid lang')
 
   // State
