@@ -48,6 +48,10 @@ El proyecto se desarrolla en slices independientes (ver `.aitools/llavors-dev-pl
 
 Los specs y planes están en `.aitools/`.
 
+## Idioma
+
+Cuando se añadan o modifiquen textos en catalán, usar siempre la **variedad valenciana** (no el catalán central). Por ejemplo: "xiquet" en lugar de "nen", "vosté" en lugar de "vostè", terminaciones verbales valencianas, etc. El botón de idioma ya usa "VAL" como etiqueta para indicar esto.
+
 ## Herramientas
 
 Para cualquier operación sobre archivos, usar siempre las herramientas internas en este orden de preferencia:
