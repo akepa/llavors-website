@@ -1,0 +1,83 @@
+---
+// No props — reads lang from <html lang="..."> at runtime
+---
+
+<div id="cookie-banner" class="cookie-banner" style="display:none">
+  <p id="cookie-text"></p>
+  <button id="cookie-btn" type="button"></button>
+</div>
+
+<script>
+  const banner = document.getElementById('cookie-banner')!
+  const textEl = document.getElementById('cookie-text')!
+  const btnEl  = document.getElementById('cookie-btn')!
+
+  if (!localStorage.getItem('cookies_accepted')) {
+    const isVal = document.documentElement.lang === 'ca'
+    const base  = import.meta.env.BASE_URL
+
+    textEl.innerHTML = isVal
+      ? `Aquest lloc web utilitza cookies tècniques pròpies necessàries per al seu funcionament. <a href="${base}cookies" rel="noopener noreferrer">Política de cookies</a>`
+      : `Este sitio web utiliza cookies técnicas propias necesarias para su funcionamiento. <a href="${base}cookies" rel="noopener noreferrer">Política de cookies</a>`
+
+    btnEl.textContent = isVal ? 'Entés' : 'Entendido'
+    banner.style.display = 'flex'
+  }
+
+  btnEl.addEventListener('click', () => {
+    localStorage.setItem('cookies_accepted', 'true')
+    banner.style.display = 'none'
+  })
+</script>
+
+<style>
+  .cookie-banner {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 150;
+    background: var(--text);
+    color: var(--bg);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    padding: 16px 20px;
+    max-width: 480px;
+    width: calc(100% - 32px);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    animation: cb-fade-in 0.3s ease both;
+  }
+  .cookie-banner p {
+    flex: 1;
+    min-width: 200px;
+    margin: 0;
+    opacity: 0.85;
+  }
+  .cookie-banner a {
+    color: var(--pink-light);
+    text-decoration: underline;
+  }
+  #cookie-btn {
+    background: var(--pink);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  #cookie-btn:hover { opacity: 0.88; }
+  @keyframes cb-fade-in {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+</style>

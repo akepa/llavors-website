@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import Header from '../../components/Header.astro'
+import Footer from '../../components/Footer.astro'
+import { getTranslations } from '../../i18n/index'
+
+const lang = 'es' as const
+const t = getTranslations(lang)
+---
+<BaseLayout lang={lang} title="Aviso Legal | Llavors Logopèdia">
+  <Header t={t} lang={lang} />
+  <main>
+    <article class="legal-content">
+      <h1>Aviso Legal</h1>
+
+      <h2>1. Datos identificativos del titular</h2>
+      <p>En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y del Comercio Electrónico (LSSICE), se facilitan los siguientes datos:</p>
+      <ul>
+        <li><strong>Titular:</strong> <span class="legal-completar">[COMPLETAR: nombre completo]</span></li>
+        <li><strong>NIF/DNI:</strong> <span class="legal-completar">[COMPLETAR: NIF/DNI]</span></li>
+        <li><strong>Domicilio:</strong> <span class="legal-completar">[COMPLETAR: dirección profesional]</span></li>
+        <li><strong>Email:</strong> <a href="mailto:logopeda.angela@gmail.com">logopeda.angela@gmail.com</a></li>
+        <li><strong>Web:</strong> <a href="https://llavorslogopedia.com">llavorslogopedia.com</a></li>
+      </ul>
+
+      <h2>2. Objeto y ámbito de aplicación</h2>
+      <p>El presente Aviso Legal regula el acceso y uso del sitio web <strong>llavorslogopedia.com</strong>, titularidad de <span class="legal-completar">[COMPLETAR: nombre completo]</span>, que tiene por objeto ofrecer información sobre los servicios de logopedia y asesoría de lactancia prestados bajo la marca <strong>Llavors Logopèdia</strong>.</p>
+      <p>El mero acceso al sitio web implica la aceptación de las condiciones establecidas en este Aviso Legal.</p>
+
+      <h2>3. Propiedad intelectual e industrial</h2>
+      <p>Todos los contenidos del sitio web (textos, imágenes, logotipos, diseño gráfico y código fuente) son propiedad de <span class="legal-completar">[COMPLETAR: nombre completo]</span> o, en su caso, de terceros que han autorizado su uso. Queda expresamente prohibida su reproducción, distribución, comunicación pública o transformación sin autorización escrita del titular.</p>
+
+      <h2>4. Exención de responsabilidad</h2>
+      <p>La información contenida en este sitio web tiene carácter meramente orientativo e informativo, y no sustituye en ningún caso la consulta personalizada con un profesional de la salud. <span class="legal-completar">[COMPLETAR: nombre completo]</span> no se responsabiliza del uso que los usuarios puedan hacer de la información publicada.</p>
+    </article>
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>

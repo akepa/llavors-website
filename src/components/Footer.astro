@@ -60,9 +60,9 @@ const base = import.meta.env.BASE_URL
     <div class="footer-bottom">
       <span>{t.footer_copy}</span>
       <div class="footer-legal">
-        <a href="#">{t.legal1}</a>
-        <a href="#">{t.legal2}</a>
-        <a href="#">{t.legal3}</a>
+        <a href={getRelativeLocaleUrl(lang, '/privacidad')}>{t.legal1}</a>
+        <a href={getRelativeLocaleUrl(lang, '/aviso-legal')}>{t.legal2}</a>
+        <a href={getRelativeLocaleUrl(lang, '/cookies')}>{t.legal3}</a>
       </div>
     </div>
   </div>
