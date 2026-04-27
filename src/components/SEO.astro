@@ -19,7 +19,10 @@ const {
 
 const SITE = 'https://www.llavorslogopedia.com'
 const BASE = '/llavors-website'
+// BASE has no trailing slash; Astro.url.pathname includes it (e.g. '/llavors-website/').
+// startsWith(BASE) still matches, and slicing gives '/' via the || '/' fallback for root.
 
+// lang is used only for hreflang URLs; the <html lang="..."> attribute is set by BaseLayout.
 // Elimina el base path de GitHub Pages para construir la URL canónica real
 const rawPath = Astro.url.pathname.startsWith(BASE)
   ? Astro.url.pathname.slice(BASE.length) || '/'
@@ -35,7 +38,7 @@ const caUrl = lang === 'ca'
 
 const esUrl = lang === 'es'
   ? resolvedCanonical
-  : resolvedCanonical.replace(SITE, `${SITE}/es`)
+  : `${SITE}/es${rawPath}`
 ---
 <title>{title} | Llavors Logopèdia</title>
 <meta name="description" content={description} />
