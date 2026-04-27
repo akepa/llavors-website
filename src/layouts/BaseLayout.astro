@@ -1,5 +1,15 @@
 ---
 import '../styles/global.css'
+import '@fontsource/playfair-display/400.css'
+import '@fontsource/playfair-display/400-italic.css'
+import '@fontsource/playfair-display/600.css'
+import '@fontsource/playfair-display/600-italic.css'
+import '@fontsource/playfair-display/700.css'
+import '@fontsource/nunito/300.css'
+import '@fontsource/nunito/400.css'
+import '@fontsource/nunito/500.css'
+import '@fontsource/nunito/600.css'
+import '@fontsource/nunito/700.css'
 import WhatsAppButton from '../components/WhatsAppButton.astro'
 import type { Lang } from '../i18n/index'
 
@@ -17,12 +27,6 @@ const { lang, title = 'Llavors Logopèdia – Àngela Alonso Millet' } = Astro.p
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}favicon.png`} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
     <title>{title}</title>
   </head>
   <body>
