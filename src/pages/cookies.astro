@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import { getTranslations } from '../i18n/index'
+
+const lang = 'es' as const
+const t = getTranslations(lang)
+---
+<BaseLayout lang={lang} title="Política de Cookies | Llavors Logopèdia">
+  <Header t={t} lang={lang} />
+  <main>
+    <article class="legal-content">
+      <h1>Política de Cookies</h1>
+
+      <h2>¿Qué son las cookies?</h2>
+      <p>Las cookies son pequeños archivos de texto que un sitio web almacena en el navegador del usuario cuando visita una página. Se utilizan para recordar preferencias y mejorar la experiencia de navegación.</p>
+
+      <h2>Cookies que utiliza este sitio</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Nombre</th>
+            <th>Finalidad</th>
+            <th>Duración</th>
+            <th>Titular</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Técnica</td>
+            <td><code>cookies_accepted</code></td>
+            <td>Recordar que el usuario ha aceptado este aviso</td>
+            <td>Persistente (hasta borrado manual)</td>
+            <td>Propia</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Este sitio <strong>no instala cookies de análisis, publicidad ni seguimiento de terceros</strong>.</p>
+
+      <h2>Cómo gestionar las cookies</h2>
+      <p>Puede eliminar o bloquear las cookies desde la configuración de su navegador:</p>
+      <ul>
+        <li><strong>Chrome:</strong> Configuración → Privacidad y seguridad → Cookies y otros datos de sitios</li>
+        <li><strong>Firefox:</strong> Opciones → Privacidad y seguridad → Cookies y datos del sitio</li>
+        <li><strong>Safari:</strong> Preferencias → Privacidad → Gestionar datos del sitio web</li>
+        <li><strong>Edge:</strong> Configuración → Privacidad, búsqueda y servicios → Cookies</li>
+      </ul>
+      <p>Tenga en cuenta que deshabilitar las cookies técnicas puede afectar al correcto funcionamiento del sitio.</p>
+    </article>
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>

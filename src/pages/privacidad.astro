@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import { getTranslations } from '../i18n/index'
+
+const lang = 'es' as const
+const t = getTranslations(lang)
+---
+<BaseLayout lang={lang} title="Política de Privacidad | Llavors Logopèdia">
+  <Header t={t} lang={lang} />
+  <main>
+    <article class="legal-content">
+      <h1>Política de Privacidad</h1>
+      <p class="legal-updated">Última actualización: <span class="legal-completar">[COMPLETAR: fecha, p.ej. mayo 2025]</span></p>
+
+      <h2>1. Responsable del tratamiento</h2>
+      <ul>
+        <li><strong>Nombre:</strong> <span class="legal-completar">[COMPLETAR: nombre completo]</span></li>
+        <li><strong>NIF/DNI:</strong> <span class="legal-completar">[COMPLETAR: NIF/DNI]</span></li>
+        <li><strong>Dirección:</strong> <span class="legal-completar">[COMPLETAR: dirección profesional]</span></li>
+        <li><strong>Email:</strong> <a href="mailto:logopeda.angela@gmail.com">logopeda.angela@gmail.com</a></li>
+      </ul>
+
+      <h2>2. Datos que recogemos y finalidad</h2>
+      <p>Los únicos datos personales que recogemos son los que usted facilita voluntariamente al <strong>reservar una primera cita</strong> a través del formulario de reserva de este sitio web:</p>
+      <ul>
+        <li>Nombre y apellidos</li>
+        <li>Dirección de correo electrónico</li>
+        <li>Teléfono de contacto (opcional)</li>
+        <li>Idioma de preferencia para la sesión</li>
+        <li>Motivo de consulta o notas adicionales</li>
+      </ul>
+      <p>Estos datos se utilizan exclusivamente para gestionar y confirmar la cita reservada, y para enviarle un correo electrónico de confirmación con los detalles de la sesión.</p>
+
+      <h2>3. Base jurídica del tratamiento</h2>
+      <p>El tratamiento de sus datos se basa en su <strong>consentimiento explícito</strong> (art. 6.1.a del Reglamento General de Protección de Datos — RGPD), que usted otorga marcando la casilla de aceptación de esta política antes de confirmar la reserva.</p>
+
+      <h2>4. Destinatarios de los datos</h2>
+      <p>Sus datos son accesibles por <strong>Google LLC</strong> en su condición de proveedor de Google Calendar y Google Apps Script, utilizados para la gestión del calendario de citas y el envío de correos de confirmación. Esta transferencia internacional de datos a los Estados Unidos está cubierta por las <strong>cláusulas contractuales tipo</strong> aprobadas por la Comisión Europea.</p>
+      <p>No cedemos sus datos a ningún otro tercero.</p>
+
+      <h2>5. Plazo de conservación</h2>
+      <p>Conservaremos sus datos durante el tiempo necesario para la prestación del servicio. Una vez finalizada la relación profesional, los datos serán suprimidos salvo obligación legal de conservación. Puede solicitar la cancelación anticipada en cualquier momento.</p>
+
+      <h2>6. Sus derechos</h2>
+      <p>Como interesado, puede ejercer los siguientes derechos:</p>
+      <ul>
+        <li><strong>Acceso:</strong> conocer qué datos tenemos sobre usted.</li>
+        <li><strong>Rectificación:</strong> corregir datos inexactos o incompletos.</li>
+        <li><strong>Supresión:</strong> solicitar el borrado de sus datos («derecho al olvido»).</li>
+        <li><strong>Limitación:</strong> solicitar la restricción del tratamiento.</li>
+        <li><strong>Portabilidad:</strong> recibir sus datos en formato estructurado y de uso común.</li>
+        <li><strong>Oposición:</strong> oponerse al tratamiento de sus datos.</li>
+      </ul>
+      <p>Para ejercer cualquiera de estos derechos, envíe un correo a <a href="mailto:logopeda.angela@gmail.com">logopeda.angela@gmail.com</a> indicando el derecho que desea ejercer y adjuntando una copia de su documento de identidad.</p>
+
+      <h2>7. Reclamación ante la autoridad de control</h2>
+      <p>Si considera que el tratamiento de sus datos no es conforme a la normativa vigente, puede presentar una reclamación ante la <strong>Agencia Española de Protección de Datos (AEPD)</strong>: <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer">www.aepd.es</a>.</p>
+    </article>
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>
