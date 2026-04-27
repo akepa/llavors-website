@@ -12,14 +12,28 @@ import '@fontsource/nunito/600.css'
 import '@fontsource/nunito/700.css'
 import WhatsAppButton from '../components/WhatsAppButton.astro'
 import CookieBanner from '../components/CookieBanner.astro'
+import SEO from '../components/SEO.astro'
 import type { Lang } from '../i18n/index'
 
 interface Props {
   lang: Lang
   title?: string
+  description?: string
+  ogImage?: string
+  canonical?: string
+  gscVerification?: string
 }
 
-const { lang, title = 'Llavors Logopèdia – Àngela Alonso Millet' } = Astro.props
+const {
+  lang,
+  title = lang === 'ca' ? 'Logopeda a València' : 'Logopeda en Valencia',
+  description = lang === 'ca'
+    ? "Logopèdia neonatal, reeducació de les funcions orals i desenvolupament del llenguatge a València. Àngela Alonso, logopeda a domicili, presencial i online."
+    : "Logopedia neonatal, reeducación de las funciones orales y desarrollo del lenguaje en Valencia. Àngela Alonso, logopeda a domicilio, presencial y online.",
+  ogImage,
+  canonical,
+  gscVerification,
+} = Astro.props
 ---
 <!doctype html>
 <html lang={lang}>
@@ -28,7 +42,15 @@ const { lang, title = 'Llavors Logopèdia – Àngela Alonso Millet' } = Astro.p
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}favicon.png`} />
-    <title>{title}</title>
+    <SEO
+      title={title}
+      description={description}
+      lang={lang}
+      ogImage={ogImage}
+      canonical={canonical}
+      gscVerification={gscVerification}
+    />
+    <slot name="head" />
   </head>
   <body>
     <slot />
