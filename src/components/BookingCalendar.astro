@@ -57,6 +57,8 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
           privacyLink: t.book_privacy_link,
           back:        t.book_back,
           confirm:     t.book_confirm,
+          confirming:   t.book_confirming,
+          emailInvalid: t.book_email_invalid,
           successTitle:t.book_success_title,
           successText: t.book_success_text,
           error:       t.book_error,
@@ -99,11 +101,11 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
             <form id="booking-form" novalidate>
               <div class="form-group">
                 <label for="book-name" id="label-name"></label>
-                <input id="book-name" name="name" type="text" required autocomplete="name" />
+                <input id="book-name" name="name" type="text" autocomplete="name" />
               </div>
               <div class="form-group">
                 <label for="book-email" id="label-email"></label>
-                <input id="book-email" name="email" type="email" required autocomplete="email" />
+                <input id="book-email" name="email" type="email" autocomplete="email" />
               </div>
               <div class="form-group">
                 <label for="book-phone" id="label-phone"></label>
@@ -111,10 +113,10 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
               </div>
               <div class="form-group">
                 <label for="book-notes" id="label-notes"></label>
-                <textarea id="book-notes" name="notes" rows="3" required></textarea>
+                <textarea id="book-notes" name="notes" rows="3"></textarea>
               </div>
               <div class="form-check">
-                <input id="book-privacy" name="privacy" type="checkbox" required />
+                <input id="book-privacy" name="privacy" type="checkbox" />
                 <label for="book-privacy">
                   <span id="privacy-text"></span>
                   <a href="/privacitat" id="privacy-link" target="_blank" rel="noopener noreferrer"></a>
@@ -366,9 +368,9 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     selectDay: string; available: string; loading: string; noSlots: string
     name: string; namePh: string; email: string; emailPh: string
     phone: string; phonePh: string; notes: string; notesPh: string
-    privacy: string; privacyLink: string; back: string; confirm: string
+    privacy: string; privacyLink: string; back: string; confirm: string; confirming: string
     successTitle: string; successText: string; error: string; slotTaken: string
-    nameRequired: string; emailRequired: string; notesRequired: string; privacyRequired: string
+    nameRequired: string; emailRequired: string; emailInvalid: string; notesRequired: string; privacyRequired: string
   }
 
   const widget = document.getElementById('booking-widget') as HTMLElement | null
@@ -382,6 +384,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   // State
   let currentYear  = new Date().getFullYear()
   let currentMonth = new Date().getMonth() + 1 // 1-based
+  let errorField: string | null = null
   let availableDays: string[] = []
   let slotsCache: Record<string, string[]> = {}
   const monthCache: Record<string, { availableDays: string[], slots: Record<string, string[]> }> = {}
@@ -619,23 +622,28 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     const btnConfirm = document.getElementById('btn-confirm') as HTMLButtonElement
 
     errorEl.classList.add('hidden')
+    errorField = null
     if (!selectedDate || !selectedTime) return
 
     const nameEl  = form.querySelector('#book-name')  as HTMLInputElement
     const emailEl = form.querySelector('#book-email') as HTMLInputElement
     const notesEl = form.querySelector('#book-notes') as HTMLTextAreaElement
 
-    if (!name)  { errorEl.textContent = i18n.nameRequired;  errorEl.classList.remove('hidden'); nameEl.focus();  return }
-    if (!email) { errorEl.textContent = i18n.emailRequired; errorEl.classList.remove('hidden'); emailEl.focus(); return }
-    if (!notes) { errorEl.textContent = i18n.notesRequired; errorEl.classList.remove('hidden'); notesEl.focus(); return }
-    if (!privacy) {
-      errorEl.textContent = i18n.privacyRequired
+    const showFieldError = (msg: string, fieldId: string, focusEl?: HTMLElement) => {
+      errorField = fieldId
+      errorEl.textContent = msg
       errorEl.classList.remove('hidden')
-      return
+      focusEl?.focus()
     }
 
+    if (!name)    { showFieldError(i18n.nameRequired,    'book-name',    nameEl);  return }
+    if (!email)   { showFieldError(i18n.emailRequired,   'book-email',   emailEl); return }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showFieldError(i18n.emailInvalid, 'book-email', emailEl); return }
+    if (!notes)   { showFieldError(i18n.notesRequired,   'book-notes',   notesEl); return }
+    if (!privacy) { showFieldError(i18n.privacyRequired, 'book-privacy');           return }
+
     btnConfirm.disabled = true
-    btnConfirm.textContent = i18n.loading
+    btnConfirm.textContent = i18n.confirming
 
     try {
       const res = await fetch(API_URL, {
@@ -667,6 +675,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   })
 
   function showBookingForm(date: string, time: string) {
+    errorField = null
     hide(slotsPlaceholder); hide(slotsList); hide(successWrap)
     show(formWrap)
 
@@ -707,15 +716,21 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     document.getElementById('form-error')!.classList.add('hidden')
   }
 
-  // Clear validation error as soon as the offending field is filled
+  // Clear validation error only when the specific offending field is edited
   const _errorEl = document.getElementById('form-error')!
   ;['book-name', 'book-email', 'book-notes'].forEach(id => {
     document.getElementById(id)!.addEventListener('input', e => {
-      if ((e.target as HTMLInputElement).value.trim()) _errorEl.classList.add('hidden')
+      if (errorField === id && (e.target as HTMLInputElement).value.trim()) {
+        _errorEl.classList.add('hidden')
+        errorField = null
+      }
     })
   })
   ;(document.getElementById('book-privacy') as HTMLInputElement).addEventListener('change', e => {
-    if ((e.target as HTMLInputElement).checked) _errorEl.classList.add('hidden')
+    if (errorField === 'book-privacy' && (e.target as HTMLInputElement).checked) {
+      _errorEl.classList.add('hidden')
+      errorField = null
+    }
   })
 
   // Boot
