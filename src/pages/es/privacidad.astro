@@ -7,7 +7,11 @@ import { getTranslations } from '../../i18n/index'
 const lang = 'es' as const
 const t = getTranslations(lang)
 ---
-<BaseLayout lang={lang} title="Política de Privacidad | Llavors Logopèdia">
+<BaseLayout
+  lang={lang}
+  title="Política de Privacidad"
+  description="Información sobre el tratamiento de tus datos personales en Llavors Logopèdia, según el RGPD y la LOPDGDD."
+>
   <Header t={t} lang={lang} />
   <main>
     <article class="legal-content">

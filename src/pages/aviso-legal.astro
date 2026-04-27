@@ -7,7 +7,11 @@ import { getTranslations } from '../i18n/index'
 const lang = 'ca' as const
 const t = getTranslations(lang)
 ---
-<BaseLayout lang={lang} title="Aviso Legal | Llavors Logopèdia">
+<BaseLayout
+  lang={lang}
+  title="Avís Legal"
+  description="Dades identificatives del titular de llavorslogopedia.com i condicions d'ús del lloc web."
+>
   <Header t={t} lang={lang} />
   <main>
     <article class="legal-content">
