@@ -47,6 +47,8 @@ const esUrl = lang === 'es'
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImageUrl} />
 <meta property="og:type" content="website" />
+<meta property="og:locale" content={lang === 'ca' ? 'ca_ES' : 'es_ES'} />
+<meta property="og:locale:alternate" content={lang === 'ca' ? 'es_ES' : 'ca_ES'} />
 <meta property="og:url" content={resolvedCanonical} />
 
 <meta name="twitter:card" content="summary_large_image" />
