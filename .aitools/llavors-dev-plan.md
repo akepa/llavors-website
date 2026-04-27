@@ -421,6 +421,36 @@ Componente `CookieBanner.astro`:
 
 ---
 
+## Slice 6b — Lanzamiento: migración DNS y puesta en producción
+
+**Objetivo:** La web deja GitHub Pages y pasa a vivir en `www.llavorslogopedia.com` de forma definitiva, con todos los requisitos legales y de SEO completos.
+
+> ⚠️ Este slice debe completarse antes de retirar el WordPress y hacer cualquier campaña.
+
+### Tareas
+
+1. **Completar los placeholders legales** en las páginas de privacidad, aviso legal y cookies (buscar `[COMPLETAR: ...]` en `src/pages/privacidad.astro`, `aviso-legal.astro`, `cookies.astro` y sus versiones en ES). Rellenar con fecha real, NIF de Àngela y resto de datos pendientes.
+
+2. **Migración DNS** — apuntar `www.llavorslogopedia.com` a GitHub Pages:
+   - Añadir `public/CNAME` con el contenido `www.llavorslogopedia.com`
+   - En `astro.config.mjs`: eliminar `base: '/llavors-website/'` (ya no es necesario)
+   - En el DNS de Hostinger: registro CNAME `www` → `akepa.github.io`
+   - Verificar que el deploy automático funciona con el nuevo dominio
+
+3. **Google Search Console** — una vez el dominio esté activo:
+   - Crear cuenta / añadir propiedad `www.llavorslogopedia.com`
+   - Verificar propiedad vía el meta tag `gscVerification` ya preparado en `SEO.astro`
+   - Enviar `https://www.llavorslogopedia.com/sitemap-index.xml` manualmente
+
+### Validación
+- [ ] Ningún `[COMPLETAR: ...]` queda en las páginas legales
+- [ ] `https://www.llavorslogopedia.com` carga la web correctamente
+- [ ] `https://www.llavorslogopedia.com/sitemap-index.xml` accesible y con URLs sin `/llavors-website/`
+- [ ] Web verificada en Google Search Console sin errores críticos
+- [ ] Backup de la web WordPress guardado antes de cancelar Hostinger
+
+---
+
 ## Slice 7 — Reseñas dinámicas
 
 > **Prerequisito:** Migración a Vercel completada (necesario para serverless functions).  
