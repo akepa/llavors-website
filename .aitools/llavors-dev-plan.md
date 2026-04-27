@@ -227,9 +227,11 @@ Abrir siempre en `target="_blank" rel="noopener noreferrer"`.
 
 ---
 
-## Slice 3 — Formulario de contacto
+## Slice 3 — Formulario de contacto ~~(descartado)~~
 
-**Objetivo:** Los pacientes pueden enviar consultas sin salir de la web.
+> ❌ **No se va a implementar.** Decidido en abril 2026: el flujo de contacto se cubre con WhatsApp y el sistema de reservas. No se instalará Formspree/Web3Forms.
+
+**Objetivo original:** Los pacientes pueden enviar consultas sin salir de la web.
 
 ### Tareas
 

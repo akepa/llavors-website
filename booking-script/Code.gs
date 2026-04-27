@@ -53,36 +53,80 @@ function doPost(e) {
 // ============================================================
 
 function getAvailableMonth(year, month) {
+  // Serve from cache when possible (10-min TTL, invalidated on booking)
+  var cacheKey = 'month_' + year + '_' + month;
+  var cache = CacheService.getScriptCache();
+  var cached = cache.get(cacheKey);
+  if (cached) {
+    try { return JSON.parse(cached); } catch(e) {}
+  }
+
   var availCal = getAvailabilityCalendar();
   if (!availCal) return { availableDays: [], slots: {} };
 
   var start = new Date(year, month - 1, 1);
-  var end = new Date(year, month, 1);
+  var end   = new Date(year, month, 1);
+
+  // Two API calls for the whole month instead of 4x per available day
   var availEvents = availCal.getEvents(start, end);
+  var primaryCal  = CalendarApp.getDefaultCalendar();
+  var busyEvents  = primaryCal.getEvents(start, end);
 
   var today = new Date();
   today.setHours(0, 0, 0, 0);
+  var cutoff = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
-  var daysSet = {};
+  // Group availability windows by day
+  var availByDay = {};
   availEvents.forEach(function(ev) {
     var d = new Date(ev.getStartTime());
     d.setHours(0, 0, 0, 0);
     if (d >= today) {
-      daysSet[toDateStr(d)] = true;
+      var key = toDateStr(d);
+      if (!availByDay[key]) availByDay[key] = [];
+      availByDay[key].push(ev);
     }
   });
 
   var availableDays = [];
   var slots = {};
-  Object.keys(daysSet).forEach(function(dateStr) {
-    var daySlots = getSlotsForDay(dateStr);
+
+  Object.keys(availByDay).sort().forEach(function(dateStr) {
+    var parts    = dateStr.split('-').map(Number);
+    var dayStart = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0);
+    var dayEnd   = new Date(parts[0], parts[1] - 1, parts[2], 23, 59, 59);
+
+    // Filter already-fetched busy events that overlap this day
+    var dayBusy = busyEvents.filter(function(ev) {
+      return ev.getStartTime() < dayEnd && ev.getEndTime() > dayStart;
+    });
+
+    var allSlots = [];
+    availByDay[dateStr].forEach(function(ev) {
+      generateSlots(ev.getStartTime(), ev.getEndTime()).forEach(function(s) {
+        allSlots.push(s);
+      });
+    });
+
+    var daySlots = allSlots.filter(function(slotStart) {
+      if (slotStart <= cutoff) return false;
+      var slotEnd = new Date(slotStart.getTime() + SLOT_MINUTES * 60 * 1000);
+      return !dayBusy.some(function(ev) {
+        return slotStart < ev.getEndTime() && slotEnd > ev.getStartTime();
+      });
+    }).map(function(d) {
+      return padTwo(d.getHours()) + ':' + padTwo(d.getMinutes());
+    });
+
     if (daySlots.length > 0) {
       availableDays.push(dateStr);
       slots[dateStr] = daySlots;
     }
   });
 
-  return { availableDays: availableDays.sort(), slots: slots };
+  var result = { availableDays: availableDays.sort(), slots: slots };
+  try { cache.put(cacheKey, JSON.stringify(result), 600); } catch(e) {}
+  return result;
 }
 
 function getSlotsForDay(dateStr) {
@@ -167,6 +211,10 @@ function bookSlot(data) {
   primaryCal.createEvent('Primera Cita — ' + name, startTime, endTime, {
     description: description.join('\n')
   });
+
+  // Invalidate month cache so the next visitor sees updated availability
+  var cacheKey = 'month_' + parts[0] + '_' + parts[1];
+  try { CacheService.getScriptCache().remove(cacheKey); } catch(e) {}
 
   sendConfirmationEmail(name, email, date, time, lang, phone, notes);
 
