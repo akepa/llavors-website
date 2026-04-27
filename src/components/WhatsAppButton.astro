@@ -7,7 +7,10 @@ interface Props {
 
 const { lang } = Astro.props
 const label = lang === 'ca' ? 'Parlem?' : '¿Hablamos?'
-const waUrl = 'https://wa.me/34614337743?text=Hola%2C%20m%27agradaria%20demanar%20informaci%C3%B3%20sobre%20logop%C3%A8dia'
+const waText = lang === 'ca'
+  ? 'Hola%2C%20m%27agradaria%20demanar%20informaci%C3%B3%20sobre...'
+  : 'Hola%2C%20me%20gustar%C3%ADa%20pedir%20informaci%C3%B3n%20sobre...'
+const waUrl = `https://wa.me/34614337743?text=${waText}`
 ---
 <div class="wa-fab">
   <span class="wa-label">{label}</span>

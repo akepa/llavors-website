@@ -7,7 +7,11 @@ import { getTranslations } from '../../i18n/index'
 const lang = 'es' as const
 const t = getTranslations(lang)
 ---
-<BaseLayout lang={lang} title="Política de Cookies | Llavors Logopèdia">
+<BaseLayout
+  lang={lang}
+  title="Política de Cookies"
+  description="Información sobre las cookies utilizadas en llavorslogopedia.com y cómo gestionarlas."
+>
   <Header t={t} lang={lang} />
   <main>
     <article class="legal-content">

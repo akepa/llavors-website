@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.llavorslogopedia.com/sitemap-index.xml

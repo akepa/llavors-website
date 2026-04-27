@@ -1,0 +1,62 @@
+---
+interface Props {
+  title: string
+  description: string
+  lang: 'ca' | 'es'
+  ogImage?: string
+  canonical?: string
+  gscVerification?: string
+}
+
+const {
+  title,
+  description,
+  lang,
+  ogImage = '/og-default.jpg',
+  canonical,
+  gscVerification,
+} = Astro.props
+
+const SITE = 'https://www.llavorslogopedia.com'
+const BASE = '/llavors-website'
+// BASE has no trailing slash; Astro.url.pathname includes it (e.g. '/llavors-website/').
+// startsWith(BASE) still matches, and slicing gives '/' via the || '/' fallback for root.
+
+// lang is used only for hreflang URLs; the <html lang="..."> attribute is set by BaseLayout.
+// Elimina el base path de GitHub Pages para construir la URL canónica real
+const rawPath = Astro.url.pathname.startsWith(BASE)
+  ? Astro.url.pathname.slice(BASE.length) || '/'
+  : Astro.url.pathname
+
+const resolvedCanonical = canonical ?? `${SITE}${rawPath}`
+const ogImageUrl = `${SITE}${ogImage}`
+
+// Construye las URLs hreflang. Las URLs ca no llevan prefijo; las es llevan /es/.
+const caUrl = lang === 'ca'
+  ? resolvedCanonical
+  : resolvedCanonical.replace(`${SITE}/es`, SITE)
+
+const esUrl = lang === 'es'
+  ? resolvedCanonical
+  : `${SITE}/es${rawPath}`
+---
+<title>{title} | Llavors Logopèdia</title>
+<meta name="description" content={description} />
+
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content={lang === 'ca' ? 'ca_ES' : 'es_ES'} />
+<meta property="og:locale:alternate" content={lang === 'ca' ? 'es_ES' : 'ca_ES'} />
+<meta property="og:url" content={resolvedCanonical} />
+
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="canonical" href={resolvedCanonical} />
+
+<link rel="alternate" hreflang="ca" href={caUrl} />
+<link rel="alternate" hreflang="es" href={esUrl} />
+<link rel="alternate" hreflang="x-default" href={caUrl} />
+
+{gscVerification && <meta name="google-site-verification" content={gscVerification} />}

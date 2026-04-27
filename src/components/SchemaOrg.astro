@@ -1,0 +1,60 @@
+---
+interface Props {
+  lang: 'ca' | 'es'
+}
+
+const { lang } = Astro.props
+const isCa = lang === 'ca'
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalBusiness',
+  name: 'Llavors Logopèdia',
+  description: isCa
+    ? "Logopèdia neonatal, reeducació de les funcions orals i desenvolupament comunicatiu. Atenció a domicili, presencial i online a València i l'Horta."
+    : "Logopedia neonatal, reeducación de las funciones orales y desarrollo comunicativo. Atención a domicilio, presencial y online en Valencia y l'Horta.",
+  url: 'https://www.llavorslogopedia.com',
+  telephone: '+34614337743',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Calle Chile, 4',
+    addressLocality: 'Valencia',
+    postalCode: '46021',
+    addressCountry: 'ES',
+  },
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Monday',    opens: '11:00', closes: '19:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Tuesday',   opens: '11:00', closes: '14:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Wednesday', opens: '09:30', closes: '14:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Thursday',  opens: '11:00', closes: '19:30' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Friday',    opens: '09:30', closes: '14:00' },
+  ],
+  areaServed: ['Valencia', 'Massamagrell', "L'Horta", 'España'],
+  serviceType: isCa
+    ? [
+        'Logopèdia neonatal',
+        'Assessorament en lactància materna',
+        'Alimentació complementària',
+        "Tractament d'anquiloglòssia",
+        'Teràpia miofuncional',
+        'Reeducació de les funcions orals',
+        'Desenvolupament comunicatiu i del llenguatge',
+        'Atenció a domicili',
+        'Sessions online',
+        'Consulta presencial',
+      ]
+    : [
+        'Logopedia neonatal',
+        'Asesoramiento en lactancia materna',
+        'Alimentación complementaria',
+        'Tratamiento de anquiloglosia',
+        'Terapia miofuncional',
+        'Reeducación de las funciones orales',
+        'Desarrollo comunicativo y del lenguaje',
+        'Atención a domicilio',
+        'Sesiones online',
+        'Consulta presencial',
+      ],
+}
+---
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
