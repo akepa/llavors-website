@@ -1,0 +1,8 @@
+function debugCalendars() {
+    var cals = CalendarApp.getAllCalendars();
+    cals.forEach(function(c) {
+      Logger.log(c.getName() + ' — ' + c.getId());
+    });
+    var avail = CalendarApp.getCalendarsByName('Disponibilitat Llavors');
+    Logger.log('Trobat: ' + avail.length);
+}
