@@ -4,7 +4,6 @@ import sitemap from '@astrojs/sitemap'
 
 export default defineConfig({
   site: 'https://www.llavorslogopedia.com',
-  base: '/llavors-website/',
   output: 'static',
   integrations: [
     sitemap({
