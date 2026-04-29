@@ -50,18 +50,18 @@ const {
       canonical={canonical}
       gscVerification={gscVerification}
     />
-    <slot name="head" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T992PQQVQT"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('consent', 'default', { analytics_storage: 'denied' });
-      if (localStorage.getItem('cookies_consent') === 'all') {
+      gtag('consent', 'default', { analytics_storage: 'denied', wait_for_update: 500 });
+      if (localStorage.getItem('cookies_accepted') === 'all') {
         gtag('consent', 'update', { analytics_storage: 'granted' });
       }
       gtag('js', new Date());
       gtag('config', 'G-T992PQQVQT');
     </script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T992PQQVQT"></script>
+    <slot name="head" />
   </head>
   <body>
     <slot />
