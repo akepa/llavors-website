@@ -10,14 +10,14 @@
   </div>
 </div>
 
-<script>
-  const banner   = document.getElementById('cookie-banner')!
-  const textEl   = document.getElementById('cookie-text')!
-  const btnEss   = document.getElementById('cookie-btn-essential')!
-  const btnAll   = document.getElementById('cookie-btn-all')!
+<script is:inline>
+  const banner = document.getElementById('cookie-banner')
+  const textEl = document.getElementById('cookie-text')
+  const btnEss = document.getElementById('cookie-btn-essential')
+  const btnAll = document.getElementById('cookie-btn-all')
 
   const stored = localStorage.getItem('cookies_accepted')
-  // 'true' is the legacy value from before Slice 6 — re-prompt so user can choose about analytics
+  // 'true' is the legacy value — re-prompt so user can choose about analytics
   if (!stored || stored === 'true') {
     const isVal = document.documentElement.lang === 'ca'
     const base  = import.meta.env.BASE_URL
@@ -33,16 +33,13 @@
 
   btnEss.addEventListener('click', () => {
     localStorage.setItem('cookies_accepted', 'essential')
-    if (typeof (window as any).gtag === 'function') {
-      (window as any).gtag('consent', 'update', { analytics_storage: 'denied' })
-    }
     banner.style.display = 'none'
   })
 
   btnAll.addEventListener('click', () => {
     localStorage.setItem('cookies_accepted', 'all')
-    if (typeof (window as any).gtag === 'function') {
-      (window as any).gtag('consent', 'update', { analytics_storage: 'granted' })
+    if (typeof gtag === 'function') {
+      gtag('consent', 'update', { analytics_storage: 'granted' })
     }
     banner.style.display = 'none'
   })
