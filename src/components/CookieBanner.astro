@@ -4,28 +4,41 @@
 
 <div id="cookie-banner" class="cookie-banner" style="display:none">
   <p id="cookie-text"></p>
-  <button id="cookie-btn" type="button"></button>
+  <div class="cookie-buttons">
+    <button id="cookie-btn-essential" type="button" class="btn-essential"></button>
+    <button id="cookie-btn-all" type="button" class="btn-all"></button>
+  </div>
 </div>
 
-<script>
-  const banner = document.getElementById('cookie-banner')!
-  const textEl = document.getElementById('cookie-text')!
-  const btnEl  = document.getElementById('cookie-btn')!
+<script is:inline>
+  const banner   = document.getElementById('cookie-banner')
+  const textEl   = document.getElementById('cookie-text')
+  const btnAll   = document.getElementById('cookie-btn-all')
+  const btnEss   = document.getElementById('cookie-btn-essential')
 
-  if (!localStorage.getItem('cookies_accepted')) {
+  if (!localStorage.getItem('cookies_consent')) {
     const isVal = document.documentElement.lang === 'ca'
     const base  = import.meta.env.BASE_URL
 
     textEl.innerHTML = isVal
-      ? `Aquest lloc web utilitza cookies tècniques pròpies necessàries per al seu funcionament. <a href="${base}cookies" rel="noopener noreferrer">Política de cookies</a>`
-      : `Este sitio web utiliza cookies técnicas propias necesarias para su funcionamiento. <a href="${base}cookies" rel="noopener noreferrer">Política de cookies</a>`
+      ? `Este lloc web utilitza cookies tècniques pròpies i, si ho acceptes, cookies analítiques (Google Analytics) per millorar el servei. <a href="${base}cookies" rel="noopener noreferrer">Política de cookies</a>`
+      : `Este sitio web utiliza cookies técnicas propias y, si lo aceptas, cookies analíticas (Google Analytics) para mejorar el servicio. <a href="${base}cookies" rel="noopener noreferrer">Política de cookies</a>`
 
-    btnEl.textContent = isVal ? 'Entés' : 'Entendido'
+    btnAll.textContent = isVal ? 'Acceptar totes' : 'Aceptar todas'
+    btnEss.textContent = isVal ? 'Només tècniques' : 'Solo técnicas'
     banner.style.display = 'flex'
   }
 
-  btnEl.addEventListener('click', () => {
-    localStorage.setItem('cookies_accepted', 'true')
+  btnAll.addEventListener('click', () => {
+    localStorage.setItem('cookies_consent', 'all')
+    if (typeof gtag !== 'undefined') {
+      gtag('consent', 'update', { analytics_storage: 'granted' })
+    }
+    banner.style.display = 'none'
+  })
+
+  btnEss.addEventListener('click', () => {
+    localStorage.setItem('cookies_consent', 'essential')
     banner.style.display = 'none'
   })
 </script>
@@ -42,7 +55,7 @@
     border-radius: 16px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
     padding: 16px 20px;
-    max-width: 480px;
+    max-width: 520px;
     width: calc(100% - 32px);
     display: flex;
     align-items: center;
@@ -62,20 +75,32 @@
     color: var(--pink-light);
     text-decoration: underline;
   }
-  #cookie-btn {
-    background: var(--pink);
-    color: #fff;
+  .cookie-buttons {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .cookie-buttons button {
     border: none;
     border-radius: 8px;
-    padding: 9px 20px;
-    font-size: 0.85rem;
+    padding: 9px 16px;
+    font-size: 0.82rem;
     font-weight: 700;
     font-family: 'Nunito', sans-serif;
     cursor: pointer;
     white-space: nowrap;
     transition: opacity 0.15s;
   }
-  #cookie-btn:hover { opacity: 0.88; }
+  .btn-all {
+    background: var(--pink);
+    color: #fff;
+  }
+  .btn-essential {
+    background: rgba(255,255,255,0.15);
+    color: var(--bg);
+  }
+  .cookie-buttons button:hover { opacity: 0.85; }
   @keyframes cb-fade-in {
     from { opacity: 0; transform: translateX(-50%) translateY(10px); }
     to   { opacity: 1; transform: translateX(-50%) translateY(0); }
