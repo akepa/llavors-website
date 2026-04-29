@@ -50,6 +50,18 @@ const {
       canonical={canonical}
       gscVerification={gscVerification}
     />
+    <!-- Google Analytics 4 — Consent Mode v2 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T992PQQVQT"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', { analytics_storage: 'denied', wait_for_update: 500 });
+      gtag('js', new Date());
+      gtag('config', 'G-T992PQQVQT');
+      if (localStorage.getItem('cookies_accepted') === 'all') {
+        gtag('consent', 'update', { analytics_storage: 'granted' });
+      }
+    </script>
     <slot name="head" />
   </head>
   <body>
