@@ -56,11 +56,11 @@ const {
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('consent', 'default', { analytics_storage: 'denied', wait_for_update: 500 });
-      gtag('js', new Date());
-      gtag('config', 'G-T992PQQVQT');
       if (localStorage.getItem('cookies_accepted') === 'all') {
         gtag('consent', 'update', { analytics_storage: 'granted' });
       }
+      gtag('js', new Date());
+      gtag('config', 'G-T992PQQVQT');
     </script>
     <slot name="head" />
   </head>
