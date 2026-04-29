@@ -55,6 +55,8 @@ const es = {
   testi_label: 'Testimonios',
   testi_h2: 'Lo que dicen las familias',
   testi_sub: 'Valoraciones reales de familias que han confiado en Llavors Logopèdia.',
+  testi_doc_hook: 'No te lo decimos nosotras. Te lo dicen ellas.',
+  testi_doc_link: 'Ver más valoraciones verificadas en Doctorialia',
   t1_text: '"Àngela fue un punto de inflexión en nuestra lactancia. Gracias a su acompañamiento superamos las dificultades de los primeros días y pudimos disfrutar de una experiencia preciosa. Siempre disponible y con mucha paciencia."',
   t1_author: 'Laura M.',
   t1_sub: '· Mamá de una bebé de 3 meses',

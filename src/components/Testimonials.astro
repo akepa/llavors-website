@@ -29,6 +29,18 @@ const cards = [
         </div>
       ))}
     </div>
+    <div class="doc-cta">
+      <div class="doc-stars" aria-hidden="true">★★★★★</div>
+      <p class="doc-hook">{t.testi_doc_hook}</p>
+      <a
+        href="https://www.doctoralia.es/angela-alonso-millet/logopeda/valencia"
+        class="doc-link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {t.testi_doc_link} <span aria-hidden="true">→</span>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -46,5 +58,33 @@ const cards = [
   .testi-author { font-weight: 700; font-size: 0.9rem; color: var(--text); }
   .testi-author span { color: var(--text-soft); font-weight: 400; }
 
-  @media (max-width: 960px) { .testimonials-grid { grid-template-columns: 1fr; } }
+  .doc-cta {
+    margin-top: 40px;
+    background: var(--white);
+    border-radius: var(--r);
+    padding: 32px 48px;
+    text-align: center;
+    border: 1px solid rgba(207, 58, 105, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .doc-stars { color: var(--pink); font-size: 1.2rem; letter-spacing: 3px; }
+  .doc-hook { font-size: 1.05rem; font-weight: 700; color: var(--text); margin: 0; }
+  .doc-link {
+    color: var(--pink);
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1.5px solid var(--pink-light);
+    transition: border-color 0.2s;
+  }
+  .doc-link:hover { border-bottom-color: var(--pink); }
+
+  @media (max-width: 960px) {
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .doc-cta { padding: 28px 24px; }
+  }
 </style>
