@@ -39,7 +39,7 @@ const canonicalPath = (lang !== 'ca' && pathWithoutBase.startsWith(`/${lang}`))
           class={`lang-btn${lang === 'es' ? ' active' : ''}`}
         >ES</a>
       </div>
-      <a href={home + '#reserva'} class="btn btn-primary" onclick="gtag('event','click_reservar_cita')">{t.nav_cta}</a>
+      <a href={home + '#reserva'} class="btn btn-primary" onclick="if(typeof gtag==='function')gtag('event','click_reservar_cita')">{t.nav_cta}</a>
       <button class="hamburger" id="hamburger" aria-label="Menú">
         <span></span><span></span><span></span>
       </button>
@@ -50,7 +50,7 @@ const canonicalPath = (lang !== 'ca' && pathWithoutBase.startsWith(`/${lang}`))
     <a href={home + '#sobre-mi'}>{t.nav_sobre}</a>
     <a href={home + '#com-funciona'}>{t.nav_com}</a>
     <a href={getRelativeLocaleUrl(lang, '/blog')}>{t.nav_blog}</a>
-    <a href={home + '#reserva'} class="btn btn-primary" onclick="gtag('event','click_reservar_cita')">{t.nav_cta}</a>
+    <a href={home + '#reserva'} class="btn btn-primary" onclick="if(typeof gtag==='function')gtag('event','click_reservar_cita')">{t.nav_cta}</a>
   </div>
 </nav>
 
