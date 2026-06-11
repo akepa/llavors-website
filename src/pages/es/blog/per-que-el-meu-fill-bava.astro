@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import Header from '../../../components/Header.astro'
+import Footer from '../../../components/Footer.astro'
+import BlogArticleHeader from '../../../components/blog/BlogArticleHeader.astro'
+import BlogProse from '../../../components/blog/BlogProse.astro'
+import { getTranslations } from '../../../i18n/index'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+
+const lang = 'es' as const
+const t = getTranslations(lang)
+const blogUrl = getRelativeLocaleUrl(lang, '/blog')
+const homeUrl = getRelativeLocaleUrl(lang, '/')
+---
+<BaseLayout
+  lang={lang}
+  title="¿Por qué mi hijo babea? Cuándo es normal y cuándo preocuparse"
+  description="El babeo es habitual hasta los 3-4 años, pero hay señales que invitan a consultar. Te damos las claves para saber cuándo es normal y cuándo no."
+>
+  <Header t={t} lang={lang} />
+  <main>
+    <BlogArticleHeader
+      title="¿Por qué mi hijo babea? Cuándo es normal y cuándo preocuparse"
+      categoryLabel={t.blog_cat_funcions_orals}
+      author={t.blog_author}
+      date="15 de junio de 2026"
+      readingTime={4}
+      readingTimeLabel={t.blog_reading_time}
+    />
+    <div class="article-body container">
+      <a href={blogUrl} class="article-back">{t.blog_back_to_blog}</a>
+      <BlogProse>
+        <p>Si tienes un niño pequeño en casa, seguro que lo has visto mil veces: la camiseta húmeda, el babero cambiado tres veces en una mañana, el cojín del carrito con una toalla debajo. El babeo es una de las escenas más comunes de la primera infancia y, en la mayoría de los casos, es completamente normal.</p>
+
+        <p>Ahora bien, hay momentos en los que conviene pararse a observar. No para alarmarse, sino para saber distinguir entre lo que forma parte del desarrollo y lo que merece una consulta profesional. En este artículo te damos las claves.</p>
+
+        <h2>¿Por qué babea mi hijo?</h2>
+
+        <p>El babeo en niños pequeños tiene varias causas, todas ellas relacionadas con el desarrollo normal de las funciones orales. Entre las más habituales encontramos:</p>
+
+        <ul>
+          <li><strong>La salida de los dientes.</strong> A partir de los 4-6 meses, la aparición de los primeros dientes estimula las glándulas salivales y aumenta la producción de saliva.</li>
+          <li><strong>La maduración del control oral.</strong> El niño todavía está aprendiendo a coordinar los labios, la lengua y la deglución. Tragar saliva sin pensarlo es una habilidad que se consolida con el tiempo.</li>
+          <li><strong>La exploración oral.</strong> Los bebés se llevan objetos a la boca para conocer el mundo. Morder, chupar y explorar con la lengua son parte de su aprendizaje y activan la salivación.</li>
+          <li><strong>La concentración.</strong> Cuando el niño está muy centrado en una actividad —apilar piezas, mirar un dibujo, observar un insecto— se olvida momentáneamente de tragar.</li>
+        </ul>
+
+        <p>Todos estos motivos son habituales y no indican ningún problema. Forman parte del proceso natural de crecimiento.</p>
+
+        <h2>¿Hasta cuándo es normal?</h2>
+
+        <p>Esta es la pregunta que más preocupa a las familias. La respuesta corta es que el babeo habitualmente disminuye de manera notable alrededor de los 18-24 meses y suele desaparecer hacia los 3-4 años, cuando el control oral y la deglución están completamente maduros.</p>
+
+        <blockquote>El babeo es una etapa, no un problema. Habitualmente, hacia los 4 años, el niño ya sabe tragar saliva de manera automática, también cuando está concentrado o en movimiento.</blockquote>
+
+        <p>Esto no significa que un niño de 3 años y medio que todavía babea ocasionalmente tenga ninguna dificultad. Cada niño tiene su ritmo, y factores como una dentición tardía o un resfriado pasajero pueden alargar la fase. Lo que miramos como logopedas no es tanto la edad exacta como la evolución: ¿el babeo va disminuyendo con el tiempo o se mantiene constante?</p>
+
+        <h2>¿Cuándo conviene consultar?</h2>
+
+        <p>Estas son las señales que invitan a pedir una valoración profesional, no para alarmarte, sino para poder actuar a tiempo:</p>
+
+        <ul>
+          <li><strong>Babeo persistente más allá de los 4 años</strong>, especialmente si no mejora a lo largo de meses.</li>
+          <li><strong>Babeo asociado a dificultades de alimentación</strong>: el niño tiene problemas para masticar, tragar alimentos sólidos o cierra mal la boca al comer.</li>
+          <li><strong>Boca abierta de manera habitual</strong>, también en reposo. Puede indicar una hipotonía (poco tono muscular) de la musculatura facial.</li>
+          <li><strong>Dificultades con la pronunciación</strong> de algunos sonidos que requieren control preciso de los labios o la lengua.</li>
+        </ul>
+
+        <p>Si reconoces alguna de estas señales, no significa que haya un problema grave: significa que una valoración puede ayudar a entender qué pasa y, si hace falta, ponerle solución con ejercicios sencillos.</p>
+
+        <h2>¿Y si tengo dudas?</h2>
+
+        <p>Cada niño es diferente y la línea entre "todavía está madurando" y "conviene valorar" no siempre es nítida. Si tienes preguntas sobre el desarrollo oral de tu hijo, puedes reservar una primera cita o escribirnos por WhatsApp. La primera consulta dura 30 minutos y sirve justamente para eso: aclarar si hace falta hacer algo o si simplemente hay que dar tiempo al tiempo.</p>
+      </BlogProse>
+
+      <div class="article-cta">
+        <p>¿Tienes dudas sobre el desarrollo oral de tu hijo?</p>
+        <a href={homeUrl + '#reserva'} class="btn btn-primary">Reservar la primera cita</a>
+      </div>
+    </div>
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>
+
+<style>
+  .article-body {
+    padding-top: 48px;
+    padding-bottom: 100px;
+    max-width: 800px;
+  }
+  .article-back {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    text-decoration: none;
+    margin-bottom: 40px;
+    transition: color 0.2s;
+  }
+  .article-back:hover { color: var(--pink); }
+  .article-cta {
+    margin-top: 64px;
+    padding: 40px 36px;
+    background: var(--pink-pale);
+    border: 1px solid var(--pink-light);
+    border-radius: var(--r);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .article-cta p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+  }
+
+  @media (max-width: 640px) {
+    .article-body { padding-top: 32px; padding-bottom: 64px; }
+    .article-cta { padding: 28px 20px; }
+  }
+</style>

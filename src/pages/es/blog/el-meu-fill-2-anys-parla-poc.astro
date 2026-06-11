@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import Header from '../../../components/Header.astro'
+import Footer from '../../../components/Footer.astro'
+import BlogArticleHeader from '../../../components/blog/BlogArticleHeader.astro'
+import BlogProse from '../../../components/blog/BlogProse.astro'
+import { getTranslations } from '../../../i18n/index'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+
+const lang = 'es' as const
+const t = getTranslations(lang)
+const blogUrl = getRelativeLocaleUrl(lang, '/blog')
+const homeUrl = getRelativeLocaleUrl(lang, '/')
+---
+<BaseLayout
+  lang={lang}
+  title="Mi hijo tiene 2 años y habla poco: ¿debo preocuparme?"
+  description="Cada niño tiene su ritmo, pero hay señales que pueden ayudarnos a saber si conviene consultar. Te damos una guía clara y práctica."
+>
+  <Header t={t} lang={lang} />
+  <main>
+    <BlogArticleHeader
+      title="Mi hijo tiene 2 años y habla poco: ¿debo preocuparme?"
+      categoryLabel={t.blog_cat_comunicacio}
+      author={t.blog_author}
+      date="29 de junio de 2026"
+      readingTime={4}
+      readingTimeLabel={t.blog_reading_time}
+    />
+    <div class="article-body container">
+      <a href={blogUrl} class="article-back">{t.blog_back_to_blog}</a>
+      <BlogProse>
+        <p>Es una de las preguntas que más recibimos en consulta. "Mi hijo ha cumplido 2 años y solo dice cinco o seis palabras." "Todavía no junta dos palabras." "La hija de mi amiga, de la misma edad, habla mucho más." Y es una preocupación totalmente comprensible: el lenguaje es uno de los hitos del desarrollo que más visibles hacen frente a otras familias.</p>
+
+        <p>La respuesta breve es que cada niño tiene su ritmo y que a los 2 años hay una variabilidad enorme dentro de lo que se considera normal. Pero también es cierto que hay algunas señales que invitan a hacer una consulta, no para alarmarse, sino para tener información y, si hace falta, empezar a trabajar antes. En este artículo te lo explicamos con calma.</p>
+
+        <h2>¿Qué se espera a los 2 años, más o menos?</h2>
+
+        <p>Una referencia orientativa, no una norma rígida, es que hacia los 24 meses un niño suele tener un vocabulario de unas 50 palabras y empieza a combinar dos ("quiero agua", "papá coche", "mamá allí"). Pero hay niños que a los 24 meses dicen 30 y a los 26 meses pegan un salto a 100. Y otros que mantienen un ritmo más pausado todo el año y acaban perfectamente bien.</p>
+
+        <blockquote>El número exacto de palabras importa mucho menos que la evolución: si ves que tu hijo va sumando palabras nuevas, aunque sea poco a poco, es una muy buena señal.</blockquote>
+
+        <p>Lo que miramos como logopedas no es tanto un número, sino la combinación de comprensión (¿entiende lo que le dices?), intención comunicativa (¿busca comunicarse contigo de alguna manera?) y evolución (¿hay progreso respecto a hace unos meses?). Estos tres elementos nos dan mucha más información que la cantidad de palabras en un día concreto.</p>
+
+        <h2>Señales que invitan a consultar</h2>
+
+        <p>Estas son las señales que, si reconoces en tu hijo, hacen recomendable una valoración profesional:</p>
+
+        <ul>
+          <li><strong>No entiende órdenes sencillas</strong> del tipo "tráeme la pelota" o "dale esto a papá", también cuando no van acompañadas de un gesto.</li>
+          <li><strong>No muestra intención comunicativa</strong>: no te mira a los ojos para pedirte cosas, no señala, no hace ruidos para llamar tu atención.</li>
+          <li><strong>El vocabulario no crece</strong> desde hace 3-6 meses: está estancado en un grupo muy reducido de palabras y no incorpora nuevas.</li>
+          <li><strong>Ha perdido palabras</strong> que antes decía. Una regresión en el lenguaje siempre merece consulta.</li>
+        </ul>
+
+        <p>Si reconoces alguna de estas señales, no significa que tu hijo tenga un trastorno. Significa que una valoración puede ayudar a descartar cosas, poner nombre a lo que pasa y, si hace falta, empezar a trabajar a tiempo. La intervención temprana, cuando es necesaria, es muy eficaz.</p>
+
+        <h2>¿Qué puedo hacer en casa?</h2>
+
+        <p>Independientemente de si decides consultar o no, hay cosas muy sencillas que ayudan a estimular el lenguaje en el día a día:</p>
+
+        <ul>
+          <li><strong>Háblale mucho y muy claro.</strong> Describe lo que hacéis juntos: "ahora nos ponemos la camiseta", "mira, ¡un perro!", "hace frío, ponte la chaqueta". Parece obvio, pero la cantidad y calidad de entrada lingüística importan mucho.</li>
+          <li><strong>Lee con él cada día.</strong> Aunque sean 5 minutos. Los libros ilustrados con poco texto, donde podéis señalar y nombrar cosas, son ideales.</li>
+          <li><strong>Espera después de decir algo.</strong> Cuando le preguntes "¿quieres la leche?", dale unos segundos para responder, aunque sea con un sonido o un gesto. Si tú llenas todos los silencios, no le dejas espacio para comunicar.</li>
+          <li><strong>Canta y haz juegos con rima.</strong> Las canciones con gestos ("Sol solete", "Cinco lobitos") son una de las herramientas más potentes para la conciencia fonológica.</li>
+        </ul>
+
+        <h2>La consulta como tranquilidad</h2>
+
+        <p>Muchas familias llegan a consulta y salen con la información de que su hijo está dentro de la normalidad, simplemente con un ritmo más pausado. Otras llegan y descubren que una intervención temprana de pocos meses puede marcar una gran diferencia. En ambos casos, la consulta da tranquilidad e información útil.</p>
+
+        <p>Si tienes preguntas sobre el desarrollo del lenguaje de tu hijo, puedes reservar una primera cita o escribirnos por WhatsApp. La primera consulta dura 30 minutos y sirve para valorar la situación contigo sin compromiso.</p>
+      </BlogProse>
+
+      <div class="article-cta">
+        <p>¿Tienes dudas sobre el desarrollo del lenguaje de tu hijo?</p>
+        <a href={homeUrl + '#reserva'} class="btn btn-primary">Reservar la primera cita</a>
+      </div>
+    </div>
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>
+
+<style>
+  .article-body {
+    padding-top: 48px;
+    padding-bottom: 100px;
+    max-width: 800px;
+  }
+  .article-back {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    text-decoration: none;
+    margin-bottom: 40px;
+    transition: color 0.2s;
+  }
+  .article-back:hover { color: var(--pink); }
+  .article-cta {
+    margin-top: 64px;
+    padding: 40px 36px;
+    background: var(--pink-pale);
+    border: 1px solid var(--pink-light);
+    border-radius: var(--r);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .article-cta p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+  }
+
+  @media (max-width: 640px) {
+    .article-body { padding-top: 32px; padding-bottom: 64px; }
+    .article-cta { padding: 28px 20px; }
+  }
+</style>

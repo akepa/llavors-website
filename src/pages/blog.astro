@@ -2,34 +2,85 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
+import BlogGrid from '../components/blog/BlogGrid.astro'
+import BlogCard from '../components/blog/BlogCard.astro'
 import { getTranslations } from '../i18n/index'
 
 const lang = 'ca' as const
 const t = getTranslations(lang)
+
+const articles = [
+  {
+    title: "Per què el meu fill bava? Quan és normal i quan preocupar-se",
+    excerpt: "El bavament és habitual fins als 3-4 anys, però hi ha senyals que conviden a consultar. Et donem les claus per a saber quan és normal i quan no.",
+    categoryLabel: t.blog_cat_funcions_orals,
+    date: '15 de juny de 2026',
+    readingTime: 4,
+    slug: 'per-que-el-meu-fill-bava',
+  },
+  {
+    title: "Introducció dels sòlids: 5 senyals que el teu nadó està preparat",
+    excerpt: "Els 6 mesos no són una data màgica. Aquestes 5 senyals t'ajuden a saber si el teu nadó està realment preparat per a començar amb els sòlids.",
+    categoryLabel: t.blog_cat_lactancia,
+    date: '22 de juny de 2026',
+    readingTime: 3,
+    slug: 'introduccio-solids-5-senyals',
+  },
+  {
+    title: "El meu fill té 2 anys i parla poc: ha de preocupar-me?",
+    excerpt: "Cada xiquet té el seu ritme, però hi ha senyals que poden ajudar-nos a saber si convé consultar. Et donem una guia clara i pràctica.",
+    categoryLabel: t.blog_cat_comunicacio,
+    date: '29 de juny de 2026',
+    readingTime: 4,
+    slug: 'el-meu-fill-2-anys-parla-poc',
+  },
+  {
+    title: "L'anquiloglòssia en nadons (fre lingual curt): quan és un problema i quan no",
+    excerpt: "Un fre lingual visible no és sempre un problema. T'expliquem què és l'anquiloglòssia, els senyals que conviden a valorar-la i quan val la pena intervindre.",
+    categoryLabel: t.blog_cat_funcions_orals,
+    date: '6 de juliol de 2026',
+    readingTime: 5,
+    slug: 'anquiloglossia-fre-lingual-curt-nadons',
+  },
+]
 ---
-<BaseLayout lang={lang} title="Mamà Informada · Llavors Logopèdia">
+<BaseLayout
+  lang={lang}
+  title="Mamà Informada · Llavors Logopèdia"
+  description={t.blog_listing_sub}
+>
   <Header t={t} lang={lang} />
-  <main class="blog-placeholder">
-    <div class="container">
-      <span class="section-label">{t.blog_label}</span>
-      <h1 set:html={t.blog_h1} />
-      <p>{t.blog_sub}</p>
-    </div>
+  <main>
+    <section class="blog-listing">
+      <div class="container">
+        <div class="blog-listing-intro section-title">
+          <span class="section-label">{t.blog_label}</span>
+          <h1 set:html={t.blog_h1} />
+          <p>{t.blog_listing_sub}</p>
+        </div>
+        <BlogGrid>
+          {articles.map((article) => (
+            <BlogCard
+              {...article}
+              lang={lang}
+              readMoreLabel={t.blog_read_more}
+              readingTimeLabel={t.blog_reading_time}
+            />
+          ))}
+        </BlogGrid>
+      </div>
+    </section>
   </main>
   <Footer t={t} lang={lang} />
 </BaseLayout>
 
 <style>
-  .blog-placeholder {
-    min-height: 60vh;
-    display: flex;
-    align-items: center;
-    padding: 80px 0;
+  .blog-listing {
+    padding: 80px 0 100px;
   }
-  .blog-placeholder h1 {
+  .blog-listing-intro h1 {
     font-size: clamp(2.2rem, 5vw, 3.4rem);
     margin: 10px 0 16px;
   }
-  .blog-placeholder h1 :global(em) { color: var(--pink); font-style: italic; }
-  .blog-placeholder p { color: var(--text-soft); font-size: 1.05rem; max-width: 480px; }
+  .blog-listing-intro h1 :global(em) { color: var(--pink); font-style: italic; }
 </style>

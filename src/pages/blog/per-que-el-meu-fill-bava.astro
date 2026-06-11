@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import Header from '../../components/Header.astro'
+import Footer from '../../components/Footer.astro'
+import BlogArticleHeader from '../../components/blog/BlogArticleHeader.astro'
+import BlogProse from '../../components/blog/BlogProse.astro'
+import { getTranslations } from '../../i18n/index'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+
+const lang = 'ca' as const
+const t = getTranslations(lang)
+const blogUrl = getRelativeLocaleUrl(lang, '/blog')
+const homeUrl = getRelativeLocaleUrl(lang, '/')
+---
+<BaseLayout
+  lang={lang}
+  title="Per què el meu fill bava? Quan és normal i quan preocupar-se"
+  description="El bavament és habitual fins als 3-4 anys, però hi ha senyals que conviden a consultar. Et donem les claus per a saber quan és normal i quan no."
+>
+  <Header t={t} lang={lang} />
+  <main>
+    <BlogArticleHeader
+      title="Per què el meu fill bava? Quan és normal i quan preocupar-se"
+      categoryLabel={t.blog_cat_funcions_orals}
+      author={t.blog_author}
+      date="15 de juny de 2026"
+      readingTime={4}
+      readingTimeLabel={t.blog_reading_time}
+    />
+    <div class="article-body container">
+      <a href={blogUrl} class="article-back">{t.blog_back_to_blog}</a>
+      <BlogProse>
+        <p>Si tens un xiquet menut a casa, segur que ho has vist mil voltes: la camiseta humida, el baveret canviat tres vegades en un matí, el coixí del cotxet amb un tovalló a sota. El bavament és una de les escenes més comunes de la primera infància i, en la majoria dels casos, és completament normal.</p>
+
+        <p>Ara bé, hi ha moments en què val la pena parar-se a observar. No per a alarmar-se, sinó per a saber distingir entre el que forma part del desenvolupament i el que mereix una consulta amb una professional. En este article et donem les claus.</p>
+
+        <h2>Per què bava el meu fill?</h2>
+
+        <p>El bavament en xiquets menuts té diverses causes, totes elles relacionades amb el desenvolupament normal de les funcions orals. Entre les més habituals trobem:</p>
+
+        <ul>
+          <li><strong>L'eixida de les dents.</strong> A partir dels 4-6 mesos, l'aparició de les primeres dents estimula les glàndules salivars i augmenta la producció de saliva.</li>
+          <li><strong>La maduració del control oral.</strong> El xiquet encara està aprenent a coordinar els llavis, la llengua i la deglució. Empassar saliva sense pensar-hi és una habilitat que es consolida amb el temps.</li>
+          <li><strong>L'exploració oral.</strong> Els bebés porten objectes a la boca per a conéixer el món. Mossegar, xuplar i explorar amb la llengua són part del seu aprenentatge i activen la salivació.</li>
+          <li><strong>La concentració.</strong> Quan el xiquet està molt centrat en una activitat —apilar peces, mirar un dibuix, observar un insecte— oblida momentàniament empassar.</li>
+        </ul>
+
+        <p>Tots estos motius són habituals i no indiquen cap problema. Formen part del procés natural de creixement.</p>
+
+        <h2>Fins quan és normal?</h2>
+
+        <p>Esta és la pregunta que més preocupa a les famílies. La resposta curta és que el bavament habitualment disminueix de manera notable al voltant dels 18-24 mesos i sol desaparéixer cap als 3-4 anys, quan el control oral i la deglució estan completament madurs.</p>
+
+        <blockquote>El bavament és una etapa, no un problema. Habitualment, cap als 4 anys, el xiquet ja sap empassar saliva de manera automàtica, també quan està concentrat o en moviment.</blockquote>
+
+        <p>Açò no vol dir que un xiquet de 3 anys i mig que encara bava ocasionalment tinga cap dificultat. Cada xiquet té el seu ritme, i factors com una dentició tardana o un refredat passatger poden allargar la fase. El que mirem com a logopedes no és tant l'edat exacta com l'evolució: ¿el bavament va disminuint amb el temps o es manté constant?</p>
+
+        <h2>Quan val la pena consultar?</h2>
+
+        <p>Estos són els senyals que conviden a demanar una valoració professional, no per a alarmar-te, sinó per a poder actuar amb temps:</p>
+
+        <ul>
+          <li><strong>Bavament persistent més enllà dels 4 anys</strong>, especialment si no millora al llarg de mesos.</li>
+          <li><strong>Bavament associat a dificultats d'alimentació</strong>: el xiquet té problemes per a mastegar, empassar aliments sòlids o tanca malament la boca al menjar.</li>
+          <li><strong>Boca oberta de manera habitual</strong>, també en repòs. Pot indicar una hipotonia (poc to muscular) de la musculatura facial.</li>
+          <li><strong>Dificultats amb la pronunciació</strong> d'alguns sons que requereixen control precís dels llavis o la llengua.</li>
+        </ul>
+
+        <p>Si reconeixes algun d'estos senyals, no vol dir que hi haja un problema greu: vol dir que una valoració pot ajudar a entendre què passa i, si cal, posar-hi solució amb exercicis senzills.</p>
+
+        <h2>I si tinc dubtes?</h2>
+
+        <p>Cada xiquet és diferent i la línia entre "encara està madurant" i "convé valorar" no sempre és nítida. Si tens preguntes sobre el desenvolupament oral del teu fill, pots reservar una primera cita o escriure'ns per WhatsApp. La primera consulta dura 30 minuts i serveix justament per a això: aclarir si cal fer res o si simplement cal donar temps al temps.</p>
+      </BlogProse>
+
+      <div class="article-cta">
+        <p>Tens dubtes sobre el desenvolupament oral del teu fill?</p>
+        <a href={homeUrl + '#reserva'} class="btn btn-primary">Reserva la primera cita</a>
+      </div>
+    </div>
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>
+
+<style>
+  .article-body {
+    padding-top: 48px;
+    padding-bottom: 100px;
+    max-width: 800px;
+  }
+  .article-back {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    text-decoration: none;
+    margin-bottom: 40px;
+    transition: color 0.2s;
+  }
+  .article-back:hover { color: var(--pink); }
+  .article-cta {
+    margin-top: 64px;
+    padding: 40px 36px;
+    background: var(--pink-pale);
+    border: 1px solid var(--pink-light);
+    border-radius: var(--r);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .article-cta p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+  }
+
+  @media (max-width: 640px) {
+    .article-body { padding-top: 32px; padding-bottom: 64px; }
+    .article-cta { padding: 28px 20px; }
+  }
+</style>
