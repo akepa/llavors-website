@@ -1,0 +1,33 @@
+# Introducció dels sòlids: 5 senyals que el teu nadó està preparat
+
+"Als 6 mesos pots començar amb els sòlids." Segur que ho has sentit cent voltes: al pediatre, al grup de criança, a casa dels iaios. I sí, els 6 mesos són una referència útil, però no són una data màgica. El que de veritat ens diu si un nadó està preparat per a començar amb l'alimentació complementària no és el calendari, sinó el seu cos.
+
+En este article et donem les 5 senyals que les famílies poden observar a casa per a saber si ha arribat el moment, sense haver d'esperar exactament al dia del sext mes ni avançar-se per pressió.
+
+## La idea bàsica: les senyals manen, no el calendari
+
+Cada xiquet desenvolupa les habilitats motores i digestives al seu ritme. Hi ha nadons que als 5 mesos i mig ja ens miren la cullera amb una insistència increïble, i altres que als 7 mesos encara no estan llestos. Tots dos casos són normals.
+
+L'Organització Mundial de la Salut recomana iniciar l'alimentació complementària "al voltant dels 6 mesos", precisament perquè és una franja, no un dia. Les senyals que descriurem ací són les que tradicionalment s'observen per a confirmar que el nadó pot —i vol— començar.
+
+## Les 5 senyals que el teu nadó està preparat
+
+1. **Es manté assegut amb poca ajuda.** Ha de ser capaç de mantindre el tronc i el cap drets, encara que siga amb un xicotet recolzament a la trona. Esta estabilitat és essencial per a empassar amb seguretat.
+2. **Mostra interés per la teua menjada.** Et mira el plat, et segueix la cullera amb la mirada, fa el gest d'agafar-te el got. No és curiositat genèrica: és curiositat dirigida a l'aliment.
+3. **Ha perdut el reflex d'extrusió.** Quan se li ofereix una cullera amb un poc d'aliment, ja no la torna cap a fora amb la llengua de manera automàtica. Este reflex protegix els primers mesos, però desapareix quan el sistema està preparat per a empassar coses diferents de la llet.
+4. **Coordina la mà amb la boca.** És capaç d'agafar un objecte i portar-lo a la boca amb intenció. Esta coordinació és el que li permetrà, una mica més avant, agarrar un tros de fruita i menjar-se'l autònomament.
+5. **Obri la boca quan se li acosta l'aliment.** No cal forçar-lo ni distraure'l: si l'aliment l'interessa, ell mateix obrirà la boca. Si la tanca o gira el cap, encara no és el moment, i no passa res.
+
+> El nadó no ha de complir les 5 senyals el mateix dia, però sí la majoria. Si en notes 3 o 4 amb certa claredat, probablement està preparat per a començar a explorar.
+
+![Nadó assegut en una trona explorant trossets de fruita amb les mans](placeholder-solids-1.jpg "Nadó descobrint la fruita a la trona")
+
+## I la llet?
+
+Una cosa que sovint es pregunten les famílies és si, al començar amb els sòlids, han de reduir la llet. La resposta és clara: **no**. Fins als 12 mesos, la llet (materna o de fórmula) continua sent l'aliment principal del nadó. Els sòlids, durant els primers mesos, són exploració: textures, sabors, gestos. La nutrició la cobrix la llet.
+
+Açò vol dir que no cal preocupar-se si el nadó pren molt poca quantitat de sòlid al principi. És totalment esperable. La quantitat creixerà a poc a poc, al seu ritme.
+
+## Si tens dubtes, fes la consulta
+
+Començar amb els sòlids és emocionant i, alhora, una mica abrumador. Si tens preguntes sobre les senyals, sobre quins aliments oferir primer o sobre com presentar-los (textures, mides, BLW vs. cullera), pots reservar una primera cita o escriure'ns per WhatsApp. La primera consulta dura 30 minuts i et donem pautes concretes adaptades al moment del teu nadó.
