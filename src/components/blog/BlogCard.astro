@@ -12,17 +12,18 @@ interface Props {
   lang: Lang
   readMoreLabel: string
   readingTimeLabel: string
+  featured?: boolean
 }
 
 const {
   title, excerpt, categoryLabel, date, readingTime,
-  slug, lang, readMoreLabel, readingTimeLabel,
+  slug, lang, readMoreLabel, readingTimeLabel, featured = false,
 } = Astro.props
 
 const href = getRelativeLocaleUrl(lang, `/blog/${slug}`)
 ---
 
-<article class="blog-card">
+<article class:list={['blog-card', { featured }]}>
   <a href={href} class="blog-card-image" aria-hidden="true" tabindex="-1">
     <div class="blog-card-image-inner"></div>
   </a>
@@ -55,6 +56,7 @@ const href = getRelativeLocaleUrl(lang, `/blog/${slug}`)
     display: block;
     aspect-ratio: 16 / 9;
     overflow: hidden;
+    flex-shrink: 0;
   }
   .blog-card-image-inner {
     width: 100%;
@@ -115,4 +117,46 @@ const href = getRelativeLocaleUrl(lang, `/blog/${slug}`)
     transition: opacity 0.2s;
   }
   .blog-card-more:hover { opacity: 0.75; }
+
+  /* ── Featured card ─────────────────────────────── */
+  .blog-card.featured {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    border: 1.5px solid var(--pink-light);
+    box-shadow: 0 4px 20px rgba(207, 58, 105, 0.07);
+  }
+  .blog-card.featured .blog-card-image {
+    flex: 0 0 44%;
+    aspect-ratio: auto;
+    min-height: 260px;
+  }
+  .blog-card.featured .blog-card-image-inner {
+    background: linear-gradient(160deg, var(--pink-pale) 0%, var(--bg-dark) 50%, var(--pink-light) 100%);
+  }
+  .blog-card.featured .blog-card-body {
+    padding: 32px 36px 28px;
+    justify-content: center;
+  }
+  .blog-card.featured h3 {
+    font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+    margin-bottom: 14px;
+  }
+  .blog-card.featured .blog-card-excerpt {
+    font-size: 0.95rem;
+    max-width: 520px;
+  }
+
+  @media (max-width: 768px) {
+    .blog-card.featured {
+      flex-direction: column;
+      grid-column: auto;
+    }
+    .blog-card.featured .blog-card-image {
+      flex: none;
+      aspect-ratio: 16 / 9;
+      min-height: auto;
+    }
+    .blog-card.featured .blog-card-body { padding: 24px 24px 20px; }
+    .blog-card.featured h3 { font-size: clamp(1rem, 2.5vw, 1.3rem); }
+  }
 </style>
