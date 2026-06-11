@@ -2,34 +2,86 @@
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import Header from '../../components/Header.astro'
 import Footer from '../../components/Footer.astro'
+import BlogGrid from '../../components/blog/BlogGrid.astro'
+import BlogCard from '../../components/blog/BlogCard.astro'
 import { getTranslations } from '../../i18n/index'
 
 const lang = 'es' as const
 const t = getTranslations(lang)
+
+const articles = [
+  {
+    title: "La anquiloglosia en bebés (frenillo lingual corto): cuándo es un problema y cuándo no",
+    excerpt: "Un frenillo lingual visible no siempre es un problema. Te explicamos qué es la anquiloglosia, las señales que invitan a valorarla y cuándo conviene intervenir.",
+    categoryLabel: t.blog_cat_funcions_orals,
+    date: '28 de mayo de 2026',
+    readingTime: 5,
+    slug: 'anquiloglossia-fre-lingual-curt-nadons',
+    featured: true,
+  },
+  {
+    title: "Mi hijo tiene 2 años y habla poco: ¿debo preocuparme?",
+    excerpt: "Cada niño tiene su ritmo, pero hay señales que pueden ayudarnos a saber si conviene consultar. Te damos una guía clara y práctica.",
+    categoryLabel: t.blog_cat_comunicacio,
+    date: '14 de mayo de 2026',
+    readingTime: 4,
+    slug: 'el-meu-fill-2-anys-parla-poc',
+  },
+  {
+    title: "Introducción de sólidos: 5 señales de que tu bebé está preparado",
+    excerpt: "Los 6 meses no son una fecha mágica. Estas 5 señales te ayudan a saber si tu bebé está realmente preparado para empezar con los sólidos.",
+    categoryLabel: t.blog_cat_lactancia,
+    date: '30 de abril de 2026',
+    readingTime: 3,
+    slug: 'introduccio-solids-5-senyals',
+  },
+  {
+    title: "¿Por qué mi hijo babea? Cuándo es normal y cuándo preocuparse",
+    excerpt: "El babeo es habitual hasta los 3-4 años, pero hay señales que invitan a consultar. Te damos las claves para saber cuándo es normal y cuándo no.",
+    categoryLabel: t.blog_cat_funcions_orals,
+    date: '16 de abril de 2026',
+    readingTime: 4,
+    slug: 'per-que-el-meu-fill-bava',
+  },
+]
 ---
-<BaseLayout lang={lang} title="Mamá Informada · Llavors Logopèdia">
+<BaseLayout
+  lang={lang}
+  title="Mamá Informada · Llavors Logopèdia"
+  description={t.blog_listing_sub}
+>
   <Header t={t} lang={lang} />
-  <main class="blog-placeholder">
-    <div class="container">
-      <span class="section-label">{t.blog_label}</span>
-      <h1 set:html={t.blog_h1} />
-      <p>{t.blog_sub}</p>
-    </div>
+  <main>
+    <section class="blog-listing">
+      <div class="container">
+        <div class="blog-listing-intro section-title">
+          <span class="section-label">{t.blog_label}</span>
+          <h1 set:html={t.blog_h1} />
+          <p>{t.blog_listing_sub}</p>
+        </div>
+        <BlogGrid>
+          {articles.map((article) => (
+            <BlogCard
+              {...article}
+              lang={lang}
+              readMoreLabel={t.blog_read_more}
+              readingTimeLabel={t.blog_reading_time}
+            />
+          ))}
+        </BlogGrid>
+      </div>
+    </section>
   </main>
   <Footer t={t} lang={lang} />
 </BaseLayout>
 
 <style>
-  .blog-placeholder {
-    min-height: 60vh;
-    display: flex;
-    align-items: center;
-    padding: 80px 0;
+  .blog-listing {
+    padding: 80px 0 100px;
   }
-  .blog-placeholder h1 {
+  .blog-listing-intro h1 {
     font-size: clamp(2.2rem, 5vw, 3.4rem);
     margin: 10px 0 16px;
   }
-  .blog-placeholder h1 :global(em) { color: var(--pink); font-style: italic; }
-  .blog-placeholder p { color: var(--text-soft); font-size: 1.05rem; max-width: 480px; }
+  .blog-listing-intro h1 :global(em) { color: var(--pink); font-style: italic; }
 </style>

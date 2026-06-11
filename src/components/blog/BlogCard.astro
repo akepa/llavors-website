@@ -1,0 +1,162 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import type { Lang } from '../../i18n/index'
+
+interface Props {
+  title: string
+  excerpt: string
+  categoryLabel: string
+  date: string
+  readingTime: number
+  slug: string
+  lang: Lang
+  readMoreLabel: string
+  readingTimeLabel: string
+  featured?: boolean
+}
+
+const {
+  title, excerpt, categoryLabel, date, readingTime,
+  slug, lang, readMoreLabel, readingTimeLabel, featured = false,
+} = Astro.props
+
+const href = getRelativeLocaleUrl(lang, `/blog/${slug}`)
+---
+
+<article class:list={['blog-card', { featured }]}>
+  <a href={href} class="blog-card-image" aria-hidden="true" tabindex="-1">
+    <div class="blog-card-image-inner"></div>
+  </a>
+  <div class="blog-card-body">
+    <span class="blog-card-cat">{categoryLabel}</span>
+    <h3><a href={href} class="blog-card-title-link">{title}</a></h3>
+    <p class="blog-card-excerpt">{excerpt}</p>
+    <footer class="blog-card-footer">
+      <span class="blog-card-meta">{date} · {readingTime} {readingTimeLabel}</span>
+      <a href={href} class="blog-card-more">{readMoreLabel} →</a>
+    </footer>
+  </div>
+</article>
+
+<style>
+  .blog-card {
+    background: var(--white);
+    border-radius: var(--r);
+    border: 1px solid var(--pink-light);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s;
+  }
+  .blog-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(207, 58, 105, 0.12);
+  }
+  .blog-card-image {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .blog-card-image-inner {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--pink-pale) 0%, var(--bg-dark) 100%);
+    transition: transform 0.35s;
+  }
+  .blog-card:hover .blog-card-image-inner { transform: scale(1.04); }
+  .blog-card-body {
+    padding: 24px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .blog-card-cat {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--pink);
+    margin-bottom: 10px;
+  }
+  h3 { font-size: clamp(1rem, 2.5vw, 1.15rem); margin-bottom: 10px; }
+  .blog-card-title-link {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .blog-card-title-link:hover { color: var(--pink); }
+  .blog-card-excerpt {
+    color: var(--text-soft);
+    font-size: 0.91rem;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    flex: 1;
+  }
+  .blog-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--pink-light);
+  }
+  .blog-card-meta {
+    font-size: 0.8rem;
+    color: var(--text-soft);
+  }
+  .blog-card-more {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--pink);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  .blog-card-more:hover { opacity: 0.75; }
+
+  /* ── Featured card ─────────────────────────────── */
+  .blog-card.featured {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    border: 1.5px solid var(--pink-light);
+    box-shadow: 0 4px 20px rgba(207, 58, 105, 0.07);
+  }
+  .blog-card.featured .blog-card-image {
+    flex: 0 0 44%;
+    aspect-ratio: auto;
+    min-height: 260px;
+  }
+  .blog-card.featured .blog-card-image-inner {
+    background: linear-gradient(160deg, var(--pink-pale) 0%, var(--bg-dark) 50%, var(--pink-light) 100%);
+  }
+  .blog-card.featured .blog-card-body {
+    padding: 32px 36px 28px;
+    justify-content: center;
+  }
+  .blog-card.featured h3 {
+    font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+    margin-bottom: 14px;
+  }
+  .blog-card.featured .blog-card-excerpt {
+    font-size: 0.95rem;
+    max-width: 520px;
+  }
+
+  @media (max-width: 768px) {
+    .blog-card.featured {
+      flex-direction: column;
+      grid-column: auto;
+    }
+    .blog-card.featured .blog-card-image {
+      flex: none;
+      aspect-ratio: 16 / 9;
+      min-height: auto;
+    }
+    .blog-card.featured .blog-card-body { padding: 24px 24px 20px; }
+    .blog-card.featured h3 { font-size: clamp(1rem, 2.5vw, 1.3rem); }
+  }
+</style>

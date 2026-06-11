@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import Header from '../../../components/Header.astro'
+import Footer from '../../../components/Footer.astro'
+import BlogArticleHeader from '../../../components/blog/BlogArticleHeader.astro'
+import BlogProse from '../../../components/blog/BlogProse.astro'
+import { getTranslations } from '../../../i18n/index'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+
+const lang = 'es' as const
+const t = getTranslations(lang)
+const blogUrl = getRelativeLocaleUrl(lang, '/blog')
+const homeUrl = getRelativeLocaleUrl(lang, '/')
+---
+<BaseLayout
+  lang={lang}
+  title="Introducción de sólidos: 5 señales de que tu bebé está preparado"
+  description="Los 6 meses no son una fecha mágica. Estas 5 señales te ayudan a saber si tu bebé está realmente preparado para empezar con los sólidos."
+>
+  <Header t={t} lang={lang} />
+  <main>
+    <BlogArticleHeader
+      title="Introducción de sólidos: 5 señales de que tu bebé está preparado"
+      categoryLabel={t.blog_cat_lactancia}
+      author={t.blog_author}
+      date="30 de abril de 2026"
+      readingTime={3}
+      readingTimeLabel={t.blog_reading_time}
+    />
+    <div class="article-body container">
+      <a href={blogUrl} class="article-back">{t.blog_back_to_blog}</a>
+      <BlogProse>
+        <p>"A los 6 meses puedes empezar con los sólidos." Seguro que lo has oído cien veces: en el pediatra, en el grupo de crianza, en casa de los abuelos. Y sí, los 6 meses son una referencia útil, pero no son una fecha mágica. Lo que de verdad nos dice si un bebé está preparado para empezar con la alimentación complementaria no es el calendario, sino su cuerpo.</p>
+
+        <p>En este artículo te damos las 5 señales que las familias pueden observar en casa para saber si ha llegado el momento, sin tener que esperar exactamente al día del sexto mes ni adelantarse por presión.</p>
+
+        <h2>La idea básica: las señales mandan, no el calendario</h2>
+
+        <p>Cada niño desarrolla las habilidades motoras y digestivas a su ritmo. Hay bebés que a los 5 meses y medio ya nos miran la cuchara con una insistencia increíble, y otros que a los 7 meses todavía no están listos. Ambos casos son normales.</p>
+
+        <p>La Organización Mundial de la Salud recomienda iniciar la alimentación complementaria "alrededor de los 6 meses", precisamente porque es una franja, no un día. Las señales que describiremos aquí son las que tradicionalmente se observan para confirmar que el bebé puede —y quiere— empezar.</p>
+
+        <h2>Las 5 señales de que tu bebé está preparado</h2>
+
+        <ol>
+          <li><strong>Se mantiene sentado con poca ayuda.</strong> Debe ser capaz de mantener el tronco y la cabeza erguidos, aunque sea con un pequeño apoyo en la trona. Esta estabilidad es esencial para tragar con seguridad.</li>
+          <li><strong>Muestra interés por tu comida.</strong> Te mira el plato, sigue la cuchara con la mirada, hace el gesto de cogerte el vaso. No es curiosidad genérica: es curiosidad dirigida al alimento.</li>
+          <li><strong>Ha perdido el reflejo de extrusión.</strong> Cuando se le ofrece una cuchara con un poco de alimento, ya no la devuelve hacia fuera con la lengua de manera automática. Este reflejo protege los primeros meses, pero desaparece cuando el sistema está preparado para tragar cosas distintas a la leche.</li>
+          <li><strong>Coordina la mano con la boca.</strong> Es capaz de coger un objeto y llevárselo a la boca con intención. Esta coordinación es lo que le permitirá, un poco más adelante, agarrar un trozo de fruta y comérselo de forma autónoma.</li>
+          <li><strong>Abre la boca cuando se le acerca el alimento.</strong> No hace falta forzarle ni distraerle: si el alimento le interesa, él mismo abrirá la boca. Si la cierra o gira la cabeza, todavía no es el momento, y no pasa nada.</li>
+        </ol>
+
+        <blockquote>El bebé no tiene que cumplir las 5 señales el mismo día, pero sí la mayoría. Si notas 3 o 4 con cierta claridad, probablemente está preparado para empezar a explorar.</blockquote>
+
+        <h2>¿Y la leche?</h2>
+
+        <p>Una cosa que se preguntan a menudo las familias es si, al empezar con los sólidos, deben reducir la leche. La respuesta es clara: <strong>no</strong>. Hasta los 12 meses, la leche (materna o de fórmula) sigue siendo el alimento principal del bebé. Los sólidos, durante los primeros meses, son exploración: texturas, sabores, gestos. La nutrición la cubre la leche.</p>
+
+        <p>Esto significa que no hay que preocuparse si el bebé toma muy poca cantidad de sólido al principio. Es totalmente esperable. La cantidad irá creciendo poco a poco, a su ritmo.</p>
+
+        <h2>Si tienes dudas, haz la consulta</h2>
+
+        <p>Empezar con los sólidos es emocionante y, a la vez, un poco abrumador. Si tienes preguntas sobre las señales, sobre qué alimentos ofrecer primero o sobre cómo presentarlos (texturas, tamaños, BLW vs. cuchara), puedes reservar una primera cita o escribirnos por WhatsApp. La primera consulta dura 30 minutos y te damos pautas concretas adaptadas al momento de tu bebé.</p>
+      </BlogProse>
+
+      <div class="article-cta">
+        <p>¿Tienes preguntas sobre la introducción de sólidos?</p>
+        <a href={homeUrl + '#reserva'} class="btn btn-primary">Reservar la primera cita</a>
+      </div>
+    </div>
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>
+
+<style>
+  .article-body {
+    padding-top: 48px;
+    padding-bottom: 100px;
+    max-width: 800px;
+  }
+  .article-back {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    text-decoration: none;
+    margin-bottom: 40px;
+    transition: color 0.2s;
+  }
+  .article-back:hover { color: var(--pink); }
+  .article-cta {
+    margin-top: 64px;
+    padding: 40px 36px;
+    background: var(--pink-pale);
+    border: 1px solid var(--pink-light);
+    border-radius: var(--r);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .article-cta p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+  }
+
+  @media (max-width: 640px) {
+    .article-body { padding-top: 32px; padding-bottom: 64px; }
+    .article-cta { padding: 28px 20px; }
+  }
+</style>

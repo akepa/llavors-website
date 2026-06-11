@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import Header from '../../components/Header.astro'
+import Footer from '../../components/Footer.astro'
+import BlogArticleHeader from '../../components/blog/BlogArticleHeader.astro'
+import BlogProse from '../../components/blog/BlogProse.astro'
+import { getTranslations } from '../../i18n/index'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+
+const lang = 'ca' as const
+const t = getTranslations(lang)
+const blogUrl = getRelativeLocaleUrl(lang, '/blog')
+const homeUrl = getRelativeLocaleUrl(lang, '/')
+---
+<BaseLayout
+  lang={lang}
+  title="Introducció dels sòlids: 5 senyals que el teu nadó està preparat"
+  description="Els 6 mesos no són una data màgica. Aquestes 5 senyals t'ajuden a saber si el teu nadó està realment preparat per a començar amb els sòlids."
+>
+  <Header t={t} lang={lang} />
+  <main>
+    <BlogArticleHeader
+      title="Introducció dels sòlids: 5 senyals que el teu nadó està preparat"
+      categoryLabel={t.blog_cat_lactancia}
+      author={t.blog_author}
+      date="30 d'abril de 2026"
+      readingTime={3}
+      readingTimeLabel={t.blog_reading_time}
+    />
+    <div class="article-body container">
+      <a href={blogUrl} class="article-back">{t.blog_back_to_blog}</a>
+      <BlogProse>
+        <p>"Als 6 mesos pots començar amb els sòlids." Segur que ho has sentit cent voltes: al pediatre, al grup de criança, a casa dels iaios. I sí, els 6 mesos són una referència útil, però no són una data màgica. El que de veritat ens diu si un nadó està preparat per a començar amb l'alimentació complementària no és el calendari, sinó el seu cos.</p>
+
+        <p>En este article et donem les 5 senyals que les famílies poden observar a casa per a saber si ha arribat el moment, sense haver d'esperar exactament al dia del sext mes ni avançar-se per pressió.</p>
+
+        <h2>La idea bàsica: les senyals manen, no el calendari</h2>
+
+        <p>Cada xiquet desenvolupa les habilitats motores i digestives al seu ritme. Hi ha nadons que als 5 mesos i mig ja ens miren la cullera amb una insistència increïble, i altres que als 7 mesos encara no estan llestos. Tots dos casos són normals.</p>
+
+        <p>L'Organització Mundial de la Salut recomana iniciar l'alimentació complementària "al voltant dels 6 mesos", precisament perquè és una franja, no un dia. Les senyals que descriurem ací són les que tradicionalment s'observen per a confirmar que el nadó pot —i vol— començar.</p>
+
+        <h2>Les 5 senyals que el teu nadó està preparat</h2>
+
+        <ol>
+          <li><strong>Es manté assegut amb poca ajuda.</strong> Ha de ser capaç de mantindre el tronc i el cap drets, encara que siga amb un xicotet recolzament a la trona. Esta estabilitat és essencial per a empassar amb seguretat.</li>
+          <li><strong>Mostra interés per la teua menjada.</strong> Et mira el plat, et segueix la cullera amb la mirada, fa el gest d'agafar-te el got. No és curiositat genèrica: és curiositat dirigida a l'aliment.</li>
+          <li><strong>Ha perdut el reflex d'extrusió.</strong> Quan se li ofereix una cullera amb un poc d'aliment, ja no la torna cap a fora amb la llengua de manera automàtica. Este reflex protegix els primers mesos, però desapareix quan el sistema està preparat per a empassar coses diferents de la llet.</li>
+          <li><strong>Coordina la mà amb la boca.</strong> És capaç d'agafar un objecte i portar-lo a la boca amb intenció. Esta coordinació és el que li permetrà, una mica més avant, agarrar un tros de fruita i menjar-se'l autònomament.</li>
+          <li><strong>Obri la boca quan se li acosta l'aliment.</strong> No cal forçar-lo ni distraure'l: si l'aliment l'interessa, ell mateix obrirà la boca. Si la tanca o gira el cap, encara no és el moment, i no passa res.</li>
+        </ol>
+
+        <blockquote>El nadó no ha de complir les 5 senyals el mateix dia, però sí la majoria. Si en notes 3 o 4 amb certa claredat, probablement està preparat per a començar a explorar.</blockquote>
+
+        <h2>I la llet?</h2>
+
+        <p>Una cosa que sovint es pregunten les famílies és si, al començar amb els sòlids, han de reduir la llet. La resposta és clara: <strong>no</strong>. Fins als 12 mesos, la llet (materna o de fórmula) continua sent l'aliment principal del nadó. Els sòlids, durant els primers mesos, són exploració: textures, sabors, gestos. La nutrició la cobrix la llet.</p>
+
+        <p>Açò vol dir que no cal preocupar-se si el nadó pren molt poca quantitat de sòlid al principi. És totalment esperable. La quantitat creixerà a poc a poc, al seu ritme.</p>
+
+        <h2>Si tens dubtes, fes la consulta</h2>
+
+        <p>Començar amb els sòlids és emocionant i, alhora, una mica abrumador. Si tens preguntes sobre les senyals, sobre quins aliments oferir primer o sobre com presentar-los (textures, mides, BLW vs. cullera), pots reservar una primera cita o escriure'ns per WhatsApp. La primera consulta dura 30 minuts i et donem pautes concretes adaptades al moment del teu nadó.</p>
+      </BlogProse>
+
+      <div class="article-cta">
+        <p>Tens preguntes sobre la introducció de sòlids?</p>
+        <a href={homeUrl + '#reserva'} class="btn btn-primary">Reserva la primera cita</a>
+      </div>
+    </div>
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>
+
+<style>
+  .article-body {
+    padding-top: 48px;
+    padding-bottom: 100px;
+    max-width: 800px;
+  }
+  .article-back {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    text-decoration: none;
+    margin-bottom: 40px;
+    transition: color 0.2s;
+  }
+  .article-back:hover { color: var(--pink); }
+  .article-cta {
+    margin-top: 64px;
+    padding: 40px 36px;
+    background: var(--pink-pale);
+    border: 1px solid var(--pink-light);
+    border-radius: var(--r);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .article-cta p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+  }
+
+  @media (max-width: 640px) {
+    .article-body { padding-top: 32px; padding-bottom: 64px; }
+    .article-cta { padding: 28px 20px; }
+  }
+</style>

@@ -1,0 +1,146 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import Header from '../../../components/Header.astro'
+import Footer from '../../../components/Footer.astro'
+import BlogArticleHeader from '../../../components/blog/BlogArticleHeader.astro'
+import BlogProse from '../../../components/blog/BlogProse.astro'
+import { getTranslations } from '../../../i18n/index'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+
+const lang = 'es' as const
+const t = getTranslations(lang)
+const blogUrl = getRelativeLocaleUrl(lang, '/blog')
+const homeUrl = getRelativeLocaleUrl(lang, '/')
+---
+<BaseLayout
+  lang={lang}
+  title="La anquiloglosia en bebés (frenillo lingual corto): cuándo es un problema y cuándo no"
+  description="Un frenillo lingual visible no siempre es un problema. Te explicamos qué es la anquiloglosia, las señales que invitan a valorarla y cuándo conviene intervenir."
+>
+  <Header t={t} lang={lang} />
+  <main>
+    <BlogArticleHeader
+      title="La anquiloglosia en bebés (frenillo lingual corto): cuándo es un problema y cuándo no"
+      categoryLabel={t.blog_cat_funcions_orals}
+      author={t.blog_author}
+      date="28 de mayo de 2026"
+      readingTime={5}
+      readingTimeLabel={t.blog_reading_time}
+    />
+    <div class="article-body container">
+      <a href={blogUrl} class="article-back">{t.blog_back_to_blog}</a>
+      <BlogProse>
+        <p>Si tienes un bebé recién nacido y la lactancia no acaba de funcionar como esperabas —el bebé se queda enganchado al pecho muchas horas, hay dolor cada vez que mama, no termina de pegar el estirón de peso que tocaba— es posible que alguien te haya mencionado la palabra "frenillo lingual" o "anquiloglosia". Y que te haya dejado con más dudas de las que tenías antes.</p>
+
+        <p>En este artículo te explicamos con calma qué es la anquiloglosia, cuándo conviene valorarla y qué papel juega la logopeda neonatal. Que nadie tenga que tomar decisiones sobre su bebé con información a medias.</p>
+
+        <h2>¿Qué es la anquiloglosia?</h2>
+
+        <p>La anquiloglosia, popularmente conocida como "frenillo lingual corto", es una condición en la que el frenillo lingual —el pliegue de tejido que conecta la parte inferior de la lengua con el suelo de la boca— es más corto, grueso o tenso de lo habitual. Esto puede limitar el movimiento de la lengua y, en algunos casos, afectar funciones como la succión, la deglución o, más adelante, el habla.</p>
+
+        <p>Hay dos tipos principales:</p>
+
+        <ul>
+          <li><strong>Anquiloglosia anterior:</strong> el frenillo llega muy cerca de la punta de la lengua y se ve claramente a simple vista. Es la forma "clásica" y la más fácil de detectar.</li>
+          <li><strong>Anquiloglosia posterior:</strong> el frenillo está más escondido, en la base de la lengua. No se ve a simple vista y requiere una valoración funcional, no solo visual.</li>
+        </ul>
+
+        <p>Es importante destacar que <strong>tener un frenillo lingual visible no significa automáticamente que haya un problema</strong>. Muchos bebés tienen el frenillo lingual prominente y la lactancia les funciona perfectamente.</p>
+
+        <h2>Señales que pueden indicarla</h2>
+
+        <p>Cuando hablamos de señales, hablamos de función, no solo de anatomía. Estos son los indicadores que invitan a hacer una valoración por parte de una logopeda neonatal:</p>
+
+        <ul>
+          <li><strong>Dolor persistente en la madre</strong> durante la toma, no solo los primeros días. Grietas, sangrado o sensación de pellizco.</li>
+          <li><strong>Tomas largas e ineficaces:</strong> el bebé está mucho tiempo en el pecho pero no parece saciado, o se duerme y se despierta con hambre al cabo de pocos minutos.</li>
+          <li><strong>Ruido al mamar</strong> ("clic", succión con aire) o pérdida de leche por los lados de la boca.</li>
+          <li><strong>Pérdida o estancamiento del peso</strong> del bebé, más allá del descenso fisiológico de los primeros días.</li>
+          <li><strong>Episodios recurrentes de mastitis u obstrucciones</strong> en la madre debido a un vaciado incompleto del pecho.</li>
+        </ul>
+
+        <blockquote>El dolor durante la lactancia no es una etapa que haya que "aguantar" mientras pasa. Si duele más allá de los primeros días o el bebé no progresa adecuadamente, merece una valoración.</blockquote>
+
+        <h2>Cuándo intervenir y cuándo no</h2>
+
+        <p>Esta es la parte donde hay que ir con cabeza, porque en los últimos años se ha dado un debate importante sobre la "sobreintervención" en frenotomías. La realidad es que <strong>no todas las anquiloglosias necesitan cirugía</strong>.</p>
+
+        <p>La decisión de intervenir debe basarse en tres factores combinados: la dificultad funcional real (¿hay problemas con la lactancia o no?), la valoración anatómica del frenillo y la posibilidad de conseguir mejoría con ejercicios y posturas antes de plantear una frenotomía.</p>
+
+        <p>Una valoración profesional bien hecha diferencia entre:</p>
+
+        <ul>
+          <li><strong>Anquiloglosia sintomática</strong> que sí hay que tratar (con ejercicios, frenotomía o ambos).</li>
+          <li><strong>Variante anatómica sin impacto funcional</strong> que no requiere ninguna actuación, aunque el frenillo sea visible.</li>
+        </ul>
+
+        <p>Esta distinción es clave para no exponer al bebé a una intervención innecesaria.</p>
+
+        <h2>El papel de la logopeda neonatal</h2>
+
+        <p>La logopeda neonatal es la profesional que valora la función oral del bebé en contexto. No se queda solo en mirar el frenillo: observa cómo mama, cómo se coordina la succión con la deglución y la respiración, cómo se mueve la lengua durante la toma, cómo se colocan la madre y el bebé.</p>
+
+        <p>Además, cuando se decide una frenotomía, la logopeda neonatal acompaña el proceso con:</p>
+
+        <ul>
+          <li><strong>Ejercicios previos</strong> para preparar la musculatura oral.</li>
+          <li><strong>Apoyo durante la toma</strong> para optimizar la posición y el enganche.</li>
+          <li><strong>Ejercicios posteriores</strong> para evitar reinserciones y ganar movilidad lingual real.</li>
+        </ul>
+
+        <p>Sin este acompañamiento, la frenotomía por sí sola a menudo no resuelve el problema funcional.</p>
+
+        <h2>Si tienes dudas, no esperes</h2>
+
+        <p>La lactancia funciona mejor cuando los problemas se valoran pronto. Si estás en Valencia y sospechas que tu bebé puede tener dificultades relacionadas con el frenillo lingual, puedes reservar una primera cita o escribirnos por WhatsApp. La valoración de 30 minutos sirve para determinar si la anquiloglosia está afectando a la función o si la dificultad viene de otro lugar, y para plantear un plan de actuación adaptado a tu caso.</p>
+      </BlogProse>
+
+      <div class="article-cta">
+        <p>¿Sospechas que tu bebé puede tener dificultades con el frenillo lingual?</p>
+        <a href={homeUrl + '#reserva'} class="btn btn-primary">Reservar la primera cita</a>
+      </div>
+    </div>
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>
+
+<style>
+  .article-body {
+    padding-top: 48px;
+    padding-bottom: 100px;
+    max-width: 800px;
+  }
+  .article-back {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    text-decoration: none;
+    margin-bottom: 40px;
+    transition: color 0.2s;
+  }
+  .article-back:hover { color: var(--pink); }
+  .article-cta {
+    margin-top: 64px;
+    padding: 40px 36px;
+    background: var(--pink-pale);
+    border: 1px solid var(--pink-light);
+    border-radius: var(--r);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .article-cta p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+  }
+
+  @media (max-width: 640px) {
+    .article-body { padding-top: 32px; padding-bottom: 64px; }
+    .article-cta { padding: 28px 20px; }
+  }
+</style>
