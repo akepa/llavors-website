@@ -1,0 +1,49 @@
+---
+interface Props {
+  currentPage: number
+  totalPages: number
+  basePath: string
+  prevLabel?: string
+  nextLabel?: string
+}
+
+const { currentPage, totalPages, basePath, prevLabel = '←', nextLabel = '→' } = Astro.props
+
+const prevUrl = currentPage === 2 ? basePath : `${basePath}${currentPage - 1}/`
+const nextUrl = `${basePath}${currentPage + 1}/`
+---
+
+{totalPages > 1 && (
+  <nav class="blog-pagination" aria-label="Paginació">
+    {currentPage > 1 && (
+      <a href={prevUrl} class="page-btn page-prev">{prevLabel}</a>
+    )}
+    <span class="page-info">{currentPage} / {totalPages}</span>
+    {currentPage < totalPages && (
+      <a href={nextUrl} class="page-btn page-next">{nextLabel}</a>
+    )}
+  </nav>
+)}
+
+<style>
+  .blog-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 60px;
+  }
+  .page-btn {
+    padding: 10px 22px;
+    border-radius: 50px;
+    background: var(--white);
+    border: 1.5px solid var(--pink-light);
+    color: var(--pink);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .page-btn:hover { background: var(--pink-pale); }
+  .page-info { font-size: 0.9rem; color: var(--text-soft); }
+</style>

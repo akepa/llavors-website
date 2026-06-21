@@ -153,6 +153,17 @@ const ca = {
   book_email_invalid: 'El format del correu no és vàlid.',
   book_notes_required: 'El motiu de consulta és obligatori.',
   book_privacy_required: 'Has d\'acceptar la política de privacitat per continuar.',
+
+  blog_related: 'Articles relacionats',
+  blog_share: 'Compartir',
+  blog_share_wa: 'Compartir per WhatsApp',
+  blog_share_fb: 'Compartir a Facebook',
+  blog_share_copy: "Copiar l'enllaç",
+  blog_share_copied: 'Copiat!',
+  blog_updated: 'Actualitzat el',
+  blog_cat_all: 'Tots',
+  blog_cta_text: "Tens dubtes sobre la lactància, l'alimentació o el desenvolupament del teu fill?",
+  blog_cta_btn: 'Reserva la primera cita',
 } as const
 
 export default ca

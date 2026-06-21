@@ -7,6 +7,7 @@ interface Props {
   excerpt: string
   categoryLabel: string
   date: string
+  dateISO?: string
   readingTime: number
   slug: string
   lang: Lang
@@ -16,7 +17,7 @@ interface Props {
 }
 
 const {
-  title, excerpt, categoryLabel, date, readingTime,
+  title, excerpt, categoryLabel, date, dateISO, readingTime,
   slug, lang, readMoreLabel, readingTimeLabel, featured = false,
 } = Astro.props
 
@@ -32,7 +33,7 @@ const href = getRelativeLocaleUrl(lang, `/blog/${slug}`)
     <h3><a href={href} class="blog-card-title-link">{title}</a></h3>
     <p class="blog-card-excerpt">{excerpt}</p>
     <footer class="blog-card-footer">
-      <span class="blog-card-meta">{date} · {readingTime} {readingTimeLabel}</span>
+      <span class="blog-card-meta"><time datetime={dateISO}>{date}</time> · {readingTime} {readingTimeLabel}</span>
       <a href={href} class="blog-card-more">{readMoreLabel} →</a>
     </footer>
   </div>

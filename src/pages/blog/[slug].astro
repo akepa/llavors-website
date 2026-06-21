@@ -1,0 +1,87 @@
+---
+import { getCollection, render } from 'astro:content'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import Header from '../../components/Header.astro'
+import Footer from '../../components/Footer.astro'
+import BlogArticleLayout from '../../layouts/BlogArticleLayout.astro'
+import SchemaArticle from '../../components/SchemaArticle.astro'
+import SchemaBreadcrumb from '../../components/SchemaBreadcrumb.astro'
+import { getTranslations } from '../../i18n/index'
+import { getRelatedEntries, getCategoryLabel, getCategorySlug, isLang } from '../../utils/blog'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+
+const lang = 'ca' as const
+const t = getTranslations(lang)
+
+export async function getStaticPaths() {
+  const allEntries = await getCollection('blog')
+  const caEntries = allEntries.filter((e) => isLang(e, 'ca'))
+
+  return caEntries
+    .filter((e) => !e.data.draft)
+    .map((entry) => {
+      const esMatch = allEntries.find(
+        (e) => isLang(e, 'es') && e.data.translationKey === entry.data.translationKey
+      )
+      return {
+        params: { slug: entry.data.slug },
+        props: { entry, esSlug: esMatch?.data.slug },
+      }
+    })
+}
+
+const { entry, esSlug } = Astro.props
+const { Content } = await render(entry)
+const { title, description, publishedAt, updatedAt, category } = entry.data
+
+const allEntries = await getCollection('blog')
+const caEntries = allEntries.filter((e) => isLang(e, 'ca') && !e.data.draft)
+const relatedEntries = getRelatedEntries(caEntries, entry)
+
+const SITE = 'https://www.llavorslogopedia.com'
+const canonicalPath = `/blog/${entry.data.slug}/`
+const canonicalUrl = `${SITE}${canonicalPath}`
+
+const hreflangs: { ca: string; es?: string } = {
+  ca: canonicalUrl,
+  ...(esSlug ? { es: `${SITE}/es/blog/${esSlug}/` } : {}),
+}
+
+const altHrefs = {
+  ca: getRelativeLocaleUrl('ca', `/blog/${entry.data.slug}`),
+  es: esSlug
+    ? getRelativeLocaleUrl('es', `/blog/${esSlug}`)
+    : getRelativeLocaleUrl('es', '/blog'),
+}
+
+const categoryLabel = getCategoryLabel(category, t)
+const categorySlug = getCategorySlug(category, lang)
+const breadcrumbs = [
+  { name: 'Inici', url: `${SITE}/` },
+  { name: 'Mamà Informada', url: `${SITE}/blog/` },
+  { name: categoryLabel, url: `${SITE}/blog/categoria/${categorySlug}/` },
+  { name: title, url: canonicalUrl },
+]
+---
+<BaseLayout
+  lang={lang}
+  title={title}
+  description={description}
+  canonical={canonicalUrl}
+  hreflangs={hreflangs}
+  rssHref="/rss.xml"
+  articleMeta={{
+    publishedAt: publishedAt.toISOString(),
+    updatedAt: updatedAt?.toISOString(),
+    section: categoryLabel,
+    author: 'Àngela Alonso Millet',
+  }}
+>
+  <SchemaArticle slot="head" entry={entry} lang={lang} canonicalUrl={canonicalUrl} />
+  <SchemaBreadcrumb slot="head" items={breadcrumbs} />
+  <Header t={t} lang={lang} altHrefs={altHrefs} />
+  <BlogArticleLayout entry={entry} lang={lang} t={t} relatedEntries={relatedEntries}>
+    <Content />
+  </BlogArticleLayout>
+  <Footer t={t} lang={lang} />
+</BaseLayout>

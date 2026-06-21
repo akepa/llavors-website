@@ -1,0 +1,53 @@
+---
+import type { Lang, Translations } from '../../i18n/index'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { CATEGORIES, getCategoryLabel, getCategorySlug } from '../../utils/blog'
+
+interface Props {
+  lang: Lang
+  t: Translations
+  activeCategory?: string
+}
+
+const { lang, t, activeCategory } = Astro.props
+const blogUrl = getRelativeLocaleUrl(lang, '/blog')
+---
+
+<nav class="blog-cat-filter" aria-label={lang === 'ca' ? 'Filtre per categoria' : 'Filtro por categoría'}>
+  <a
+    href={blogUrl}
+    class:list={['cat-chip', { active: !activeCategory }]}
+  >{t.blog_cat_all}</a>
+  {CATEGORIES.map(({ key }) => (
+    <a
+      href={getRelativeLocaleUrl(lang, `/blog/categoria/${getCategorySlug(key, lang)}`)}
+      class:list={['cat-chip', { active: activeCategory === key }]}
+    >{getCategoryLabel(key, t)}</a>
+  ))}
+</nav>
+
+<style>
+  .blog-cat-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  .cat-chip {
+    padding: 7px 18px;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    background: var(--bg-dark);
+    color: var(--text-soft);
+    border: 1.5px solid transparent;
+    transition: all 0.2s;
+  }
+  .cat-chip:hover, .cat-chip.active {
+    background: var(--pink-pale);
+    color: var(--pink);
+    border-color: var(--pink-light);
+  }
+</style>
