@@ -10,6 +10,13 @@ export default defineConfig({
     mdx(),
     sitemap({
       filter: (page) => !page.includes('/draft'),
+      i18n: {
+        defaultLocale: 'ca',
+        locales: {
+          ca: 'ca-ES-valencia',
+          es: 'es-ES',
+        },
+      },
     }),
   ],
   i18n: {

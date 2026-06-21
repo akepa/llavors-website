@@ -24,6 +24,7 @@ const { entries, lang, t } = Astro.props
             excerpt={entry.data.excerpt}
             categoryLabel={getCategoryLabel(entry.data.category, t)}
             date={formatDate(entry.data.publishedAt, lang)}
+            dateISO={entry.data.publishedAt.toISOString().split('T')[0]}
             readingTime={entry.data.readingTime}
             slug={entry.data.slug}
             lang={lang}

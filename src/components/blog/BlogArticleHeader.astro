@@ -6,11 +6,15 @@ interface Props {
   categoryLabel: string
   author: string
   date: string
+  dateISO: string
   readingTime: number
   readingTimeLabel: string
+  updatedDate?: string
+  updatedDateISO?: string
+  updatedLabel?: string
 }
 
-const { title, categoryLabel, author, date, readingTime, readingTimeLabel } = Astro.props
+const { title, categoryLabel, author, date, dateISO, readingTime, readingTimeLabel, updatedDate, updatedDateISO, updatedLabel } = Astro.props
 ---
 
 <header class="article-header">
@@ -20,8 +24,12 @@ const { title, categoryLabel, author, date, readingTime, readingTimeLabel } = As
     <BlogArticleMeta
       author={author}
       date={date}
+      dateISO={dateISO}
       readingTime={readingTime}
       readingTimeLabel={readingTimeLabel}
+      updatedDate={updatedDate}
+      updatedDateISO={updatedDateISO}
+      updatedLabel={updatedLabel}
     />
   </div>
   <div class="article-hero">

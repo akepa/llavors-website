@@ -2,17 +2,27 @@
 interface Props {
   author: string
   date: string
+  dateISO: string
   readingTime: number
   readingTimeLabel: string
+  updatedDate?: string
+  updatedDateISO?: string
+  updatedLabel?: string
 }
 
-const { author, date, readingTime, readingTimeLabel } = Astro.props
+const { author, date, dateISO, readingTime, readingTimeLabel, updatedDate, updatedDateISO, updatedLabel } = Astro.props
 ---
 
 <div class="article-meta">
   <span class="article-meta-author">{author}</span>
   <span class="article-meta-sep" aria-hidden="true">·</span>
-  <time class="article-meta-date">{date}</time>
+  <time class="article-meta-date" datetime={dateISO}>{date}</time>
+  {updatedDate && updatedDateISO && (
+    <>
+      <span class="article-meta-sep" aria-hidden="true">·</span>
+      <span class="article-meta-updated">{updatedLabel} <time datetime={updatedDateISO}>{updatedDate}</time></span>
+    </>
+  )}
   <span class="article-meta-sep" aria-hidden="true">·</span>
   <span class="article-meta-time">{readingTime} {readingTimeLabel}</span>
 </div>
@@ -29,4 +39,5 @@ const { author, date, readingTime, readingTimeLabel } = Astro.props
   }
   .article-meta-author { font-weight: 600; color: var(--text); }
   .article-meta-sep { color: var(--pink-light); }
+  .article-meta-updated { font-style: italic; }
 </style>
