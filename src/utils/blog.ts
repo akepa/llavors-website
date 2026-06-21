@@ -62,6 +62,10 @@ export function formatDate(date: Date, lang: Lang): string {
   }).format(date)
 }
 
+export function isLang(entry: BlogEntry, lang: Lang): boolean {
+  return entry.filePath?.includes(`/blog/${lang === 'ca' ? 'ca' : 'es'}/`) ?? false
+}
+
 export function getRelatedEntries(
   allEntries: BlogEntry[],
   current: BlogEntry,
