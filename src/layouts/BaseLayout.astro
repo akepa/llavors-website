@@ -22,6 +22,14 @@ interface Props {
   ogImage?: string
   canonical?: string
   gscVerification?: string
+  articleMeta?: {
+    publishedAt: string
+    updatedAt?: string
+    section: string
+    author: string
+  }
+  rssHref?: string
+  hreflangs?: { ca: string; es?: string }
 }
 
 const {
@@ -33,6 +41,9 @@ const {
   ogImage,
   canonical,
   gscVerification,
+  articleMeta,
+  rssHref,
+  hreflangs,
 } = Astro.props
 ---
 <!doctype html>
@@ -49,6 +60,9 @@ const {
       ogImage={ogImage}
       canonical={canonical}
       gscVerification={gscVerification}
+      articleMeta={articleMeta}
+      rssHref={rssHref}
+      hreflangs={hreflangs}
     />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T992PQQVQT"></script>
     <script is:inline>

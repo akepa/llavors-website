@@ -153,6 +153,17 @@ const es = {
   book_email_invalid: 'El formato del correo no es válido.',
   book_notes_required: 'El motivo de consulta es obligatorio.',
   book_privacy_required: 'Debes aceptar la política de privacidad para continuar.',
+
+  blog_related: 'Artículos relacionados',
+  blog_share: 'Compartir',
+  blog_share_wa: 'Compartir por WhatsApp',
+  blog_share_fb: 'Compartir en Facebook',
+  blog_share_copy: 'Copiar enlace',
+  blog_share_copied: '¡Copiado!',
+  blog_updated: 'Actualizado el',
+  blog_cat_all: 'Todos',
+  blog_cta_text: '¿Tienes dudas sobre la lactancia, la alimentación o el desarrollo de tu hijo?',
+  blog_cta_btn: 'Reservar la primera cita',
 } as const
 
 export default es

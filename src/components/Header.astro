@@ -5,9 +5,10 @@ import type { Lang, Translations } from '../i18n/index'
 interface Props {
   t: Translations
   lang: Lang
+  altHrefs?: { ca: string; es: string }
 }
 
-const { t, lang } = Astro.props
+const { t, lang, altHrefs } = Astro.props
 const base = import.meta.env.BASE_URL
 const home = getRelativeLocaleUrl(lang, '/')
 
@@ -31,11 +32,11 @@ const canonicalPath = (lang !== 'ca' && pathWithoutBase.startsWith(`/${lang}`))
     <div class="nav-right">
       <div class="lang-switcher">
         <a
-          href={getRelativeLocaleUrl('ca', canonicalPath)}
+          href={altHrefs?.ca ?? getRelativeLocaleUrl('ca', canonicalPath)}
           class={`lang-btn${lang === 'ca' ? ' active' : ''}`}
         >VAL</a>
         <a
-          href={getRelativeLocaleUrl('es', canonicalPath)}
+          href={altHrefs?.es ?? getRelativeLocaleUrl('es', canonicalPath)}
           class={`lang-btn${lang === 'es' ? ' active' : ''}`}
         >ES</a>
       </div>
