@@ -1,0 +1,91 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import type { Lang, Translations } from '../i18n/index'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import BlogArticleHeader from '../components/blog/BlogArticleHeader.astro'
+import BlogProse from '../components/blog/BlogProse.astro'
+import BlogShareButtons from '../components/blog/BlogShareButtons.astro'
+import BlogRelated from '../components/blog/BlogRelated.astro'
+import { getCategoryLabel, formatDate } from '../utils/blog'
+
+interface Props {
+  entry: CollectionEntry<'blog'>
+  lang: Lang
+  t: Translations
+  relatedEntries: CollectionEntry<'blog'>[]
+}
+
+const { entry, lang, t, relatedEntries } = Astro.props
+const { title, category, publishedAt, readingTime } = entry.data
+
+const blogUrl = getRelativeLocaleUrl(lang, '/blog')
+const homeUrl = getRelativeLocaleUrl(lang, '/')
+const categoryLabel = getCategoryLabel(category, t)
+const formattedDate = formatDate(publishedAt, lang)
+---
+
+<main>
+  <BlogArticleHeader
+    title={title}
+    categoryLabel={categoryLabel}
+    author={t.blog_author}
+    date={formattedDate}
+    readingTime={readingTime}
+    readingTimeLabel={t.blog_reading_time}
+  />
+  <div class="article-body container">
+    <a href={blogUrl} class="article-back">{t.blog_back_to_blog}</a>
+    <BlogProse>
+      <slot />
+    </BlogProse>
+    <BlogShareButtons title={title} t={t} />
+  </div>
+  <BlogRelated entries={relatedEntries} lang={lang} t={t} />
+  <div class="article-cta-wrap container">
+    <div class="article-cta">
+      <p>{t.blog_cta_text}</p>
+      <a href={homeUrl + '#reserva'} class="btn btn-primary">{t.blog_cta_btn}</a>
+    </div>
+  </div>
+</main>
+
+<style>
+  .article-body {
+    padding-top: 48px;
+    padding-bottom: 60px;
+    max-width: 800px;
+  }
+  .article-back {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    text-decoration: none;
+    margin-bottom: 40px;
+    transition: color 0.2s;
+  }
+  .article-back:hover { color: var(--pink); }
+  .article-cta-wrap { padding: 64px 0 100px; max-width: 800px; }
+  .article-cta {
+    padding: 40px 36px;
+    background: var(--pink-pale);
+    border: 1px solid var(--pink-light);
+    border-radius: var(--r);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .article-cta p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .article-body { padding-top: 32px; padding-bottom: 40px; }
+    .article-cta { padding: 28px 20px; }
+    .article-cta-wrap { padding: 40px 0 64px; }
+  }
+</style>

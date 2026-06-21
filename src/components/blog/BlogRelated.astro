@@ -1,0 +1,62 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import type { Lang, Translations } from '../../i18n/index'
+import BlogCard from './BlogCard.astro'
+import { getCategoryLabel, formatDate } from '../../utils/blog'
+
+interface Props {
+  entries: CollectionEntry<'blog'>[]
+  lang: Lang
+  t: Translations
+}
+
+const { entries, lang, t } = Astro.props
+---
+
+{entries.length > 0 && (
+  <section class="blog-related">
+    <div class="container">
+      <h2 class="blog-related-title">{t.blog_related}</h2>
+      <div class="blog-related-grid">
+        {entries.map((entry) => (
+          <BlogCard
+            title={entry.data.title}
+            excerpt={entry.data.excerpt}
+            categoryLabel={getCategoryLabel(entry.data.category, t)}
+            date={formatDate(entry.data.publishedAt, lang)}
+            readingTime={entry.data.readingTime}
+            slug={entry.data.slug}
+            lang={lang}
+            readMoreLabel={t.blog_read_more}
+            readingTimeLabel={t.blog_reading_time}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .blog-related {
+    background: var(--bg-dark);
+    padding: 64px 0 80px;
+    margin-top: 80px;
+  }
+  .blog-related-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    color: var(--text);
+    margin-bottom: 36px;
+  }
+  .blog-related-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  @media (min-width: 640px) {
+    .blog-related-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .blog-related-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
