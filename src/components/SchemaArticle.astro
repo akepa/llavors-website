@@ -1,0 +1,48 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import type { Lang } from '../i18n/index'
+import { getCategoryLabel } from '../utils/blog'
+import { getTranslations } from '../i18n/index'
+
+interface Props {
+  entry: CollectionEntry<'blog'>
+  lang: Lang
+  canonicalUrl: string
+}
+
+const { entry, lang, canonicalUrl } = Astro.props
+const { title, description, publishedAt, updatedAt, category, heroImageAlt } = entry.data
+const t = getTranslations(lang)
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: publishedAt.toISOString(),
+  dateModified: (updatedAt ?? publishedAt).toISOString(),
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+  inLanguage: lang === 'ca' ? 'ca-ES-valencia' : 'es-ES',
+  articleSection: getCategoryLabel(category, t),
+  image: {
+    '@type': 'ImageObject',
+    url: 'https://www.llavorslogopedia.com/og-default.png',
+    description: heroImageAlt,
+  },
+  author: {
+    '@type': 'Person',
+    name: 'Àngela Alonso Millet',
+    url: 'https://www.llavorslogopedia.com',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Llavors Logopèdia',
+    url: 'https://www.llavorslogopedia.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://www.llavorslogopedia.com/images/logo.png',
+    },
+  },
+}
+---
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
