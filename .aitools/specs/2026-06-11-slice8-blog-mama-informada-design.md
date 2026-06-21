@@ -48,7 +48,7 @@ Slugs por idioma (para SEO local de cada idioma):
 
 **Features del MVP** (presentes desde el slice 8.2):
 
-- Imagen destacada por artículo (con alt text obligatorio, optimizada con Astro Image).
+- Imagen destacada por artículo (con alt text obligatorio, optimizada con Astro Image). **Nota:** en 8.2 solo se implementó el `heroImageAlt`; el campo `heroImage` y la generación de imágenes son el Slice 8.4.
 - Tiempo de lectura estimado (calculado automáticamente).
 - Fecha de publicación + fecha de última actualización visibles.
 - Artículos relacionados al final (3 de la misma categoría, ordenados por fecha).
@@ -74,11 +74,15 @@ Uso **Content Collections** (sistema nativo de Astro v6 para colecciones tipadas
 
 ### 3.2 Estructura de carpetas
 
+> **Nota:** la implementación real difiere del plan original: el schema está en `src/content.config.ts` (no `src/content/config.ts`) y los artículos en `src/data/blog/` (no `src/content/blog/`). El árbol siguiente refleja el estado real + las adiciones del Slice 8.4.
+
 ```
 src/
-  content/
-    config.ts                    ← schema tipado + enum de categorías
+  content.config.ts              ← schema tipado + enum de categorías (Slice 8.2)
+  data/
     blog/
+      _images/                   ← imágenes hero compartidas VAL/ES (Slice 8.4); `_` la excluye del loader
+        <translationKey>.jpg
       ca/
         2026-MM-DD-titol-article.mdx
         ...
@@ -118,9 +122,22 @@ src/
     es.ts
 .aitools/
   blog-drafts/                   ← borradores en .md plano (Slice 8.0)
-  blog-editorial-process.md      ← documentación de proceso (Slice 8.3)
-  templates/
-    blog-article-template.mdx    ← plantilla de frontmatter (Slice 8.3)
+pipeline/                        ← procesos de GENERACIÓN de contenido (raíz del repo)
+  README.md                      ← visión global del pipeline
+  articles/                      ← proceso de texto (Slice 8.3, pendiente)
+    README.md                    ← documentación de proceso editorial
+    blog-article-template.mdx    ← plantilla de frontmatter
+  blog-image/                    ← proceso de imagen (Slice 8.4)
+    SKILL.md                     ← skill: genera el prompt de imagen desde el contenido
+    master-prompt.md             ← restricciones fijas (guía de estilo)
+    reference/
+      style-ref.jpg              ← referencia de estilo (se adjunta SIEMPRE a Nano Banana)
+      angela/                    ← fotos de referencia de Àngela (de espaldas/sin cara)
+  scripts/
+    list-missing-heroimages.mjs  ← (opcional) chequeo mecánico
+.claude/
+  skills/
+    blog-image/SKILL.md          ← envoltorio fino → referencia pipeline/blog-image/
 ```
 
 ### 3.3 Modelo de datos (frontmatter por artículo)
@@ -134,7 +151,7 @@ description: "Quan preocupar-se i quan no..."
 category: comunicacio-llenguatge           # enum cerrado
 publishedAt: 2026-06-15
 updatedAt: 2026-06-20                      # opcional
-heroImage: ./images/dificultats-parla.jpg  # relativa al .mdx
+heroImage: ../_images/dificultats-parla-3-anys.jpg  # opcional (Slice 8.4); compartida VAL/ES por translationKey
 heroImageAlt: "Xiquet en sessió de logopèdia"
 draft: false
 ---
@@ -367,22 +384,119 @@ Los textos redactados por Claude son borradores de divulgación, **no contenido 
 
 ### Slice 8.3 — Operativa editorial estable
 
+> **Estado: PENDIENTE (no implementado).** El slice 8.2 (arquitectura) está en `master`, pero el 8.3 todavía no: no existen `pipeline/articles/` ni la plantilla de frontmatter. Queda como trabajo independiente.
+
 **Objetivo:** Definir el proceso "Àngela me pasa un artículo → yo lo publico" sin código nuevo del blog.
 
 **Tareas:**
 
-- Documentar en `.aitools/blog-editorial-process.md`: formato esperado del texto de Àngela, dónde poner imágenes, naming de slugs, checklist SEO por artículo (description, alt, categoría, fecha).
-- Plantilla de frontmatter en `.aitools/templates/blog-article-template.mdx`.
+- Documentar en `pipeline/articles/README.md` (proceso de **texto**): formato esperado del texto de Àngela, dónde poner imágenes, naming de slugs, checklist SEO por artículo (description, alt, categoría, fecha).
+- Plantilla de frontmatter en `pipeline/articles/blog-article-template.mdx`.
 - Subir los primeros artículos reales que Àngela vaya pasando.
 - Ajustes que aparezcan al usar el sistema con contenido real (refinamientos puntuales, no features nuevas).
 
-**Qué NO se hace:** CMS.
+**Qué NO se hace:** CMS. Imágenes (eso es el Slice 8.4).
 
 **Validación:** Àngela pasa un artículo nuevo, se publica en menos de 30 minutos sin tocar arquitectura.
 
+> **Nota sobre `pipeline/`:** todo lo relativo a *generar* contenido (texto e imágenes) vive bajo la carpeta nueva `pipeline/` en la raíz del repo. El proceso de texto (este slice) en `pipeline/articles/`; el de imágenes (Slice 8.4) en `pipeline/blog-image/`. Ver §3.2.
+
 ---
 
-### Slice 8.4 — Decap CMS (opcional, último)
+### Slice 8.4 — Imatges dels articles
+
+**Objetivo:** Sustituir los placeholders de gradiente por imágenes reales generadas de forma **semiautomática a partir del contenido** de cada artículo, con un estilo coherente y sin aspecto de IA.
+
+**Estado de partida:**
+
+- El schema (`src/content.config.ts`) tiene `heroImageAlt` (texto alternativo) pero **no** `heroImage` (el archivo). Hay que añadirlo.
+- `BlogCard` y `BlogArticleHeader` pintan el gradiente CSS como placeholder. Ningún artículo tiene imagen real.
+- No hay imagen de referencia de estilo previa. **La primera imagen aprobada hará de referencia** para las siguientes (ver "bootstrap" más abajo).
+
+**Decisión de herramienta (importante):**
+
+- Tenemos acceso a **Nano Banana PRO**, pero **NO en modo API** → la generación es **manual** en su interfaz web.
+- **Ningún modelo de Anthropic genera imágenes.** Claude solo tiene *visión* (analizar imágenes), no generación. No existe endpoint de generación de imágenes en la API de Anthropic ni bajo la licencia de Claude Code.
+- Por tanto el flujo es: **Claude redacta el prompt → el humano genera en Nano Banana PRO → Claude integra la imagen en el repo.**
+
+#### Concepto visual (guía de estilo)
+
+Fotografía editorial cálida de tipo *still-life* / lifestyle doméstico, **casi siempre sin personas**. Reglas duras (van codificadas en el prompt maestro):
+
+- **Horizontal** (apaisada), ~16:9 o más ancha (el hero usa `21/8`, la card `16/9`).
+- Paleta afín al sitio: rosa/crema/madera clara, luz suave y natural.
+- **Nunca** entorno médico/clínico; **nunca** bata ni material sanitario.
+- **Sin caras, sin niños, sin otras personas** de fondo.
+- Por defecto **sin personas**: objetos y escenas domésticas cotidianas relacionadas con el tema del artículo.
+- **Excepción rara** (solo si el contenido lo exige de verdad): una figura **de espaldas / sin cara visible**, ropa de calle, con los rasgos de Àngela aportados vía foto de referencia en Nano Banana.
+
+#### El pipeline (carpeta `pipeline/`)
+
+Todo lo relativo a generar imágenes vive bajo `pipeline/blog-image/`. Flujo en 3 pasos:
+
+1. **Claude genera el prompt.** Se invoca la skill (ver abajo) indicando el artículo. La skill lee el `.mdx`, identifica categoría y tema, y compone el prompt final = **prompt maestro** (restricciones fijas) + **escena específica** derivada del contenido.
+2. **El humano genera en Nano Banana PRO.** Pega el prompt y adjunta lo indicado (ver "Qué adjuntar"). Genera y descarga la imagen.
+3. **Claude integra.** Coloca la imagen con el naming correcto en `src/data/blog/_images/<translationKey>.<ext>`, añade `heroImage` al frontmatter de ambas versiones (VAL y ES) y verifica el render.
+
+**Estructura de archivos:**
+
+```
+pipeline/
+  README.md                       ← visión global del pipeline (artículos + imágenes)
+  articles/                       ← proceso de texto (Slice 8.3, pendiente)
+    README.md
+    blog-article-template.mdx
+  blog-image/
+    SKILL.md                      ← la skill: cómo generar el prompt de imagen
+    master-prompt.md              ← bloque fijo de restricciones (guía de estilo)
+    reference/
+      style-ref.jpg               ← referencia de estilo (se adjunta SIEMPRE)
+      angela/                     ← fotos de referencia de Àngela (de espaldas/sin cara)
+  scripts/
+    list-missing-heroimages.mjs   ← (opcional) chequeo mecánico de qué artículos faltan
+```
+
+Para que Claude Code la descubra como skill invocable (p. ej. `/blog-image`), el `SKILL.md` se registra bajo `.claude/skills/blog-image/` como un envoltorio fino que referencia `pipeline/blog-image/`. La fuente de verdad del contenido sigue en `pipeline/`.
+
+#### ¿Skill o script?
+
+**Skill**, no script de Node, para la generación del prompt. La tarea central —leer el artículo e inventar una escena apropiada que cumpla las restricciones— requiere *comprensión* del contenido, no plantillas. Un script determinista solo puede rellenar huecos con palabras clave de categoría; no puede derivar una escena concreta del texto. Una skill además **es** un `.md` (`SKILL.md`). El script de Node queda **opcional y secundario**, solo para tareas mecánicas (listar artículos sin `heroImage`).
+
+#### Qué adjuntar a Nano Banana PRO
+
+Para cada imagen, en su interfaz web:
+
+1. **El texto del prompt** generado por la skill (se pega en el campo de prompt).
+2. **`reference/style-ref.jpg`** — imagen de referencia de estilo. Se adjunta **siempre** (salvo la primera vez, ver bootstrap), para que todas las portadas tengan coherencia visual entre sí (misma temperatura de color, mismo *mood*, misma "familia" estética).
+3. **Solo en el caso raro de figura:** 1-2 fotos de `reference/angela/` (de espaldas / sin cara) para que la silueta y los rasgos coincidan con Àngela.
+
+> El prompt maestro debe pedir explícitamente formato **horizontal** y, cuando se adjunte `style-ref.jpg`, indicar a Nano Banana que **imite el estilo/iluminación** de la referencia pero **no su contenido** concreto.
+
+**Bootstrap del estilo (primera imagen):** no existe `style-ref.jpg` de partida. La primera imagen se genera solo con el prompt (paso 2 sin referencia de estilo); el prompt maestro debe describir el *look* deseado con suficiente detalle (paleta rosa/crema/madera, luz suave, editorial). Una vez Àngela aprueba esa primera imagen, **se guarda una copia como `reference/style-ref.jpg`** y, a partir de ahí, se adjunta a todas las generaciones siguientes para fijar la coherencia. Si en algún momento el estilo deriva, se puede re-elegir la `style-ref`.
+
+#### Infraestructura de código
+
+- **Schema:** añadir `heroImage: image().optional()` (helper `image()` de `astro:content`) a `src/content.config.ts`. **Opcional** → las imágenes entran de forma incremental sin romper artículos sin imagen.
+- **Imagen compartida VAL/ES:** una sola imagen por `translationKey` en `src/data/blog/_images/<translationKey>.<ext>` (el prefijo `_` la excluye del loader `glob` `**/[^_]*.{md,mdx}`). Ambas versiones la referencian por ruta relativa.
+- **Render con fallback:** `BlogCard` y `BlogArticleHeader` → si hay `heroImage`, render con `<Image>` de Astro (optimizada, responsive, `loading="lazy"` salvo la primera); **si no, mantienen el gradiente actual**.
+- **SEO:** cuando exista `heroImage`, `og:image` y el `ImageObject` del JSON-LD (`SchemaArticle.astro`) deben apuntar a la URL absoluta de la imagen real en lugar del placeholder/genérico.
+
+#### Requisito previo
+
+Para el caso excepcional de figura: Àngela aporta **2-3 fotos de referencia suyas de espaldas / sin cara visible**, que se guardan en `pipeline/blog-image/reference/angela/`. Mientras no existan, el pipeline funciona igual (genera escenas sin personas).
+
+**Qué NO se hace:** Generación vía API (no disponible). OG images dinámicas con Satori (sigue fuera de scope). Imágenes con personas identificables.
+
+**Validación:**
+
+- Una imagen de prueba por categoría, generada con el pipeline e integrada end-to-end, visible en card y en hero, en VAL y ES.
+- El fallback al gradiente sigue funcionando en artículos sin imagen.
+- `og:image` correcto en el artículo con imagen (validador de Google / preview de WhatsApp).
+- Coherencia visual entre las imágenes generadas (gracias a `style-ref.jpg`).
+
+---
+
+### Slice 8.5 — Decap CMS (opcional, último)
 
 **Objetivo:** Àngela edita y publica sola desde un panel web.
 

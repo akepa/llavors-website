@@ -33,7 +33,7 @@ const showUpdated = updatedAt && updatedAt.getTime() !== publishedAt.getTime()
 const updatedDateFormatted = showUpdated ? formatDate(updatedAt, lang) : undefined
 const updatedDateISO = showUpdated ? updatedAt.toISOString().split('T')[0] : undefined
 
-const catSlug = getCategorySlug(category, lang)
+const catSlug = getCategorySlug(category)
 const catUrl = getRelativeLocaleUrl(lang, `/blog/categoria/${catSlug}`)
 const breadcrumbs: BreadcrumbItem[] = [
   { label: lang === 'ca' ? 'Inici' : 'Inicio', href: homeUrl },
