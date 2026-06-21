@@ -20,7 +20,7 @@ const blogUrl = getRelativeLocaleUrl(lang, '/blog')
   >{t.blog_cat_all}</a>
   {CATEGORIES.map(({ key }) => (
     <a
-      href={getRelativeLocaleUrl(lang, `/blog/categoria/${getCategorySlug(key, lang)}`)}
+      href={getRelativeLocaleUrl(lang, `/blog/categoria/${getCategorySlug(key)}`)}
       class:list={['cat-chip', { active: activeCategory === key }]}
     >{getCategoryLabel(key, t)}</a>
   ))}

@@ -29,7 +29,7 @@ export const getStaticPaths = (async ({ paginate }) => {
     .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
 
   return CATEGORIES.flatMap(({ key }) => {
-    const slug = getCategorySlug(key, 'es')
+    const slug = getCategorySlug(key)
     const filtered = esEntries.filter((e) => e.data.category === key)
     return paginate(filtered, {
       params: { categoria: slug },
@@ -45,15 +45,14 @@ const categoryLabel = getCategoryLabel(categoryKey, t)
 const basePath = getRelativeLocaleUrl('es', `/blog/categoria/${categoria}/`)
 
 const SITE = 'https://www.llavorslogopedia.com'
-const caCatSlug = getCategorySlug(categoryKey, 'ca')
 const canonicalUrl = page.currentPage === 1
   ? `${SITE}/es/blog/categoria/${categoria}/`
   : `${SITE}/es/blog/categoria/${categoria}/${page.currentPage}/`
 
 const hreflangs: { ca: string; es?: string } = {
   ca: page.currentPage === 1
-    ? `${SITE}/blog/categoria/${caCatSlug}/`
-    : `${SITE}/blog/categoria/${caCatSlug}/${page.currentPage}/`,
+    ? `${SITE}/blog/categoria/${categoria}/`
+    : `${SITE}/blog/categoria/${categoria}/${page.currentPage}/`,
   es: canonicalUrl,
 }
 

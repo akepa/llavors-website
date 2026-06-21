@@ -9,32 +9,6 @@ export const CATEGORY_LABELS_KEY = {
   'comunicacio-llenguatge': 'blog_cat_comunicacio',
 } as const
 
-export const CATEGORY_SLUGS: Record<Lang, Record<string, string>> = {
-  ca: {
-    'funcions-orals': 'funcions-orals',
-    'lactancia-alimentacio': 'lactancia-i-alimentacio',
-    'comunicacio-llenguatge': 'comunicacio-i-llenguatge',
-  },
-  es: {
-    'funcions-orals': 'funciones-orales',
-    'lactancia-alimentacio': 'lactancia-y-alimentacion',
-    'comunicacio-llenguatge': 'comunicacion-y-lenguaje',
-  },
-}
-
-export const CATEGORY_SLUG_TO_KEY: Record<Lang, Record<string, string>> = {
-  ca: {
-    'funcions-orals': 'funcions-orals',
-    'lactancia-i-alimentacio': 'lactancia-alimentacio',
-    'comunicacio-i-llenguatge': 'comunicacio-llenguatge',
-  },
-  es: {
-    'funciones-orales': 'funcions-orals',
-    'lactancia-y-alimentacion': 'lactancia-alimentacio',
-    'comunicacion-y-lenguaje': 'comunicacio-llenguatge',
-  },
-}
-
 export const CATEGORIES = [
   { key: 'funcions-orals' as const },
   { key: 'lactancia-alimentacio' as const },
@@ -46,12 +20,12 @@ export function getCategoryLabel(category: string, t: Translations): string {
   return t[key] ?? category
 }
 
-export function getCategorySlug(category: string, lang: Lang): string {
-  return CATEGORY_SLUGS[lang][category] ?? category
+export function getCategorySlug(category: string): string {
+  return category
 }
 
-export function getCategoryKey(slug: string, lang: Lang): string {
-  return CATEGORY_SLUG_TO_KEY[lang][slug] ?? slug
+export function getCategoryKey(slug: string): string {
+  return slug
 }
 
 export function formatDate(date: Date, lang: Lang): string {
