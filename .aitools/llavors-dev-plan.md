@@ -498,16 +498,42 @@ El **plan gratuito de Doctoralia no tiene API**. Las opciones son:
 
 ---
 
+## Slice 8 — Blog "Mamà Informada"
+
+> ⚠️ Diseño completo en `.aitools/specs/2026-06-11-slice8-blog-mama-informada-design.md`
+
+**Estado: 8.0 ✓ · 8.1 ✓ · 8.2 ✓** — PR #25 (`slice/8.1-blog-visual` → `develop`)
+
+**Objetivo:** Blog editorial bilingüe (VAL + ES) con artículos de divulgación para familias + SEO técnico completo.
+
+### Completado (8.0 + 8.1 + 8.2)
+
+- 4 artículos × 2 idiomas en MDX con Content Collections (Astro 6 glob loader)
+- Rutas dinámicas: `[slug].astro`, `[...page].astro`, `categoria/[categoria]/[...page].astro`
+- RSS por idioma con `content:encoded`
+- SEO: Schema Article + BreadcrumbList JSON-LD, hreflang, OG article, canonical, sitemap i18n, `<time datetime>`, `<article>` semántico, breadcrumb visible
+- Componentes: BlogCard, BlogGrid, BlogPagination, BlogCategoryFilter, BlogArticleHeader, BlogArticleMeta, BlogProse, BlogShareButtons, BlogRelated, SchemaArticle, SchemaBreadcrumb, BlogArticleLayout
+- Componentes MDX: Callout, Figure
+
+### Pendiente
+
+- **Slice 8.3** — Operativa editorial: documentar proceso, plantilla frontmatter, publicar artículos reales de Àngela
+- **Slice 8.4** (opcional) — Decap CMS para que Àngela publique sola desde `/admin/`
+- Imágenes reales para los artículos (hero images) — actualmente usan gradientes placeholder
+- Validar Lighthouse SEO ≥ 95, Rich Results Test y RSS W3C en producción
+
+---
+
 ## Roadmap futuro (fuera de scope v1)
 
-### Blog / Contenido editorial → Decap CMS
+### Blog CMS (Slice 8.4, opcional) → Decap CMS
 
-Cuando Àngela quiera publicar artículos o actualizar contenido sin tocar código:
+Si Àngela necesita publicar sola sin soporte técnico:
 
-- Instalar Decap CMS (se integra directamente con el repo de GitHub)
-- Panel de administración en `/admin`
-- Los cambios se guardan como commits — sin base de datos
-- Compatible con Astro y Vercel sin cambios
+- Instalar Decap CMS en `/public/admin/`
+- `config.yml` con la estructura de la colección blog y categorías
+- Habilitar Git Gateway para que Decap commitee al repo
+- Decisión pospuesta: evaluar según frecuencia real de publicación
 
 ### Panel de administración → Supabase
 

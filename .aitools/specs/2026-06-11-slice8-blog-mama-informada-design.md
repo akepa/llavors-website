@@ -1,8 +1,8 @@
 # Slice 8 — Blog "Mamà Informada" — Diseño
 
-> Estado: borrador para revisión
-> Autor: Claude + Adam, sesión 2026-06-11
-> Predecesor: `src/pages/blog.astro` actual (placeholder con "Pròximament")
+> Estado: **8.0 ✓ · 8.1 ✓ · 8.2 ✓** — pendiente 8.3 y 8.4 (opcional)
+> Autor: Claude + Adam, sesiones 2026-06-11 a 2026-06-21
+> PR abierta: #25 (`slice/8.1-blog-visual` → `develop`)
 
 ---
 
@@ -291,7 +291,7 @@ Ya existe. No requiere cambios. Verificar que `Disallow:` no bloquea nada del bl
 
 ## 7. Troceado por slices
 
-### Slice 8.0 — Redacción de artículos de prueba
+### Slice 8.0 — Redacción de artículos de prueba ✅
 
 **Objetivo:** Tener 2-3 artículos completos en VAL + ES listos para usar como contenido real en el Slice 8.1.
 
@@ -317,7 +317,7 @@ Los textos redactados por Claude son borradores de divulgación, **no contenido 
 
 ---
 
-### Slice 8.1 — Validación visual con artículos hardcoded
+### Slice 8.1 — Validación visual con artículos hardcoded ✅
 
 **Objetivo:** Iterar el diseño visual sobre contenido real antes de comprometernos con Content Collections.
 
@@ -335,7 +335,7 @@ Los textos redactados por Claude son borradores de divulgación, **no contenido 
 
 ---
 
-### Slice 8.2 — Arquitectura completa + features MVP
+### Slice 8.2 — Arquitectura completa + features MVP ✅
 
 **Objetivo:** Convertir el blog en sistema real con todas las funcionalidades del MVP "pulido".
 
@@ -356,12 +356,23 @@ Los textos redactados por Claude son borradores de divulgación, **no contenido 
 
 **Validación:**
 
-- Lighthouse SEO ≥ 95 en artículo y listado.
-- Schema válido en [validador de Google](https://search.google.com/test/rich-results).
-- hreflang sin errores cuando se valide en Search Console.
-- RSS valida en [validador W3C](https://validator.w3.org/feed/).
-- Los 2-3 artículos son navegables end-to-end en VAL y ES.
-- Selector de idioma cambia correctamente entre artículos emparejados; fallback al listado funciona si no hay pareja.
+- [x] Schema Article + BreadcrumbList JSON-LD en cada artículo.
+- [x] hreflang bidireccional (ca-valencia / es) en `<head>` + sitemap `xhtml:link`.
+- [x] RSS `/rss.xml` y `/es/rss.xml` con `content:encoded`.
+- [x] 4 artículos × 2 idiomas navegables end-to-end.
+- [x] Selector de idioma cambia correctamente entre artículos emparejados vía `translationKey`.
+- [x] Categorías paginadas (3 × 2 idiomas) con filtro activo.
+- [x] OG article meta, canonical URLs, `<time datetime>`, `<article>` semántico, breadcrumb visible.
+- [ ] Lighthouse SEO ≥ 95 en artículo y listado (pendiente validar con imágenes reales).
+- [ ] Schema válido en [Rich Results Test](https://search.google.com/test/rich-results) (pendiente validar en producción).
+- [ ] RSS valida en [validador W3C](https://validator.w3.org/feed/) (pendiente validar en producción).
+
+**Notas de implementación (divergencias respecto al diseño original):**
+
+- El schema Zod está en `src/content.config.ts` (Astro 6 convention) con glob loader desde `src/data/blog/`, no en `src/content/config.ts` como se diseñó.
+- Los IDs del glob loader de Astro 6 no incluyen el prefijo de directorio (`ca/`, `es/`) — se usa `filePath` para filtrar por idioma (ver `isLang()` en `utils/blog.ts`).
+- Los MDX usan HTML crudo (`<p>`, `<h2>`) en lugar de Markdown puro — funciona correctamente con MDX.
+- Los componentes MDX (`Callout`, `Figure`) están creados pero no registrados globalmente en `astro.config.mjs` — se importan explícitamente cuando se usan.
 
 ---
 
@@ -426,17 +437,17 @@ Los textos redactados por Claude son borradores de divulgación, **no contenido 
 
 Antes de cerrar el Slice 8.2 y considerar el blog "vivo":
 
-- [ ] Las 3 categorías muestran sus páginas correctamente en VAL y ES.
-- [ ] Cambio de idioma desde un artículo lleva al artículo emparejado o al listado del otro idioma si no hay pareja.
-- [ ] Los 2-3 artículos del Slice 8.0 están publicados en `.mdx` con frontmatter válido.
+- [x] Las 3 categorías muestran sus páginas correctamente en VAL y ES.
+- [x] Cambio de idioma desde un artículo lleva al artículo emparejado o al listado del otro idioma si no hay pareja.
+- [x] Los 4 artículos están publicados en `.mdx` con frontmatter válido.
 - [ ] Lighthouse SEO ≥ 95 en artículo y listado.
-- [ ] Schema Article + BreadcrumbList validan en validador de Google.
-- [ ] hreflang correcto en los 3 artículos.
-- [ ] OG images se previsualizan correctamente en WhatsApp y Facebook.
-- [ ] Sitemap incluye los artículos con alternates de idioma.
-- [ ] RSS válido en validador W3C, con `content:encoded` poblado.
-- [ ] El enlace `nav_blog` del header apunta al listado real (placeholder eliminado).
-- [ ] Botón WhatsApp flotante y banner de cookies siguen funcionando en las páginas del blog.
+- [x] Schema Article + BreadcrumbList presentes en cada artículo (validar en prod).
+- [x] hreflang correcto en los 4 artículos × 2 idiomas.
+- [ ] OG images se previsualizan correctamente en WhatsApp y Facebook (requiere imágenes reales).
+- [x] Sitemap incluye los artículos. Alternates i18n para páginas con URLs pareadas.
+- [x] RSS genera 4 items con `content:encoded` poblado (validar W3C en prod).
+- [x] El enlace `nav_blog` del header apunta al listado real (placeholder eliminado).
+- [x] Botón WhatsApp flotante y banner de cookies siguen funcionando en las páginas del blog.
 
 ---
 

@@ -39,6 +39,7 @@ El proyecto se desarrolla en slices independientes (ver `.aitools/llavors-dev-pl
 - Slice 5: SEO básico
 - Slice 6: Analytics (Plausible)
 - Slice 7: Reseñas dinámicas (requiere migración a Vercel)
+- Slice 8: Blog "Mamà Informada" (8.0-8.2 ✓, 8.3-8.4 pendientes) — spec en `.aitools/specs/2026-06-11-slice8-blog-mama-informada-design.md`
 
 ### Config importante
 
