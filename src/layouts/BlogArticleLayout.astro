@@ -1,0 +1,141 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import type { Lang, Translations } from '../i18n/index'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import BlogArticleHeader from '../components/blog/BlogArticleHeader.astro'
+import BlogProse from '../components/blog/BlogProse.astro'
+import BlogShareButtons from '../components/blog/BlogShareButtons.astro'
+import BlogRelated from '../components/blog/BlogRelated.astro'
+import { getCategoryLabel, getCategorySlug, formatDate } from '../utils/blog'
+
+interface BreadcrumbItem {
+  label: string
+  href?: string
+}
+
+interface Props {
+  entry: CollectionEntry<'blog'>
+  lang: Lang
+  t: Translations
+  relatedEntries: CollectionEntry<'blog'>[]
+}
+
+const { entry, lang, t, relatedEntries } = Astro.props
+const { title, category, publishedAt, updatedAt, readingTime } = entry.data
+
+const blogUrl = getRelativeLocaleUrl(lang, '/blog')
+const homeUrl = getRelativeLocaleUrl(lang, '/')
+const categoryLabel = getCategoryLabel(category, t)
+const formattedDate = formatDate(publishedAt, lang)
+const dateISO = publishedAt.toISOString().split('T')[0]
+
+const showUpdated = updatedAt && updatedAt.getTime() !== publishedAt.getTime()
+const updatedDateFormatted = showUpdated ? formatDate(updatedAt, lang) : undefined
+const updatedDateISO = showUpdated ? updatedAt.toISOString().split('T')[0] : undefined
+
+const catSlug = getCategorySlug(category, lang)
+const catUrl = getRelativeLocaleUrl(lang, `/blog/categoria/${catSlug}`)
+const breadcrumbs: BreadcrumbItem[] = [
+  { label: lang === 'ca' ? 'Inici' : 'Inicio', href: homeUrl },
+  { label: lang === 'ca' ? 'Mamà Informada' : 'Mamá Informada', href: blogUrl },
+  { label: categoryLabel, href: catUrl },
+  { label: title },
+]
+---
+
+<main>
+  <article>
+  <BlogArticleHeader
+    title={title}
+    categoryLabel={categoryLabel}
+    author={t.blog_author}
+    date={formattedDate}
+    dateISO={dateISO}
+    readingTime={readingTime}
+    readingTimeLabel={t.blog_reading_time}
+    updatedDate={updatedDateFormatted}
+    updatedDateISO={updatedDateISO}
+    updatedLabel={t.blog_updated}
+  />
+  <div class="article-body container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol>
+        {breadcrumbs.map((item, i) => (
+          <li>
+            {item.href
+              ? <a href={item.href}>{item.label}</a>
+              : <span aria-current="page">{item.label}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+    <BlogProse>
+      <slot />
+    </BlogProse>
+    <BlogShareButtons title={title} t={t} />
+  </div>
+  </article>
+  <BlogRelated entries={relatedEntries} lang={lang} t={t} />
+  <div class="article-cta-wrap container">
+    <div class="article-cta">
+      <p>{t.blog_cta_text}</p>
+      <a href={homeUrl + '#reserva'} class="btn btn-primary">{t.blog_cta_btn}</a>
+    </div>
+  </div>
+</main>
+
+<style>
+  .article-body {
+    padding-top: 48px;
+    padding-bottom: 60px;
+    max-width: 800px;
+  }
+  .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 40px;
+    gap: 4px;
+    font-size: 0.84rem;
+  }
+  .breadcrumb li:not(:last-child)::after {
+    content: '›';
+    margin-left: 4px;
+    color: var(--pink-light);
+  }
+  .breadcrumb a {
+    color: var(--text-soft);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+  .breadcrumb a:hover { color: var(--pink); }
+  .breadcrumb span[aria-current] {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .article-cta-wrap { padding: 64px 0 100px; max-width: 800px; }
+  .article-cta {
+    padding: 40px 36px;
+    background: var(--pink-pale);
+    border: 1px solid var(--pink-light);
+    border-radius: var(--r);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .article-cta p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .article-body { padding-top: 32px; padding-bottom: 40px; }
+    .article-cta { padding: 28px 20px; }
+    .article-cta-wrap { padding: 40px 0 64px; }
+  }
+</style>

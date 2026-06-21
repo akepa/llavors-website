@@ -1,0 +1,77 @@
+---
+---
+<div class="blog-prose">
+  <slot />
+</div>
+
+<style>
+  .blog-prose {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .blog-prose :global(h2) {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.25rem, 3vw, 1.6rem);
+    color: var(--text);
+    margin-top: 52px;
+    margin-bottom: 16px;
+    line-height: 1.25;
+  }
+  .blog-prose :global(h3) {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+    color: var(--text);
+    margin-top: 36px;
+    margin-bottom: 12px;
+  }
+  .blog-prose :global(p) {
+    color: var(--text-soft);
+    font-size: 1rem;
+    line-height: 1.85;
+    margin-bottom: 20px;
+  }
+  .blog-prose :global(ul),
+  .blog-prose :global(ol) {
+    padding-left: 22px;
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .blog-prose :global(li) {
+    color: var(--text-soft);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  .blog-prose :global(blockquote) {
+    border-left: 4px solid var(--pink);
+    background: var(--pink-pale);
+    border-radius: 0 var(--r) var(--r) 0;
+    padding: 20px 28px;
+    margin: 36px 0;
+    font-style: italic;
+    color: var(--text);
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+  .blog-prose :global(strong) { color: var(--text); font-weight: 700; }
+  .blog-prose :global(em) { font-style: italic; }
+  .blog-prose :global(a) {
+    color: var(--pink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .blog-prose :global(a:hover) { opacity: 0.8; }
+  .blog-prose :global(img) {
+    width: 100%;
+    border-radius: var(--r);
+    margin: 32px 0;
+  }
+  .blog-prose :global(ol) { list-style: decimal; }
+  .blog-prose :global(ul) { list-style: disc; }
+
+  @media (max-width: 640px) {
+    .blog-prose :global(blockquote) { padding: 14px 18px; }
+    .blog-prose :global(h2) { margin-top: 40px; }
+  }
+</style>

@@ -1,0 +1,97 @@
+---
+import type { GetStaticPaths } from 'astro'
+import { getCollection } from 'astro:content'
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import Header from '../../../components/Header.astro'
+import Footer from '../../../components/Footer.astro'
+import BlogGrid from '../../../components/blog/BlogGrid.astro'
+import BlogCard from '../../../components/blog/BlogCard.astro'
+import BlogPagination from '../../../components/blog/BlogPagination.astro'
+import BlogCategoryFilter from '../../../components/blog/BlogCategoryFilter.astro'
+import { getTranslations } from '../../../i18n/index'
+import { getCategoryLabel, formatDate, isLang } from '../../../utils/blog'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+
+const lang = 'es' as const
+const t = getTranslations(lang)
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const allEntries = await getCollection('blog')
+  const esEntries = allEntries
+    .filter((e) => isLang(e, 'es') && !e.data.draft)
+    .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+
+  return paginate(esEntries, { pageSize: 10 })
+}) satisfies GetStaticPaths
+
+const { page } = Astro.props
+const basePath = getRelativeLocaleUrl('es', '/blog/')
+
+const SITE = 'https://www.llavorslogopedia.com'
+const canonicalUrl = page.currentPage === 1
+  ? `${SITE}/es/blog/`
+  : `${SITE}/es/blog/${page.currentPage}/`
+
+const hreflangs: { ca: string; es?: string } = {
+  ca: page.currentPage === 1
+    ? `${SITE}/blog/`
+    : `${SITE}/blog/${page.currentPage}/`,
+  es: canonicalUrl,
+}
+---
+<BaseLayout
+  lang={lang}
+  title={page.currentPage === 1 ? "Mamá Informada · Llavors Logopèdia" : `Mamá Informada · Página ${page.currentPage}`}
+  description={t.blog_listing_sub}
+  canonical={canonicalUrl}
+  hreflangs={hreflangs}
+  rssHref="/es/rss.xml"
+>
+  <Header t={t} lang={lang} />
+  <main>
+    <section class="blog-listing">
+      <div class="container">
+        <div class="blog-listing-intro section-title">
+          <span class="section-label">{t.blog_label}</span>
+          <h1 set:html={t.blog_h1} />
+          <p>{t.blog_listing_sub}</p>
+        </div>
+        <BlogCategoryFilter lang={lang} t={t} />
+        <BlogGrid>
+          {page.data.map((entry, i) => (
+            <BlogCard
+              title={entry.data.title}
+              excerpt={entry.data.excerpt}
+              categoryLabel={getCategoryLabel(entry.data.category, t)}
+              date={formatDate(entry.data.publishedAt, lang)}
+              dateISO={entry.data.publishedAt.toISOString().split('T')[0]}
+              readingTime={entry.data.readingTime}
+              slug={entry.data.slug}
+              lang={lang}
+              readMoreLabel={t.blog_read_more}
+              readingTimeLabel={t.blog_reading_time}
+              featured={page.currentPage === 1 && i === 0}
+            />
+          ))}
+        </BlogGrid>
+        <BlogPagination
+          currentPage={page.currentPage}
+          totalPages={page.lastPage}
+          basePath={basePath}
+        />
+      </div>
+    </section>
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>
+
+<style>
+  .blog-listing {
+    padding: 80px 0 100px;
+  }
+  .blog-listing-intro h1 {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    margin: 10px 0 16px;
+  }
+  .blog-listing-intro h1 :global(em) { color: var(--pink); font-style: italic; }
+</style>

@@ -55,6 +55,8 @@ const ca = {
   testi_label: 'Testimonis',
   testi_h2: 'El que diuen les famílies',
   testi_sub: 'Valoracions reals de famílies que han confiat en Llavors Logopèdia.',
+  testi_doc_hook: 'No t\'ho diem nosaltres. T\'ho diuen elles.',
+  testi_doc_link: 'Veure més valoracions verificades a Doctorialia',
   t1_text: "\"L'Àngela va ser un punt d'inflexió en la nostra lactància. Gràcies al seu acompanyament vam superar les dificultats dels primers dies i vam poder gaudir d'una experiència preciosa. Sempre disponible i amb molta paciència.\"",
   t1_author: 'Laura M.',
   t1_sub: "· Mamà d'una bebè de 3 mesos",
@@ -115,6 +117,15 @@ const ca = {
   blog_h1: 'Mamà <em>Informada</em>',
   blog_sub: 'Articles, consells i recursos per a famílies. Pròximament.',
   blog_back: 'Tornar a la web',
+  blog_listing_sub: 'Articles de divulgació sobre logopèdia, lactància i desenvolupament per a famílies.',
+  blog_read_more: "Llegir l'article",
+  blog_reading_time: 'min de lectura',
+  blog_author: 'Àngela Alonso Millet',
+  blog_published: 'Publicat el',
+  blog_cat_funcions_orals: 'Funcions orals',
+  blog_cat_lactancia: 'Lactància i Alimentació',
+  blog_cat_comunicacio: 'Comunicació i Llenguatge',
+  blog_back_to_blog: '← Mamà Informada',
 
   book_select_day: 'Selecciona un dia per veure els horaris disponibles',
   book_available: 'Horaris disponibles',
@@ -142,6 +153,17 @@ const ca = {
   book_email_invalid: 'El format del correu no és vàlid.',
   book_notes_required: 'El motiu de consulta és obligatori.',
   book_privacy_required: 'Has d\'acceptar la política de privacitat per continuar.',
+
+  blog_related: 'Articles relacionats',
+  blog_share: 'Compartir',
+  blog_share_wa: 'Compartir per WhatsApp',
+  blog_share_fb: 'Compartir a Facebook',
+  blog_share_copy: "Copiar l'enllaç",
+  blog_share_copied: 'Copiat!',
+  blog_updated: 'Actualitzat el',
+  blog_cat_all: 'Tots',
+  blog_cta_text: "Tens dubtes sobre la lactància, l'alimentació o el desenvolupament del teu fill?",
+  blog_cta_btn: 'Reserva la primera cita',
 } as const
 
 export default ca

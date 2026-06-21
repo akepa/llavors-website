@@ -1,0 +1,21 @@
+translationKey: bavament-infantil
+category: funcions-orals
+publishedAt: 2026-06-15   # fecha propuesta; Àngela puede cambiarla al publicar
+
+val:
+  title: "Per què el meu fill bava? Quan és normal i quan preocupar-se"
+  slug: per-que-el-meu-fill-bava
+  description: "El bavament és habitual fins als 3-4 anys, però hi ha senyals que conviden a consultar. Et donem les claus per a saber quan és normal i quan no."
+  heroImageAlt: "Xiquet menut explorant un objecte amb la boca"
+
+es:
+  title: "¿Por qué mi hijo babea? Cuándo es normal y cuándo preocuparse"
+  slug: por-que-mi-hijo-babea
+  description: "El babeo es habitual hasta los 3-4 años, pero hay señales que invitan a consultar. Te damos las claves para saber cuándo es normal y cuándo no."
+  heroImageAlt: "Niño pequeño explorando un objeto con la boca"
+
+heroImageIdea: >
+  Foto cercana de un bebé o niño pequeño (12-24 meses) en momento cotidiano:
+  jugando con un mordedor, explorando un objeto con la boca, o sonriendo con
+  un poco de babeo natural. Tono cálido, luz natural. Evitar imágenes
+  clínicas o de stock genérico tipo "bebé en consulta".

@@ -9,6 +9,7 @@ interface Props {
 
 const { t, lang } = Astro.props
 const base = import.meta.env.BASE_URL
+const home = getRelativeLocaleUrl(lang, '/')
 ---
 <footer>
   <div class="container">
@@ -28,21 +29,21 @@ const base = import.meta.env.BASE_URL
       <div class="footer-col">
         <h4>{t.footer_serveis_h}</h4>
         <ul>
-          <li><a href="#serveis">{t.footer_s1}</a></li>
-          <li><a href="#serveis">{t.footer_s2}</a></li>
-          <li><a href="#serveis">{t.footer_s3}</a></li>
-          <li><a href="#serveis">{t.footer_s4}</a></li>
-          <li><a href="#serveis">{t.footer_s5}</a></li>
+          <li><a href={home + '#serveis'}>{t.footer_s1}</a></li>
+          <li><a href={home + '#serveis'}>{t.footer_s2}</a></li>
+          <li><a href={home + '#serveis'}>{t.footer_s3}</a></li>
+          <li><a href={home + '#serveis'}>{t.footer_s4}</a></li>
+          <li><a href={home + '#serveis'}>{t.footer_s5}</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>{t.footer_nav_h}</h4>
         <ul>
-          <li><a href="#inici">{t.footer_n1}</a></li>
-          <li><a href="#sobre-mi">{t.footer_n2}</a></li>
-          <li><a href="#com-funciona">{t.footer_n3}</a></li>
+          <li><a href={home}>{t.footer_n1}</a></li>
+          <li><a href={home + '#sobre-mi'}>{t.footer_n2}</a></li>
+          <li><a href={home + '#com-funciona'}>{t.footer_n3}</a></li>
           <li><a href={getRelativeLocaleUrl(lang, '/blog')}>{t.footer_n4}</a></li>
-          <li><a href="#faq">{t.footer_n5}</a></li>
+          <li><a href={home + '#faq'}>{t.footer_n5}</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -52,7 +53,7 @@ const base = import.meta.env.BASE_URL
           <li><a href="tel:+34614337743">614 33 77 43</a></li>
           <li><a href="https://www.instagram.com/llavors.de.llet" target="_blank" rel="noopener noreferrer">@llavors.de.llet</a></li>
           <li style="margin-top:8px">
-            <a href="#reserva" class="btn btn-outline-pink" style="font-size:0.85rem;padding:10px 20px">{t.nav_cta}</a>
+            <a href={home + '#reserva'} class="btn btn-outline-pink" style="font-size:0.85rem;padding:10px 20px">{t.nav_cta}</a>
           </li>
         </ul>
       </div>
