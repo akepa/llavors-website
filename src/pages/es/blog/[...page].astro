@@ -71,6 +71,8 @@ const hreflangs: { ca: string; es?: string } = {
               readMoreLabel={t.blog_read_more}
               readingTimeLabel={t.blog_reading_time}
               featured={page.currentPage === 1 && i === 0}
+              heroImage={entry.data.heroImage}
+              heroImageAlt={entry.data.heroImageAlt}
             />
           ))}
         </BlogGrid>

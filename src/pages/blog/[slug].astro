@@ -32,7 +32,7 @@ export async function getStaticPaths() {
 
 const { entry, esSlug } = Astro.props
 const { Content } = await render(entry)
-const { title, description, publishedAt, updatedAt, category } = entry.data
+const { title, description, publishedAt, updatedAt, category, heroImage } = entry.data
 
 const allEntries = await getCollection('blog')
 const caEntries = allEntries.filter((e) => isLang(e, 'ca') && !e.data.draft)
@@ -41,6 +41,11 @@ const relatedEntries = getRelatedEntries(caEntries, entry)
 const SITE = 'https://www.llavorslogopedia.com'
 const canonicalPath = `/blog/${entry.data.slug}/`
 const canonicalUrl = `${SITE}${canonicalPath}`
+
+const BASE = '/llavors-website'
+const ogImage = heroImage
+  ? (heroImage.src.startsWith(BASE) ? heroImage.src.slice(BASE.length) : heroImage.src)
+  : undefined
 
 const hreflangs: { ca: string; es?: string } = {
   ca: canonicalUrl,
@@ -67,6 +72,7 @@ const breadcrumbs = [
   lang={lang}
   title={title}
   description={description}
+  ogImage={ogImage}
   canonical={canonicalUrl}
   hreflangs={hreflangs}
   rssHref="/rss.xml"

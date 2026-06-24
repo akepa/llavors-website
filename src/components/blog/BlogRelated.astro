@@ -30,6 +30,8 @@ const { entries, lang, t } = Astro.props
             lang={lang}
             readMoreLabel={t.blog_read_more}
             readingTimeLabel={t.blog_reading_time}
+            heroImage={entry.data.heroImage}
+            heroImageAlt={entry.data.heroImageAlt}
           />
         ))}
       </div>
