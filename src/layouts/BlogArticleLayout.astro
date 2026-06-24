@@ -21,7 +21,7 @@ interface Props {
 }
 
 const { entry, lang, t, relatedEntries } = Astro.props
-const { title, category, publishedAt, updatedAt, readingTime } = entry.data
+const { title, category, publishedAt, updatedAt, readingTime, heroImage, heroImageAlt } = entry.data
 
 const blogUrl = getRelativeLocaleUrl(lang, '/blog')
 const homeUrl = getRelativeLocaleUrl(lang, '/')
@@ -56,6 +56,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     updatedDate={updatedDateFormatted}
     updatedDateISO={updatedDateISO}
     updatedLabel={t.blog_updated}
+    heroImage={heroImage}
+    heroImageAlt={heroImageAlt}
   />
   <div class="article-body container">
     <nav class="breadcrumb" aria-label="Breadcrumb">

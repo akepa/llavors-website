@@ -11,8 +11,14 @@ interface Props {
 }
 
 const { entry, lang, canonicalUrl } = Astro.props
-const { title, description, publishedAt, updatedAt, category, heroImageAlt } = entry.data
+const { title, description, publishedAt, updatedAt, category, heroImage, heroImageAlt } = entry.data
 const t = getTranslations(lang)
+
+const SITE = 'https://www.llavorslogopedia.com'
+const BASE = '/llavors-website'
+const imageUrl = heroImage
+  ? `${SITE}${heroImage.src.startsWith(BASE) ? heroImage.src.slice(BASE.length) : heroImage.src}`
+  : `${SITE}/og-default.png`
 
 const schema = {
   '@context': 'https://schema.org',
@@ -26,7 +32,7 @@ const schema = {
   articleSection: getCategoryLabel(category, t),
   image: {
     '@type': 'ImageObject',
-    url: 'https://www.llavorslogopedia.com/og-default.png',
+    url: imageUrl,
     description: heroImageAlt,
   },
   author: {
