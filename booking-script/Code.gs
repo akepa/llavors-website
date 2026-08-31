@@ -244,14 +244,18 @@ function createEventWithMeet(name, email, startTime, endTime, phone, notes, lang
   // El hangoutLink puede llegar vacío justo tras el insert mientras Google
   // aprovisiona la conferencia — se reintenta una vez recuperando el evento.
   if (!meetLink) {
-    var refreshed = Calendar.Events.get('primary', event.id);
-    meetLink = refreshed.hangoutLink || '';
+    try {
+      var refreshed = Calendar.Events.get('primary', event.id);
+      meetLink = refreshed.hangoutLink || '';
+    } catch (e) {}
   }
 
   if (meetLink) {
-    Calendar.Events.patch({
-      description: description.concat(['Enllaç de la videotrucada: ' + meetLink]).join('\n')
-    }, 'primary', event.id);
+    try {
+      Calendar.Events.patch({
+        description: description.concat(['Enllaç de la videotrucada: ' + meetLink]).join('\n')
+      }, 'primary', event.id);
+    } catch (e) {}
   }
 
   return meetLink;
