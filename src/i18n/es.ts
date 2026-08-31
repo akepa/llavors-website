@@ -23,7 +23,7 @@ const es = {
   s3_title: 'Desarrollo Comunicativo y del Lenguaje',
   s3_text: 'Asesoramiento y acompañamiento en el desarrollo de la comunicación y el lenguaje desde el primer año hasta los 6 años. Buscamos estrategias y mejoramos las habilidades familiares para favorecer el aprendizaje del lenguaje en los entornos naturales del niño y en base a sus rutinas diarias.',
   mod1: "Atención a domicilio · Valencia y l'Horta",
-  mod2: 'Consulta presencial · Valencia y Massamagrell',
+  mod2: 'Consulta presencial · Valencia',
   mod3: 'Sesiones online',
 
   about_badge: '+5 años acompañando familias en la primera infancia',
@@ -90,7 +90,7 @@ const es = {
   faq4_q: '¿Trabajáis con el seguro médico?',
   faq4_a: 'Por el momento no trabajamos con seguros médicos. Ofrecemos atención privada porque nos permite dedicar el tiempo y la calidad que cada familia merece, sin restricciones ni prisas.',
   faq5_q: '¿Hacéis sesiones a domicilio?',
-  faq5_a: "¡Sí! Ofrecemos atención a domicilio en Valencia y los municipios de l'Horta. También tenemos consulta presencial en Valencia y Massamagrell, y sesiones online para quien prefiera la comodidad de su casa.",
+  faq5_a: "¡Sí! Ofrecemos atención a domicilio en Valencia y los municipios de l'Horta. También tenemos consulta presencial en Valencia, y sesiones online para quien prefiera la comodidad de su casa.",
   faq6_q: '¿Cómo sé si mi hijo necesita logopedia?',
   faq6_a: 'Si tienes dudas sobre la alimentación de tu bebé, la lactancia, su respiración o su desarrollo comunicativo, no esperes. Una primera consulta de valoración es el mejor punto de partida para resolver tus dudas y quedarte tranquila.',
 
