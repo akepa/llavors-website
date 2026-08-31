@@ -22,7 +22,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
 
     <div class="booking-options">
       <div class="booking-option">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
         <span>{t.res_o1}</span>
       </div>
       <div class="booking-option">
@@ -136,6 +136,9 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
           </div>
         </div>
       </div>
+      <p class="inperson-note">
+        {t.res_inperson_note} <a href="https://wa.me/34614337743" target="_blank" rel="noopener noreferrer">{t.res_inperson_link}</a>
+      </p>
     ) : (
       <div class="calendly-wrap">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -167,6 +170,12 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     width: 18px; height: 18px;
     stroke: var(--pink); fill: none; stroke-width: 2;
   }
+
+  .inperson-note {
+    max-width: 900px; margin: 16px auto 0;
+    font-size: 0.85rem; color: var(--gray); text-align: center;
+  }
+  .inperson-note a { color: var(--pink); font-weight: 600; }
 
   /* Fallback (sin API URL) */
   .calendly-wrap {
