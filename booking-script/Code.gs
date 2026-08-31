@@ -220,13 +220,18 @@ function bookSlot(data) {
 // único para esta reserva. Requiere el servicio avanzado "Google Calendar
 // API" (ver comentario de configuración al inicio del archivo).
 function createEventWithMeet(name, email, startTime, endTime, phone, notes, lang) {
-  var description = [];
-  if (phone) description.push('Telèfon: ' + phone);
-  if (notes) description.push('Motiu: ' + notes);
-  description.push('Idioma preferit: ' + (lang === 'ca' ? 'Valencià' : 'Castellà'));
+  var isCa = lang === 'ca';
+
+  // El paciente está invitado al evento, así que ve el título y la descripción:
+  // van en su idioma. Los apuntes internos quedan en el aviso a Àngela.
+  var description = [isCa
+    ? 'Primera cita de valoració amb Àngela Alonso, per videotrucada.'
+    : 'Primera cita de valoración con Àngela Alonso, por videollamada.'];
+  if (phone) description.push((isCa ? 'Telèfon de contacte: ' : 'Teléfono de contacto: ') + phone);
+  if (notes) description.push((isCa ? 'Motiu de la consulta: ' : 'Motivo de la consulta: ') + notes);
 
   var event = Calendar.Events.insert({
-    summary: 'Primera Cita (Online) — ' + name,
+    summary: 'Primera cita online — ' + name,
     description: description.join('\n'),
     start: { dateTime: startTime.toISOString(), timeZone: 'Europe/Madrid' },
     end:   { dateTime: endTime.toISOString(),   timeZone: 'Europe/Madrid' },
@@ -253,7 +258,9 @@ function createEventWithMeet(name, email, startTime, endTime, phone, notes, lang
   if (meetLink) {
     try {
       Calendar.Events.patch({
-        description: description.concat(['Enllaç de la videotrucada: ' + meetLink]).join('\n')
+        description: description.concat([
+          (isCa ? 'Enllaç de la videotrucada: ' : 'Enlace de la videollamada: ') + meetLink
+        ]).join('\n')
       }, 'primary', event.id);
     } catch (e) {}
   }
@@ -298,34 +305,36 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes, meet
 
   // Confirmation to patient
   if (lang === 'ca') {
-    GmailApp.sendEmail(email, 'Cita confirmada — Llavors Logopèdia',
+    GmailApp.sendEmail(email, 'Cita reservada — Llavors Logopèdia',
       'Hola ' + name + ',\n\n' +
-      'La teua primera cita amb Àngela Alonso està confirmada.\n\n' +
+      'He rebut la teua sol·licitud de primera cita. Ací tens les dades:\n\n' +
       '📅 ' + weekdaysCa[wd] + ', ' + d + ' de ' + monthsCa[m] + ' de ' + y + ' a les ' + time + '–' + endStr + '\n' +
       '⏱ Durada: 30 minuts\n' +
-      '💻 La cita és online, per videotrucada.\n' +
-      (meetLine ? '📹 Enllaç de la videotrucada: ' + meetLine + '\n' : '') + '\n' +
-      '📌 Em posaré en contacte amb tu per confirmar la cita. L\'horari podria patir canvis per motius d\'organització.\n\n' +
-      'Si necessites una cita presencial urgent, contacta per WhatsApp: ' + whatsapp + '\n\n' +
-      'Si necessites canviar o cancel·lar la cita, posa\'t en contacte:\n' +
-      '📧 ' + fromAddr + '\n' +
-      '💬 WhatsApp: ' + whatsapp + '\n\n' +
+      '💻 Cita online, per videotrucada\n' +
+      (meetLine
+        ? '📹 Enllaç de la videotrucada: ' + meetLine + '\n'
+        : '📹 T\'enviaré l\'enllaç de la videotrucada abans de la cita.\n') + '\n' +
+      '📌 Em posaré en contacte amb tu per a confirmar-la. Si l\'horari haguera de canviar, t\'avisaria amb antelació.\n\n' +
+      'Si necessites canviar o cancel·lar la cita, o necessites una cita presencial urgent, escriu-me:\n' +
+      '💬 WhatsApp: ' + whatsapp + '\n' +
+      '📧 ' + fromAddr + '\n\n' +
       'Fins aviat,\nÀngela Alonso — Llavors Logopèdia',
       { from: fromAddr }
     );
   } else {
-    GmailApp.sendEmail(email, 'Cita confirmada — Llavors Logopèdia',
+    GmailApp.sendEmail(email, 'Cita reservada — Llavors Logopèdia',
       'Hola ' + name + ',\n\n' +
-      'Tu primera cita con Àngela Alonso está confirmada.\n\n' +
+      'He recibido tu solicitud de primera cita. Estos son los datos:\n\n' +
       '📅 ' + weekdaysEs[wd] + ', ' + d + ' de ' + monthsEs[m] + ' de ' + y + ' a las ' + time + '–' + endStr + '\n' +
       '⏱ Duración: 30 minutos\n' +
-      '💻 La cita es online, por videollamada.\n' +
-      (meetLine ? '📹 Enlace de la videollamada: ' + meetLine + '\n' : '') + '\n' +
-      '📌 Me pondré en contacto contigo para confirmar la cita. El horario podría sufrir cambios por motivos de organización.\n\n' +
-      'Si necesitas una cita presencial urgente, contacta por WhatsApp: ' + whatsapp + '\n\n' +
-      'Si necesitas cambiar o cancelar la cita, contacta:\n' +
-      '📧 ' + fromAddr + '\n' +
-      '💬 WhatsApp: ' + whatsapp + '\n\n' +
+      '💻 Cita online, por videollamada\n' +
+      (meetLine
+        ? '📹 Enlace de la videollamada: ' + meetLine + '\n'
+        : '📹 Te enviaré el enlace de la videollamada antes de la cita.\n') + '\n' +
+      '📌 Me pondré en contacto contigo para confirmarla. Si el horario tuviera que cambiar, te avisaría con antelación.\n\n' +
+      'Si necesitas cambiar o cancelar la cita, o necesitas una cita presencial urgente, escríbeme:\n' +
+      '💬 WhatsApp: ' + whatsapp + '\n' +
+      '📧 ' + fromAddr + '\n\n' +
       'Hasta pronto,\nÀngela Alonso — Llavors Logopèdia',
       { from: fromAddr }
     );
@@ -341,8 +350,8 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes, meet
     'Email: ' + email + '\n' +
     (phone ? 'Telèfon: ' + phone + '\n' : '') +
     (notes ? 'Motiu: ' + notes + '\n' : '') +
-    'Idioma preferit: ' + (lang === 'ca' ? 'Valencià' : 'Castellà') + '\n' +
-    (meetLine ? 'Enllaç de la videotrucada: ' + meetLine + '\n' : ''),
+    'Idioma preferit: ' + (lang === 'ca' ? 'Valencià' : 'Castellà') +
+    (meetLine ? '\nEnllaç de la videotrucada: ' + meetLine : ''),
     { from: fromAddr }
   );
 }

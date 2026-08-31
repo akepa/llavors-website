@@ -134,6 +134,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
             <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
             <h3 id="success-title"></h3>
             <p id="success-text"></p>
+            <p id="success-note"></p>
           </div>
         </div>
       </div>
@@ -356,6 +357,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
   }
   .booking-success h3 { color: var(--pink); font-size: 1.1rem; }
   .booking-success p { font-size: 0.9rem; color: var(--text-soft); }
+  .booking-success #success-note { max-width: 34ch; }
 
   .hidden { display: none !important; }
 
@@ -665,8 +667,8 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
 
       if (data.ok) {
         hide(formWrap)
-        const successText = document.getElementById('success-text')!
-        successText.textContent = i18n.successText + ' ' + email + ' ' + i18n.successOnlineNote
+        document.getElementById('success-text')!.textContent = i18n.successText + ' ' + email
+        document.getElementById('success-note')!.textContent = i18n.successOnlineNote
         document.getElementById('success-title')!.textContent = i18n.successTitle
         show(successWrap)
       } else {
