@@ -271,7 +271,7 @@ function generateSlots(start, end) {
   return slots;
 }
 
-function sendConfirmationEmail(name, email, date, time, lang, phone, notes) {
+function sendConfirmationEmail(name, email, date, time, lang, phone, notes, meetLink) {
   var parts = date.split('-').map(Number);
   var timeParts = time.split(':').map(Number);
   var startTime = new Date(parts[0], parts[1] - 1, parts[2], timeParts[0], timeParts[1], 0);
@@ -290,6 +290,7 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes) {
 
   var fromAddr = 'info@llavorslogopedia.com';
   var whatsapp = 'https://wa.me/34614337743';
+  var meetLine = meetLink || '';
 
   // Confirmation to patient
   if (lang === 'ca') {
@@ -297,7 +298,10 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes) {
       'Hola ' + name + ',\n\n' +
       'La teua primera cita amb Àngela Alonso està confirmada.\n\n' +
       '📅 ' + weekdaysCa[wd] + ', ' + d + ' de ' + monthsCa[m] + ' de ' + y + ' a les ' + time + '–' + endStr + '\n' +
-      '⏱ Durada: 30 minuts\n\n' +
+      '⏱ Durada: 30 minuts\n' +
+      '💻 La cita és online, per videotrucada.\n' +
+      (meetLine ? '📹 Enllaç de la videotrucada: ' + meetLine + '\n' : '') + '\n' +
+      'Si necessites una cita presencial urgent, contacta per WhatsApp: ' + whatsapp + '\n\n' +
       'Si necessites canviar o cancel·lar la cita, posa\'t en contacte:\n' +
       '📧 ' + fromAddr + '\n' +
       '💬 WhatsApp: ' + whatsapp + '\n\n' +
@@ -309,7 +313,10 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes) {
       'Hola ' + name + ',\n\n' +
       'Tu primera cita con Àngela Alonso está confirmada.\n\n' +
       '📅 ' + weekdaysEs[wd] + ', ' + d + ' de ' + monthsEs[m] + ' de ' + y + ' a las ' + time + '–' + endStr + '\n' +
-      '⏱ Duración: 30 minutos\n\n' +
+      '⏱ Duración: 30 minutos\n' +
+      '💻 La cita es online, por videollamada.\n' +
+      (meetLine ? '📹 Enlace de la videollamada: ' + meetLine + '\n' : '') + '\n' +
+      'Si necesitas una cita presencial urgente, contacta por WhatsApp: ' + whatsapp + '\n\n' +
       'Si necesitas cambiar o cancelar la cita, contacta:\n' +
       '📧 ' + fromAddr + '\n' +
       '💬 WhatsApp: ' + whatsapp + '\n\n' +
@@ -321,14 +328,15 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes) {
   // Notification to Àngela
   GmailApp.sendEmail('logopeda.angela@gmail.com',
     'Nova cita — ' + name + ' · ' + weekdaysCa[wd] + ' ' + d + '/' + (m+1) + ' ' + time,
-    'S\'ha reservat una nova primera cita:\n\n' +
+    'S\'ha reservat una nova primera cita (online):\n\n' +
     'Nom: ' + name + '\n' +
     'Data: ' + weekdaysCa[wd] + ', ' + d + ' de ' + monthsCa[m] + ' de ' + y + '\n' +
     'Hora: ' + time + '–' + endStr + '\n' +
     'Email: ' + email + '\n' +
     (phone ? 'Telèfon: ' + phone + '\n' : '') +
     (notes ? 'Motiu: ' + notes + '\n' : '') +
-    'Idioma preferit: ' + (lang === 'ca' ? 'Valencià' : 'Castellà'),
+    'Idioma preferit: ' + (lang === 'ca' ? 'Valencià' : 'Castellà') + '\n' +
+    (meetLine ? 'Enllaç de la videotrucada: ' + meetLine + '\n' : ''),
     { from: fromAddr }
   );
 }
