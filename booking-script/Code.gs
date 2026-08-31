@@ -1,6 +1,9 @@
 // ============================================================
 // Configuración — ajustar si cambia la cuenta de Google
 // ============================================================
+// Requiere el Servicio avanzado "Google Calendar API" habilitado en este
+// proyecto de Apps Script (Servicios → + → Google Calendar API), usado
+// para generar un enlace de Meet único por reserva (ver createEventWithMeet).
 var AVAILABILITY_CAL_NAME = 'Disponibilitat Llavors';
 var SLOT_MINUTES = 30;
 
@@ -202,23 +205,56 @@ function bookSlot(data) {
   var startTime = new Date(parts[0], parts[1] - 1, parts[2], timeParts[0], timeParts[1], 0);
   var endTime   = new Date(startTime.getTime() + SLOT_MINUTES * 60 * 1000);
 
-  var description = [];
-  if (phone) description.push('Telèfon: ' + phone);
-  if (notes) description.push('Motiu: ' + notes);
-  description.push('Idioma preferit: ' + (lang === 'ca' ? 'Valencià' : 'Castellà'));
-
-  var primaryCal = CalendarApp.getDefaultCalendar();
-  primaryCal.createEvent('Primera Cita — ' + name, startTime, endTime, {
-    description: description.join('\n')
-  });
+  var meetLink = createEventWithMeet(name, email, startTime, endTime, phone, notes, lang);
 
   // Invalidate month cache so the next visitor sees updated availability
   var cacheKey = 'month_' + parts[0] + '_' + parts[1];
   try { CacheService.getScriptCache().remove(cacheKey); } catch(e) {}
 
-  sendConfirmationEmail(name, email, date, time, lang, phone, notes);
+  sendConfirmationEmail(name, email, date, time, lang, phone, notes, meetLink);
 
   return { ok: true };
+}
+
+// Crea el evento en el calendario principal con un enlace de Google Meet
+// único para esta reserva. Requiere el servicio avanzado "Google Calendar
+// API" (ver comentario de configuración al inicio del archivo).
+function createEventWithMeet(name, email, startTime, endTime, phone, notes, lang) {
+  var description = [];
+  if (phone) description.push('Telèfon: ' + phone);
+  if (notes) description.push('Motiu: ' + notes);
+  description.push('Idioma preferit: ' + (lang === 'ca' ? 'Valencià' : 'Castellà'));
+
+  var event = Calendar.Events.insert({
+    summary: 'Primera Cita (Online) — ' + name,
+    description: description.join('\n'),
+    start: { dateTime: startTime.toISOString(), timeZone: 'Europe/Madrid' },
+    end:   { dateTime: endTime.toISOString(),   timeZone: 'Europe/Madrid' },
+    attendees: [{ email: email }],
+    conferenceData: {
+      createRequest: {
+        requestId: Utilities.getUuid(),
+        conferenceSolutionKey: { type: 'hangoutsMeet' }
+      }
+    }
+  }, 'primary', { conferenceDataVersion: 1, sendUpdates: 'all' });
+
+  var meetLink = event.hangoutLink;
+
+  // El hangoutLink puede llegar vacío justo tras el insert mientras Google
+  // aprovisiona la conferencia — se reintenta una vez recuperando el evento.
+  if (!meetLink) {
+    var refreshed = Calendar.Events.get('primary', event.id);
+    meetLink = refreshed.hangoutLink || '';
+  }
+
+  if (meetLink) {
+    Calendar.Events.patch({
+      description: description.concat(['Enllaç de la videotrucada: ' + meetLink]).join('\n')
+    }, 'primary', event.id);
+  }
+
+  return meetLink;
 }
 
 // ============================================================
