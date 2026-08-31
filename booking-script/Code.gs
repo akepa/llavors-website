@@ -282,6 +282,16 @@ function generateSlots(start, end) {
   return slots;
 }
 
+// En valencià, els mesos que comencen per vocal porten «d'» i no «de».
+function caMonthPrefix(month) {
+  return /^[aeiou]/.test(month) ? 'd\'' : 'de ';
+}
+
+// IMPORTANTE — nada de emoji tipo 📅 💻 📧 en el cuerpo de los correos.
+// GmailApp serializa los caracteres fuera del BMP (los U+1F4xx, que en UTF-16
+// son parejas suplentes) como CESU-8, y al paciente le llegan 6 rombos negros
+// por emoji. Los símbolos del BMP (⏱ ✉ ☎ ▶) sí pasan bien, pero se prefieren
+// etiquetas de texto por coherencia.
 function sendConfirmationEmail(name, email, date, time, lang, phone, notes, meetLink) {
   var parts = date.split('-').map(Number);
   var timeParts = time.split(':').map(Number);
@@ -308,16 +318,16 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes, meet
     GmailApp.sendEmail(email, 'Cita reservada — Llavors Logopèdia',
       'Hola ' + name + ',\n\n' +
       'He rebut la teua sol·licitud de primera cita. Ací tens les dades:\n\n' +
-      '📅 ' + weekdaysCa[wd] + ', ' + d + ' de ' + monthsCa[m] + ' de ' + y + ' a les ' + time + '–' + endStr + '\n' +
-      '⏱ Durada: 30 minuts\n' +
-      '💻 Cita online, per videotrucada\n' +
+      '  Data: ' + weekdaysCa[wd] + ', ' + d + ' ' + caMonthPrefix(monthsCa[m]) + monthsCa[m] + ' de ' + y + ', de ' + time + ' a ' + endStr + '\n' +
+      '  Durada: 30 minuts\n' +
+      '  Format: cita online, per videotrucada\n' +
       (meetLine
-        ? '📹 Enllaç de la videotrucada: ' + meetLine + '\n'
-        : '📹 T\'enviaré l\'enllaç de la videotrucada abans de la cita.\n') + '\n' +
-      '📌 Em posaré en contacte amb tu per a confirmar-la. Si l\'horari haguera de canviar, t\'avisaria amb antelació.\n\n' +
-      'Si necessites canviar o cancel·lar la cita, o necessites una cita presencial urgent, escriu-me:\n' +
-      '💬 WhatsApp: ' + whatsapp + '\n' +
-      '📧 ' + fromAddr + '\n\n' +
+        ? '  Enllaç: ' + meetLine + '\n'
+        : '  Enllaç: te l\'enviaré abans de la cita\n') + '\n' +
+      'Em posaré en contacte amb tu per a confirmar-la. Si l\'horari haguera de canviar, t\'avisaria amb antelació.\n\n' +
+      'Si necessites canviar o cancel·lar la cita, o necessites una cita presencial urgent, escriu-me:\n\n' +
+      '  WhatsApp: ' + whatsapp + '\n' +
+      '  Correu: ' + fromAddr + '\n\n' +
       'Fins aviat,\nÀngela Alonso — Llavors Logopèdia',
       { from: fromAddr }
     );
@@ -325,16 +335,16 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes, meet
     GmailApp.sendEmail(email, 'Cita reservada — Llavors Logopèdia',
       'Hola ' + name + ',\n\n' +
       'He recibido tu solicitud de primera cita. Estos son los datos:\n\n' +
-      '📅 ' + weekdaysEs[wd] + ', ' + d + ' de ' + monthsEs[m] + ' de ' + y + ' a las ' + time + '–' + endStr + '\n' +
-      '⏱ Duración: 30 minutos\n' +
-      '💻 Cita online, por videollamada\n' +
+      '  Fecha: ' + weekdaysEs[wd] + ', ' + d + ' de ' + monthsEs[m] + ' de ' + y + ', de ' + time + ' a ' + endStr + '\n' +
+      '  Duración: 30 minutos\n' +
+      '  Formato: cita online, por videollamada\n' +
       (meetLine
-        ? '📹 Enlace de la videollamada: ' + meetLine + '\n'
-        : '📹 Te enviaré el enlace de la videollamada antes de la cita.\n') + '\n' +
-      '📌 Me pondré en contacto contigo para confirmarla. Si el horario tuviera que cambiar, te avisaría con antelación.\n\n' +
-      'Si necesitas cambiar o cancelar la cita, o necesitas una cita presencial urgente, escríbeme:\n' +
-      '💬 WhatsApp: ' + whatsapp + '\n' +
-      '📧 ' + fromAddr + '\n\n' +
+        ? '  Enlace: ' + meetLine + '\n'
+        : '  Enlace: te lo enviaré antes de la cita\n') + '\n' +
+      'Me pondré en contacto contigo para confirmarla. Si el horario tuviera que cambiar, te avisaría con antelación.\n\n' +
+      'Si necesitas cambiar o cancelar la cita, o necesitas una cita presencial urgente, escríbeme:\n\n' +
+      '  WhatsApp: ' + whatsapp + '\n' +
+      '  Correo: ' + fromAddr + '\n\n' +
       'Hasta pronto,\nÀngela Alonso — Llavors Logopèdia',
       { from: fromAddr }
     );
@@ -345,7 +355,7 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes, meet
     'Nova cita — ' + name + ' · ' + weekdaysCa[wd] + ' ' + d + '/' + (m+1) + ' ' + time,
     'S\'ha reservat una nova primera cita (online):\n\n' +
     'Nom: ' + name + '\n' +
-    'Data: ' + weekdaysCa[wd] + ', ' + d + ' de ' + monthsCa[m] + ' de ' + y + '\n' +
+    'Data: ' + weekdaysCa[wd] + ', ' + d + ' ' + caMonthPrefix(monthsCa[m]) + monthsCa[m] + ' de ' + y + '\n' +
     'Hora: ' + time + '–' + endStr + '\n' +
     'Email: ' + email + '\n' +
     (phone ? 'Telèfon: ' + phone + '\n' : '') +
