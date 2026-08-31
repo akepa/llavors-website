@@ -61,6 +61,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
           emailInvalid: t.book_email_invalid,
           successTitle:t.book_success_title,
           successText: t.book_success_text,
+          successOnlineNote: t.book_success_online_note,
           error:       t.book_error,
           slotTaken:   t.book_slot_taken,
           nameRequired:    t.book_name_required,
@@ -378,7 +379,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     name: string; namePh: string; email: string; emailPh: string
     phone: string; phonePh: string; notes: string; notesPh: string
     privacy: string; privacyLink: string; back: string; confirm: string; confirming: string
-    successTitle: string; successText: string; error: string; slotTaken: string
+    successTitle: string; successText: string; successOnlineNote: string; error: string; slotTaken: string
     nameRequired: string; emailRequired: string; emailInvalid: string; notesRequired: string; privacyRequired: string
   }
 
@@ -665,7 +666,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
       if (data.ok) {
         hide(formWrap)
         const successText = document.getElementById('success-text')!
-        successText.textContent = i18n.successText + ' ' + email
+        successText.textContent = i18n.successText + ' ' + email + ' ' + i18n.successOnlineNote
         document.getElementById('success-title')!.textContent = i18n.successTitle
         show(successWrap)
       } else {
