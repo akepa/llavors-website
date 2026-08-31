@@ -23,7 +23,7 @@ const ca = {
   s3_title: 'Desenvolupament Comunicatiu i del Llenguatge',
   s3_text: "Assessorament i acompanyament en el desenvolupament de la comunicació i el llenguatge des del primer any fins als 6 anys. Busquem estratègies i millorem les habilitats familiars per afavorir l'aprenentatge del llenguatge en els entorns naturals del xiquet i en base a les seues rutines diàries.",
   mod1: "Atenció a domicili · València i l'Horta",
-  mod2: 'Consulta presencial · València i Massamagrell',
+  mod2: 'Consulta presencial · València',
   mod3: 'Sessions online',
 
   about_badge: '+5 anys acompanyant famílies en la primera infància',
@@ -90,7 +90,7 @@ const ca = {
   faq4_q: "Treballeu amb l'assegurança mèdica?",
   faq4_a: 'De moment no treballem amb assegurances mèdiques. Oferim atenció privada perquè ens permet dedicar el temps i la qualitat que cada família mereix, sense restriccions ni pressa.',
   faq5_q: 'Feu sessions a domicili?',
-  faq5_a: "Sí! Oferim atenció a domicili a València i les poblacions de l'Horta. També tenim consulta presencial a València i Massamagrell, i sessions online per a qui preferisca la comoditat de casa seva.",
+  faq5_a: "Sí! Oferim atenció a domicili a València i les poblacions de l'Horta. També tenim consulta presencial a València, i sessions online per a qui preferisca la comoditat de casa seua.",
   faq6_q: 'Com sé si el meu fill necessita logopèdia?',
   faq6_a: "Si tens dubtes sobre l'alimentació del teu bebè, la lactància, la seua respiració o el seu desenvolupament comunicatiu, no esperes. Una primera consulta de valoració és el millor punt de partida per resoldre els teus dubtes i quedar-te tranquil·la.",
 
