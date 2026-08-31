@@ -1,6 +1,9 @@
 // ============================================================
 // Configuración — ajustar si cambia la cuenta de Google
 // ============================================================
+// Requiere el Servicio avanzado "Google Calendar API" habilitado en este
+// proyecto de Apps Script (Servicios → + → Google Calendar API), usado
+// para generar un enlace de Meet único por reserva (ver createEventWithMeet).
 var AVAILABILITY_CAL_NAME = 'Disponibilitat Llavors';
 var SLOT_MINUTES = 30;
 
@@ -202,23 +205,67 @@ function bookSlot(data) {
   var startTime = new Date(parts[0], parts[1] - 1, parts[2], timeParts[0], timeParts[1], 0);
   var endTime   = new Date(startTime.getTime() + SLOT_MINUTES * 60 * 1000);
 
-  var description = [];
-  if (phone) description.push('Telèfon: ' + phone);
-  if (notes) description.push('Motiu: ' + notes);
-  description.push('Idioma preferit: ' + (lang === 'ca' ? 'Valencià' : 'Castellà'));
-
-  var primaryCal = CalendarApp.getDefaultCalendar();
-  primaryCal.createEvent('Primera Cita — ' + name, startTime, endTime, {
-    description: description.join('\n')
-  });
+  var meetLink = createEventWithMeet(name, email, startTime, endTime, phone, notes, lang);
 
   // Invalidate month cache so the next visitor sees updated availability
   var cacheKey = 'month_' + parts[0] + '_' + parts[1];
   try { CacheService.getScriptCache().remove(cacheKey); } catch(e) {}
 
-  sendConfirmationEmail(name, email, date, time, lang, phone, notes);
+  sendConfirmationEmail(name, email, date, time, lang, phone, notes, meetLink);
 
   return { ok: true };
+}
+
+// Crea el evento en el calendario principal con un enlace de Google Meet
+// único para esta reserva. Requiere el servicio avanzado "Google Calendar
+// API" (ver comentario de configuración al inicio del archivo).
+function createEventWithMeet(name, email, startTime, endTime, phone, notes, lang) {
+  var isCa = lang === 'ca';
+
+  // El paciente está invitado al evento, así que ve el título y la descripción:
+  // van en su idioma. Los apuntes internos quedan en el aviso a Àngela.
+  var description = [isCa
+    ? 'Primera cita de valoració amb Àngela Alonso, per videotrucada.'
+    : 'Primera cita de valoración con Àngela Alonso, por videollamada.'];
+  if (phone) description.push((isCa ? 'Telèfon de contacte: ' : 'Teléfono de contacto: ') + phone);
+  if (notes) description.push((isCa ? 'Motiu de la consulta: ' : 'Motivo de la consulta: ') + notes);
+
+  var event = Calendar.Events.insert({
+    summary: 'Primera cita online — ' + name,
+    description: description.join('\n'),
+    start: { dateTime: startTime.toISOString(), timeZone: 'Europe/Madrid' },
+    end:   { dateTime: endTime.toISOString(),   timeZone: 'Europe/Madrid' },
+    attendees: [{ email: email }],
+    conferenceData: {
+      createRequest: {
+        requestId: Utilities.getUuid(),
+        conferenceSolutionKey: { type: 'hangoutsMeet' }
+      }
+    }
+  }, 'primary', { conferenceDataVersion: 1, sendUpdates: 'all' });
+
+  var meetLink = event.hangoutLink;
+
+  // El hangoutLink puede llegar vacío justo tras el insert mientras Google
+  // aprovisiona la conferencia — se reintenta una vez recuperando el evento.
+  if (!meetLink) {
+    try {
+      var refreshed = Calendar.Events.get('primary', event.id);
+      meetLink = refreshed.hangoutLink || '';
+    } catch (e) {}
+  }
+
+  if (meetLink) {
+    try {
+      Calendar.Events.patch({
+        description: description.concat([
+          (isCa ? 'Enllaç de la videotrucada: ' : 'Enlace de la videollamada: ') + meetLink
+        ]).join('\n')
+      }, 'primary', event.id);
+    } catch (e) {}
+  }
+
+  return meetLink;
 }
 
 // ============================================================
@@ -235,7 +282,17 @@ function generateSlots(start, end) {
   return slots;
 }
 
-function sendConfirmationEmail(name, email, date, time, lang, phone, notes) {
+// En valencià, els mesos que comencen per vocal porten «d'» i no «de».
+function caMonthPrefix(month) {
+  return /^[aeiou]/.test(month) ? 'd\'' : 'de ';
+}
+
+// IMPORTANTE — nada de emoji tipo 📅 💻 📧 en el cuerpo de los correos.
+// GmailApp serializa los caracteres fuera del BMP (los U+1F4xx, que en UTF-16
+// son parejas suplentes) como CESU-8, y al paciente le llegan 6 rombos negros
+// por emoji. Los símbolos del BMP (⏱ ✉ ☎ ▶) sí pasan bien, pero se prefieren
+// etiquetas de texto por coherencia.
+function sendConfirmationEmail(name, email, date, time, lang, phone, notes, meetLink) {
   var parts = date.split('-').map(Number);
   var timeParts = time.split(':').map(Number);
   var startTime = new Date(parts[0], parts[1] - 1, parts[2], timeParts[0], timeParts[1], 0);
@@ -254,29 +311,40 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes) {
 
   var fromAddr = 'info@llavorslogopedia.com';
   var whatsapp = 'https://wa.me/34614337743';
+  var meetLine = meetLink || '';
 
   // Confirmation to patient
   if (lang === 'ca') {
-    GmailApp.sendEmail(email, 'Cita confirmada — Llavors Logopèdia',
+    GmailApp.sendEmail(email, 'Cita reservada — Llavors Logopèdia',
       'Hola ' + name + ',\n\n' +
-      'La teua primera cita amb Àngela Alonso està confirmada.\n\n' +
-      '📅 ' + weekdaysCa[wd] + ', ' + d + ' de ' + monthsCa[m] + ' de ' + y + ' a les ' + time + '–' + endStr + '\n' +
-      '⏱ Durada: 30 minuts\n\n' +
-      'Si necessites canviar o cancel·lar la cita, posa\'t en contacte:\n' +
-      '📧 ' + fromAddr + '\n' +
-      '💬 WhatsApp: ' + whatsapp + '\n\n' +
+      'He rebut la teua sol·licitud de primera cita. Ací tens les dades:\n\n' +
+      '  Data: ' + weekdaysCa[wd] + ', ' + d + ' ' + caMonthPrefix(monthsCa[m]) + monthsCa[m] + ' de ' + y + ', de ' + time + ' a ' + endStr + '\n' +
+      '  Durada: 30 minuts\n' +
+      '  Format: cita online, per videotrucada\n' +
+      (meetLine
+        ? '  Enllaç: ' + meetLine + '\n'
+        : '  Enllaç: te l\'enviaré abans de la cita\n') + '\n' +
+      'Em posaré en contacte amb tu per a confirmar-la. Si l\'horari haguera de canviar, t\'avisaria amb antelació.\n\n' +
+      'Si necessites canviar o cancel·lar la cita, o necessites una cita presencial urgent, escriu-me:\n\n' +
+      '  WhatsApp: ' + whatsapp + '\n' +
+      '  Correu: ' + fromAddr + '\n\n' +
       'Fins aviat,\nÀngela Alonso — Llavors Logopèdia',
       { from: fromAddr }
     );
   } else {
-    GmailApp.sendEmail(email, 'Cita confirmada — Llavors Logopèdia',
+    GmailApp.sendEmail(email, 'Cita reservada — Llavors Logopèdia',
       'Hola ' + name + ',\n\n' +
-      'Tu primera cita con Àngela Alonso está confirmada.\n\n' +
-      '📅 ' + weekdaysEs[wd] + ', ' + d + ' de ' + monthsEs[m] + ' de ' + y + ' a las ' + time + '–' + endStr + '\n' +
-      '⏱ Duración: 30 minutos\n\n' +
-      'Si necesitas cambiar o cancelar la cita, contacta:\n' +
-      '📧 ' + fromAddr + '\n' +
-      '💬 WhatsApp: ' + whatsapp + '\n\n' +
+      'He recibido tu solicitud de primera cita. Estos son los datos:\n\n' +
+      '  Fecha: ' + weekdaysEs[wd] + ', ' + d + ' de ' + monthsEs[m] + ' de ' + y + ', de ' + time + ' a ' + endStr + '\n' +
+      '  Duración: 30 minutos\n' +
+      '  Formato: cita online, por videollamada\n' +
+      (meetLine
+        ? '  Enlace: ' + meetLine + '\n'
+        : '  Enlace: te lo enviaré antes de la cita\n') + '\n' +
+      'Me pondré en contacto contigo para confirmarla. Si el horario tuviera que cambiar, te avisaría con antelación.\n\n' +
+      'Si necesitas cambiar o cancelar la cita, o necesitas una cita presencial urgente, escríbeme:\n\n' +
+      '  WhatsApp: ' + whatsapp + '\n' +
+      '  Correo: ' + fromAddr + '\n\n' +
       'Hasta pronto,\nÀngela Alonso — Llavors Logopèdia',
       { from: fromAddr }
     );
@@ -285,14 +353,15 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes) {
   // Notification to Àngela
   GmailApp.sendEmail('logopeda.angela@gmail.com',
     'Nova cita — ' + name + ' · ' + weekdaysCa[wd] + ' ' + d + '/' + (m+1) + ' ' + time,
-    'S\'ha reservat una nova primera cita:\n\n' +
+    'S\'ha reservat una nova primera cita (online):\n\n' +
     'Nom: ' + name + '\n' +
-    'Data: ' + weekdaysCa[wd] + ', ' + d + ' de ' + monthsCa[m] + ' de ' + y + '\n' +
+    'Data: ' + weekdaysCa[wd] + ', ' + d + ' ' + caMonthPrefix(monthsCa[m]) + monthsCa[m] + ' de ' + y + '\n' +
     'Hora: ' + time + '–' + endStr + '\n' +
     'Email: ' + email + '\n' +
     (phone ? 'Telèfon: ' + phone + '\n' : '') +
     (notes ? 'Motiu: ' + notes + '\n' : '') +
-    'Idioma preferit: ' + (lang === 'ca' ? 'Valencià' : 'Castellà'),
+    'Idioma preferit: ' + (lang === 'ca' ? 'Valencià' : 'Castellà') +
+    (meetLine ? '\nEnllaç de la videotrucada: ' + meetLine : ''),
     { from: fromAddr }
   );
 }
