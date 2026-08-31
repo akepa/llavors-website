@@ -305,7 +305,7 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes, meet
       '⏱ Durada: 30 minuts\n' +
       '💻 La cita és online, per videotrucada.\n' +
       (meetLine ? '📹 Enllaç de la videotrucada: ' + meetLine + '\n' : '') + '\n' +
-      '📌 Em posaré en contacte amb tu per confirmar la cita. L\'horari podria patir xicotets canvis per motius d\'organització.\n\n' +
+      '📌 Em posaré en contacte amb tu per confirmar la cita. L\'horari podria patir canvis per motius d\'organització.\n\n' +
       'Si necessites una cita presencial urgent, contacta per WhatsApp: ' + whatsapp + '\n\n' +
       'Si necessites canviar o cancel·lar la cita, posa\'t en contacte:\n' +
       '📧 ' + fromAddr + '\n' +
@@ -321,7 +321,7 @@ function sendConfirmationEmail(name, email, date, time, lang, phone, notes, meet
       '⏱ Duración: 30 minutos\n' +
       '💻 La cita es online, por videollamada.\n' +
       (meetLine ? '📹 Enlace de la videollamada: ' + meetLine + '\n' : '') + '\n' +
-      '📌 Me pondré en contacto contigo para confirmar la cita. El horario podría sufrir pequeños cambios por motivos de organización.\n\n' +
+      '📌 Me pondré en contacto contigo para confirmar la cita. El horario podría sufrir cambios por motivos de organización.\n\n' +
       'Si necesitas una cita presencial urgente, contacta por WhatsApp: ' + whatsapp + '\n\n' +
       'Si necesitas cambiar o cancelar la cita, contacta:\n' +
       '📧 ' + fromAddr + '\n' +
