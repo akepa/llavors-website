@@ -228,7 +228,8 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     align-items: center; justify-content: center;
     color: var(--text); transition: background 0.15s;
   }
-  .calendar-header button:hover { background: var(--bg); }
+  .calendar-header button:hover:not(:disabled) { background: var(--bg); }
+  .calendar-header button:disabled { opacity: 0.35; cursor: default; }
   .month-wrap { flex: 1; display: flex; align-items: center; gap: 6px; }
 
   @keyframes cal-blink {
@@ -598,22 +599,39 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
     show(slotsPlaceholder)
   }
 
-  // Month navigation
-  prevBtn.addEventListener('click', () => {
+  // Month navigation — only the current month and the next one are bookable
+  const MAX_MONTHS_AHEAD = 1
+
+  function monthOffsetFromNow(year: number, month: number): number {
     const now = new Date()
-    if (currentYear === now.getFullYear() && currentMonth === now.getMonth() + 1) return
+    return (year - now.getFullYear()) * 12 + (month - (now.getMonth() + 1))
+  }
+
+  function updateNavButtons() {
+    const offset = monthOffsetFromNow(currentYear, currentMonth)
+    ;(prevBtn as HTMLButtonElement).disabled = offset <= 0
+    ;(nextBtn as HTMLButtonElement).disabled = offset >= MAX_MONTHS_AHEAD
+  }
+
+  prevBtn.addEventListener('click', () => {
+    if (monthOffsetFromNow(currentYear, currentMonth) <= 0) return
     currentMonth--
     if (currentMonth < 1) { currentMonth = 12; currentYear-- }
     clearSelection()
+    updateNavButtons()
     loadMonth(currentYear, currentMonth)
   })
 
   nextBtn.addEventListener('click', () => {
+    if (monthOffsetFromNow(currentYear, currentMonth) >= MAX_MONTHS_AHEAD) return
     currentMonth++
     if (currentMonth > 12) { currentMonth = 1; currentYear++ }
     clearSelection()
+    updateNavButtons()
     loadMonth(currentYear, currentMonth)
   })
+
+  updateNavButtons()
 
   // Back button
   document.getElementById('btn-back')!.addEventListener('click', () => {
