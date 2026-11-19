@@ -11,6 +11,12 @@ const UPDATED_ARTICLES = [
     ca: '/blog/anquiloglossia-fre-lingual-curt-nadons/',
     relatedService: 'lactancia',
   },
+  {
+    key: 'solidos',
+    es: '/es/blog/introduccion-solidos-5-senales/',
+    ca: '/blog/introduccio-solids-5-senyals/',
+    relatedService: 'lactancia',
+  },
 ];
 
 const SOURCES_H2 = { es: 'Fuentes', ca: 'Fonts' };
