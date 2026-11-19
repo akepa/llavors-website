@@ -12,9 +12,12 @@ const BUSINESS_ID = `${SITE}/#negocio`;
 const PERSON_ID = `${SITE}/#angela`;
 const DOCTORALIA = 'https://www.doctoralia.es/angela-alonso-millet/logopeda/valencia';
 
-// Datos publicados en la web (src/data/business.ts). Si el negocio pasa a
-// atender solo a domicilio (address = null), el pie debe decir «a domicilio».
-const ADDRESS = ['Calle Chile, 4', '46021 València'];
+// Si business.address es null, el JSON-LD no lleva address y el bloque de
+// dirección del pie debe decir «a domicilio» / «a domicili».
+const ADDRESS_LABEL = { '/es/': 'Dirección', '/': 'Adreça' };
+
+// Literales que solo pueden estar en src/data/business.ts.
+const SINGLE_SOURCE = ['614337743', '614 33 77 43', 'Calle Chile', 'info@llavorslogopedia'];
 const HOURS = {
   '/es/': ['Lun 11:00–19:00', 'Mar 11:00–14:00', 'Mié 9:30–14:00', 'Jue 11:00–19:30', 'Vie 9:30–14:00'],
   '/': ['Dl 11:00–19:00', 'Dt 11:00–14:00', 'Dc 9:30–14:00', 'Dj 11:00–19:30', 'Dv 9:30–14:00'],
@@ -28,10 +31,18 @@ function visibleText(html) {
     .replace(/\s+/g, ' ');
 }
 
-function footerText(html) {
+function footerHtml(html) {
   const m = html.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i);
   assert.ok(m, 'falta <footer>');
-  return visibleText(m[0]);
+  return m[0];
+}
+
+/** Texto del bloque que sigue al rótulo de dirección del pie (y solo ese bloque). */
+function footerAddressText(footer, label) {
+  const re = new RegExp(`<span class="footer-info-label"[^>]*>${label}</span>\\s*<span[^>]*>([\\s\\S]*?)</span>`);
+  const m = footer.match(re);
+  assert.ok(m, `falta el bloque «${label}» en el pie`);
+  return visibleText(m[1]).trim();
 }
 
 test('findDirty devuelve las rutas JSON de undefined, null y cadenas vacías', () => {
@@ -50,15 +61,21 @@ test("en '/es/' el MedicalBusiness enlaza el negocio, la fundadora y los perfile
   assert.ok(biz.sameAs?.includes(DOCTORALIA), `sameAs sin Doctoralia: ${JSON.stringify(biz.sameAs)}`);
   assert.ok(Array.isArray(biz.areaServed), 'areaServed debe ser una lista');
   assert.ok(!biz.areaServed.includes('España'), 'areaServed no debe incluir España');
+  assert.deepEqual(biz.founder.sameAs, [DOCTORALIA], 'founder.sameAs solo con perfiles de la persona');
 });
 
 for (const route of ['/es/', '/']) {
   test(`'${route}' muestra en el pie la dirección y cada tramo de horario, y la colegiada 46666`, () => {
     const html = readPage(route);
-    const footer = footerText(html);
-    const hasAddress = ADDRESS.every((part) => footer.includes(part));
-    const homeVisits = /a domicili/i.test(footer);
-    assert.ok(hasAddress || homeVisits, `el pie no muestra la dirección: ${footer}`);
+    const footer = visibleText(footerHtml(html));
+    const address = footerAddressText(footerHtml(html), ADDRESS_LABEL[route]);
+    const biz = jsonLd(html).find((b) => b['@type'] === 'MedicalBusiness');
+    if (biz?.address) {
+      const { streetAddress, postalCode, addressLocality } = biz.address;
+      assert.equal(address, `${streetAddress} · ${postalCode} ${addressLocality}`);
+    } else {
+      assert.match(address, /^a domicilio?$/i);
+    }
     for (const slot of HOURS[route]) {
       assert.ok(footer.includes(slot), `falta el tramo «${slot}» en el pie: ${footer}`);
     }
@@ -86,7 +103,15 @@ test('ningún bloque JSON-LD de ninguna ruta contiene undefined, null ni cadenas
   assert.deepEqual(dirty, []);
 });
 
-test('el teléfono (614337743) solo aparece en src/data/business.ts', () => {
+for (const route of ['/aviso-legal/', '/es/aviso-legal/', '/privacidad/', '/es/privacidad/']) {
+  test(`'${route}' muestra el domicilio del titular (al menos la localidad)`, () => {
+    const m = readPage(route).match(/<li><strong>(?:Domicilio|Dirección):<\/strong>([^<]*)<\/li>/);
+    assert.ok(m, 'falta la línea de domicilio');
+    assert.ok(m[1].includes('València'), `domicilio sin localidad: ${m[1]}`);
+  });
+}
+
+test('teléfono, dirección y email solo aparecen en src/data/business.ts', () => {
   const offenders = [];
   const walk = (dir) => {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -94,8 +119,10 @@ test('el teléfono (614337743) solo aparece en src/data/business.ts', () => {
       if (entry.isDirectory()) walk(full);
       else if (/\.(astro|ts)$/.test(entry.name)) {
         const rel = relative(SRC, full).split(sep).join('/');
-        if (rel !== 'data/business.ts' && readFileSync(full, 'utf8').includes('614337743')) {
-          offenders.push(`src/${rel}`);
+        if (rel === 'data/business.ts') continue;
+        const text = readFileSync(full, 'utf8');
+        for (const literal of SINGLE_SOURCE) {
+          if (text.includes(literal)) offenders.push(`src/${rel}: ${literal}`);
         }
       }
     }

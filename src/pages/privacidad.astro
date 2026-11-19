@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
-import { business, formatAddress } from '../data/business'
+import { business, legalAddress } from '../data/business'
 import { getTranslations } from '../i18n/index'
 
 const lang = 'ca' as const
@@ -23,7 +23,7 @@ const t = getTranslations(lang)
       <h2>1. Responsable del tratamiento</h2>
       <ul>
         <li><strong>Nombre:</strong> Àngela Alonso Millet</li>
-        {business.address && <li><strong>Dirección:</strong> {formatAddress(business.address)}</li>}
+        <li><strong>Dirección:</strong> {legalAddress}</li>
         <li><strong>Email:</strong> <a href={`mailto:${business.email}`}>{business.email}</a></li>
       </ul>
 

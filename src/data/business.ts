@@ -4,6 +4,8 @@
 export type Weekday = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
 
 const SITE = 'https://www.llavorslogopedia.com'
+const LOCALITY = 'València'
+const DOCTORALIA = 'https://www.doctoralia.es/angela-alonso-millet/logopeda/valencia'
 
 export const business = {
   id: `${SITE}/#negocio`,
@@ -13,10 +15,12 @@ export const business = {
   alternateName: 'Llavors Logopèdia · Àngela Alonso Millet',
   phone: '+34614337743',
   email: 'info@llavorslogopedia.com',
+  /** Localidad del titular; se muestra aunque address sea null (LSSICE art. 10). */
+  locality: LOCALITY,
   address: {
     street: 'Calle Chile, 4',
     postalCode: '46021',
-    locality: 'València',
+    locality: LOCALITY,
     country: 'ES',
   } as { street: string; postalCode: string; locality: 'València'; country: 'ES' } | null,
   geo: null as { lat: number; lng: number } | null,
@@ -29,14 +33,13 @@ export const business = {
   ] as { day: Weekday; opens: string; closes: string }[],
   areaServed: ['València', "L'Horta"],
   priceRange: '€€',
-  sameAs: [
-    'https://www.doctoralia.es/angela-alonso-millet/logopeda/valencia',
-    'https://www.instagram.com/llavors.de.llet',
-  ],
+  sameAs: [DOCTORALIA, 'https://www.instagram.com/llavors.de.llet'],
   colegiada: '46666',
   person: {
     name: 'Àngela Alonso Millet',
     jobTitle: 'Logopeda',
+    /** Perfiles de la persona (no los del negocio, como su Instagram). */
+    sameAs: [DOCTORALIA],
     knowsAbout: [
       'Logopedia neonatal',
       'Lactancia materna',
@@ -52,6 +55,9 @@ export const business = {
 export function formatAddress(a: NonNullable<typeof business.address>): string {
   return `${a.street} · ${a.postalCode} ${a.locality}`
 }
+
+/** Domicilio para las páginas legales: dirección completa o, si no hay, la localidad. */
+export const legalAddress = business.address ? formatAddress(business.address) : business.locality
 
 /** '+34614337743' → '614 33 77 43' */
 export const phoneDisplay = business.phone.replace(/^\+34/, '').replace(/^(\d{3})(\d{2})(\d{2})(\d{2})$/, '$1 $2 $3 $4')
