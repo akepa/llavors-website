@@ -1,5 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n'
+import { Image } from 'astro:assets'
+import logoImg from '../assets/logo.png'
 import type { Lang, Translations } from '../i18n/index'
 
 interface Props {
@@ -21,7 +23,7 @@ const canonicalPath = (lang !== 'ca' && pathWithoutBase.startsWith(`/${lang}`))
 <nav>
   <div class="nav-inner">
     <a class="nav-logo" href={getRelativeLocaleUrl(lang, '/')}>
-      <img src={`${base}images/logo.png`} alt="Llavors Logopèdia" height="52" />
+      <Image src={logoImg} alt="Llavors Logopèdia" width={289} height={104} loading="eager" />
     </a>
     <ul class="nav-links">
       <li><a href={home + '#serveis'}>{t.nav_serveis}</a></li>

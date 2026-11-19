@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets'
+import aboutImg from '../assets/angela-about.jpg'
 import type { Translations } from '../i18n/index'
 
 interface Props {
@@ -6,18 +8,20 @@ interface Props {
 }
 
 const { t } = Astro.props
-const base = import.meta.env.BASE_URL
 ---
 <section class="about section" id="sobre-mi">
   <div class="container">
     <div class="about-inner">
       <div class="about-photo-wrap">
-        <img
+        <Image
           class="about-photo"
-          src={`${base}images/angela-about.jpg`}
+          src={aboutImg}
           alt="Àngela Alonso Millet"
-          width="460"
-          height="520"
+          width={920}
+          height={1040}
+          widths={[460, 690, 920]}
+          sizes="(max-width: 960px) 100vw, 460px"
+          loading="lazy"
         />
         <div class="about-badge">{t.about_badge}</div>
       </div>
