@@ -172,6 +172,10 @@ const ca = {
   blog_cat_all: 'Tots',
   blog_cta_text: "Tens dubtes sobre la lactància, l'alimentació o el desenvolupament del teu fill?",
   blog_cta_btn: 'Reserva la primera cita',
+
+  service_modalities_h2: 'Modalitats',
+  service_price_label: 'Preu orientatiu',
+  service_price_from: 'Des de {price} €',
 } as const
 
 export default ca
