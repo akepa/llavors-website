@@ -47,3 +47,10 @@ test('el sitemap excluye las páginas legales y cada url tiene lastmod', () => {
 test('llms.txt existe y enlaza a /es/', () => {
   assert.ok(readDist('llms.txt').includes('https://www.llavorslogopedia.com/es/'));
 });
+
+test('los hreflang del sitemap son ca, es o x-default', () => {
+  const allowed = ['ca', 'es', 'x-default'];
+  const matches = [...readDist('sitemap-0.xml').matchAll(/hreflang="([^"]*)"/g)];
+  assert.ok(matches.length > 0, 'sitemap sin hreflang');
+  for (const m of matches) assert.ok(allowed.includes(m[1]), `hreflang="${m[1]}" en sitemap`);
+});
