@@ -4,4 +4,5 @@ export const SERVICES = {
   neonatal: { es: '/es/logopeda-neonatal-valencia/', ca: '/logopeda-neonatal-valencia/' },
   lactancia: { es: '/es/asesora-lactancia-valencia/', ca: '/assessora-lactancia-valencia/' },
   miofuncional: { es: '/es/terapia-miofuncional-infantil-valencia/', ca: '/terapia-miofuncional-infantil-valencia/' },
+  lenguaje: { es: '/es/logopeda-infantil-lenguaje-valencia/', ca: '/logopeda-infantil-llenguatge-valencia/' },
 };
