@@ -1,6 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync, readdirSync } from 'node:fs';
+import { join, relative, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { readPage, listRoutes, jsonLd, findDirty } from './helpers.mjs';
+
+const SRC = fileURLToPath(new URL('../src', import.meta.url));
 
 const SITE = 'https://www.llavorslogopedia.com';
 const BUSINESS_ID = `${SITE}/#negocio`;
@@ -79,4 +84,22 @@ test('ningún bloque JSON-LD de ninguna ruta contiene undefined, null ni cadenas
     });
   }
   assert.deepEqual(dirty, []);
+});
+
+test('el teléfono (614337743) solo aparece en src/data/business.ts', () => {
+  const offenders = [];
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) walk(full);
+      else if (/\.(astro|ts)$/.test(entry.name)) {
+        const rel = relative(SRC, full).split(sep).join('/');
+        if (rel !== 'data/business.ts' && readFileSync(full, 'utf8').includes('614337743')) {
+          offenders.push(`src/${rel}`);
+        }
+      }
+    }
+  };
+  walk(SRC);
+  assert.deepEqual(offenders, []);
 });
