@@ -27,7 +27,7 @@ const service = {
   },
   areaServed: business.areaServed,
   url,
-  inLanguage: lang === 'ca' ? 'ca-ES-valencia' : 'es-ES',
+  inLanguage: lang,
   ...(priceFrom !== undefined && {
     offers: {
       '@type': 'Offer',

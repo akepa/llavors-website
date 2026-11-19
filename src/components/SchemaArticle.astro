@@ -16,9 +16,8 @@ const { title, description, publishedAt, updatedAt, category, heroImage, heroIma
 const t = getTranslations(lang)
 
 const SITE = business.url
-const BASE = '/llavors-website'
 const imageUrl = heroImage
-  ? `${SITE}${heroImage.src.startsWith(BASE) ? heroImage.src.slice(BASE.length) : heroImage.src}`
+  ? `${SITE}${heroImage.src}`
   : `${SITE}/og-default.png`
 
 const schema = {
@@ -29,7 +28,7 @@ const schema = {
   datePublished: publishedAt.toISOString(),
   dateModified: (updatedAt ?? publishedAt).toISOString(),
   mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
-  inLanguage: lang === 'ca' ? 'ca-ES-valencia' : 'es-ES',
+  inLanguage: lang,
   articleSection: getCategoryLabel(category, t),
   image: {
     '@type': 'ImageObject',

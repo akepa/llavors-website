@@ -23,6 +23,12 @@ const UPDATED_ARTICLES = [
     ca: '/blog/per-que-el-meu-fill-bava/',
     relatedService: 'miofuncional',
   },
+  {
+    key: 'habla-poco',
+    es: '/es/blog/mi-hijo-2-anos-habla-poco/',
+    ca: '/blog/el-meu-fill-2-anys-parla-poc/',
+    relatedService: 'lenguaje',
+  },
 ];
 
 const SOURCES_H2 = { es: 'Fuentes', ca: 'Fonts' };
