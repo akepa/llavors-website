@@ -14,6 +14,7 @@ const LANGS: Lang[] = ['ca', 'es']
 const SERVICE_SLUGS: Partial<Record<ServiceKey, Record<Lang, string>>> = {
   neonatal: { ca: 'logopeda-neonatal-valencia', es: 'logopeda-neonatal-valencia' },
   lactancia: { ca: 'assessora-lactancia-valencia', es: 'asesora-lactancia-valencia' },
+  miofuncional: { ca: 'terapia-miofuncional-infantil-valencia', es: 'terapia-miofuncional-infantil-valencia' },
 }
 
 /** Ruta relativa de la página de servicio, con barra final ('/es/logopeda-neonatal-valencia/'). */
