@@ -1,5 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n'
+import { Image } from 'astro:assets'
+import logoImg from '../assets/logo.png'
 import type { Lang, Translations } from '../i18n/index'
 
 interface Props {
@@ -15,7 +17,7 @@ const home = getRelativeLocaleUrl(lang, '/')
   <div class="container">
     <div class="footer-top">
       <div class="footer-brand">
-        <img src={`${base}images/logo.png`} alt="Llavors Logopèdia" width="120" height="36" class="footer-logo" />
+        <Image src={logoImg} alt="Llavors Logopèdia" width={240} height={86} class="footer-logo" />
         <p>{t.footer_desc}</p>
         <div class="footer-social">
           <a href="https://www.instagram.com/llavors.de.llet" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram">
@@ -79,7 +81,7 @@ const home = getRelativeLocaleUrl(lang, '/')
     border-bottom: 1px solid rgba(242, 233, 225, 0.1);
     margin-bottom: 32px;
   }
-  .footer-logo { filter: brightness(0) invert(1); margin-bottom: 16px; }
+  .footer-logo { width: 120px; height: auto; filter: brightness(0) invert(1); margin-bottom: 16px; }
   .footer-brand p { font-size: 0.88rem; opacity: 0.65; line-height: 1.6; max-width: 220px; }
   .footer-social { display: flex; gap: 12px; margin-top: 20px; }
   .social-icon {
