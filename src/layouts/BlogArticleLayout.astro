@@ -5,6 +5,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n'
 import BlogArticleHeader from '../components/blog/BlogArticleHeader.astro'
 import BlogProse from '../components/blog/BlogProse.astro'
 import BlogShareButtons from '../components/blog/BlogShareButtons.astro'
+import BlogAuthorBox from '../components/blog/BlogAuthorBox.astro'
 import BlogRelated from '../components/blog/BlogRelated.astro'
 import { serviceUrl } from '../utils/services'
 import { getCategoryLabel, getCategorySlug, formatDate } from '../utils/blog'
@@ -75,6 +76,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     <BlogProse>
       <slot />
     </BlogProse>
+    <BlogAuthorBox lang={lang} t={t} />
     <BlogShareButtons title={title} t={t} />
   </div>
   </article>
