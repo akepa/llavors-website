@@ -6,6 +6,7 @@ import BlogArticleHeader from '../components/blog/BlogArticleHeader.astro'
 import BlogProse from '../components/blog/BlogProse.astro'
 import BlogShareButtons from '../components/blog/BlogShareButtons.astro'
 import BlogRelated from '../components/blog/BlogRelated.astro'
+import { serviceUrl } from '../utils/services'
 import { getCategoryLabel, getCategorySlug, formatDate } from '../utils/blog'
 
 interface BreadcrumbItem {
@@ -21,7 +22,7 @@ interface Props {
 }
 
 const { entry, lang, t, relatedEntries } = Astro.props
-const { title, category, publishedAt, updatedAt, readingTime, heroImage, heroImageAlt } = entry.data
+const { title, category, publishedAt, relatedService, updatedAt, readingTime, heroImage, heroImageAlt } = entry.data
 
 const blogUrl = getRelativeLocaleUrl(lang, '/blog')
 const homeUrl = getRelativeLocaleUrl(lang, '/')
@@ -81,7 +82,10 @@ const breadcrumbs: BreadcrumbItem[] = [
   <div class="article-cta-wrap container">
     <div class="article-cta">
       <p>{t.blog_cta_text}</p>
-      <a href={homeUrl + '#reserva'} class="btn btn-primary">{t.blog_cta_btn}</a>
+      <div class="article-cta-actions">
+        <a href={homeUrl + '#reserva'} class="btn btn-primary">{t.blog_cta_btn}</a>
+        {relatedService && <a href={serviceUrl(relatedService, lang)} class="btn btn-outline-pink">{t.blog_cta_service}</a>}
+      </div>
     </div>
   </div>
 </main>
@@ -129,6 +133,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     align-items: center;
     gap: 20px;
   }
+  .article-cta-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
   .article-cta p {
     font-size: 1.1rem;
     font-weight: 600;
