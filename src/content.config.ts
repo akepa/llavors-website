@@ -2,6 +2,7 @@ import { defineCollection } from 'astro:content'
 import { glob } from 'astro/loaders'
 import { z } from 'astro/zod'
 import { BLOG_CATEGORIES } from './data/blog-categories'
+import { SERVICE_KEYS } from './data/service-slugs'
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/data/blog' }),
@@ -18,6 +19,7 @@ const blog = defineCollection({
     heroImageAlt: z.string(),
     draft: z.boolean().default(false),
     readingTime: z.number().int().positive(),
+    relatedService: z.enum(SERVICE_KEYS).optional(),
   }),
 })
 
@@ -31,7 +33,7 @@ const services = defineCollection({
     generateId: ({ entry }) => entry.replace(/\.mdx?$/, ''),
   }),
   schema: z.object({
-    translationKey: z.enum(['neonatal', 'lactancia', 'miofuncional', 'lenguaje', 'domicilio']),
+    translationKey: z.enum(SERVICE_KEYS),
     slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     title: z.string().min(1),
     description: z.string().min(1),

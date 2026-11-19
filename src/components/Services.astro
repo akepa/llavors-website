@@ -1,11 +1,13 @@
 ---
-import type { Translations } from '../i18n/index'
+import type { Lang, Translations } from '../i18n/index'
+import { serviceUrl } from '../utils/services'
 
 interface Props {
   t: Translations
+  lang: Lang
 }
 
-const { t } = Astro.props
+const { t, lang } = Astro.props
 ---
 <section class="services section" id="serveis">
   <div class="container">
@@ -24,6 +26,7 @@ const { t } = Astro.props
         </div>
         <h3>{t.s1_title}</h3>
         <p>{t.s1_text}</p>
+        <a href={serviceUrl('neonatal', lang)} class="service-more">{t.services_more}</a>
       </div>
       <div class="service-card">
         <div class="service-icon">
@@ -36,6 +39,7 @@ const { t } = Astro.props
         </div>
         <h3>{t.s2_title}</h3>
         <p>{t.s2_text}</p>
+        <a href={serviceUrl('miofuncional', lang)} class="service-more">{t.services_more}</a>
       </div>
       <div class="service-card">
         <div class="service-icon">
@@ -45,6 +49,7 @@ const { t } = Astro.props
         </div>
         <h3>{t.s3_title}</h3>
         <p>{t.s3_text}</p>
+        <a href={serviceUrl('lenguaje', lang)} class="service-more">{t.services_more}</a>
       </div>
     </div>
     <div class="modalities">
@@ -87,6 +92,8 @@ const { t } = Astro.props
   .service-icon svg { width: 26px; height: 26px; stroke: var(--pink); fill: none; stroke-width: 1.8; }
   .service-card h3 { color: var(--text); margin-bottom: 10px; }
   .service-card p { color: var(--text-soft); font-size: 0.94rem; line-height: 1.6; }
+  .service-more { display: inline-block; margin-top: 16px; color: var(--pink); font-weight: 700; font-size: 0.92rem; }
+  .service-more:hover { text-decoration: underline; }
   .modalities { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
   .modality-pill {
     display: inline-flex;

@@ -96,9 +96,9 @@ const ca = {
   footer_desc: 'Logopèdia neonatal, assessoria de lactància i acompanyament al desenvolupament comunicatiu a València.',
   footer_serveis_h: 'Serveis',
   footer_s1: 'Logopèdia Neonatal',
-  footer_s2: 'Funcions Orals',
-  footer_s3: 'Desenvolupament Comunicatiu',
-  footer_s4: 'Sessions Online',
+  footer_s2: 'Assessoria de Lactància',
+  footer_s3: 'Funcions Orals',
+  footer_s4: 'Desenvolupament Comunicatiu',
   footer_s5: 'Atenció a Domicili',
   footer_nav_h: 'Navegació',
   footer_n1: 'Inici',
@@ -170,6 +170,8 @@ const ca = {
   blog_cat_all: 'Tots',
   blog_cta_text: "Tens dubtes sobre la lactància, l'alimentació o el desenvolupament del teu fill?",
   blog_cta_btn: 'Reserva la primera cita',
+  blog_cta_service: 'Coneix el servici',
+  services_more: 'Més informació',
 
   service_modalities_h2: 'Modalitats',
 } as const
