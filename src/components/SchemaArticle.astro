@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content'
 import type { Lang } from '../i18n/index'
 import { getCategoryLabel } from '../utils/blog'
 import { getTranslations } from '../i18n/index'
+import { business } from '../data/business'
 
 interface Props {
   entry: CollectionEntry<'blog'>
@@ -14,7 +15,7 @@ const { entry, lang, canonicalUrl } = Astro.props
 const { title, description, publishedAt, updatedAt, category, heroImage, heroImageAlt } = entry.data
 const t = getTranslations(lang)
 
-const SITE = 'https://www.llavorslogopedia.com'
+const SITE = business.url
 const BASE = '/llavors-website'
 const imageUrl = heroImage
   ? `${SITE}${heroImage.src.startsWith(BASE) ? heroImage.src.slice(BASE.length) : heroImage.src}`
@@ -37,16 +38,19 @@ const schema = {
   },
   author: {
     '@type': 'Person',
-    name: 'Àngela Alonso Millet',
-    url: 'https://www.llavorslogopedia.com',
+    '@id': business.personId,
+    name: business.person.name,
+    jobTitle: business.person.jobTitle,
+    url: business.url,
   },
   publisher: {
-    '@type': 'Organization',
-    name: 'Llavors Logopèdia',
-    url: 'https://www.llavorslogopedia.com',
+    '@type': 'MedicalBusiness',
+    '@id': business.id,
+    name: business.name,
+    url: business.url,
     logo: {
       '@type': 'ImageObject',
-      url: 'https://www.llavorslogopedia.com/images/logo.png',
+      url: `${business.url}/images/logo.png`,
     },
   },
 }
