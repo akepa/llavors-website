@@ -1,23 +1,14 @@
 import { getCollection, type CollectionEntry } from 'astro:content'
 import type { Lang } from '../i18n/index'
 import { isLang } from './blog'
+import { SERVICE_SLUGS as SLUGS } from '../data/service-slugs'
 
 export type ServiceEntry = CollectionEntry<'services'>
 export type ServiceKey = ServiceEntry['data']['translationKey']
 
 const SITE = 'https://www.llavorslogopedia.com'
 const LANGS: Lang[] = ['ca', 'es']
-
-// Slug de cada página de servicio por idioma. Tiene que coincidir con el `slug`
-// del MDX en src/data/services/{ca,es}/: si no, el build falla (assertServiceSlugs).
-// Al añadir un servicio: su MDX en los dos idiomas + una entrada aquí.
-const SERVICE_SLUGS: Partial<Record<ServiceKey, Record<Lang, string>>> = {
-  neonatal: { ca: 'logopeda-neonatal-valencia', es: 'logopeda-neonatal-valencia' },
-  lactancia: { ca: 'assessora-lactancia-valencia', es: 'asesora-lactancia-valencia' },
-  miofuncional: { ca: 'terapia-miofuncional-infantil-valencia', es: 'terapia-miofuncional-infantil-valencia' },
-  lenguaje: { ca: 'logopeda-infantil-llenguatge-valencia', es: 'logopeda-infantil-lenguaje-valencia' },
-  domicilio: { ca: 'logopeda-a-domicili-valencia', es: 'logopeda-a-domicilio-valencia' },
-}
+const SERVICE_SLUGS: Partial<Record<ServiceKey, Record<Lang, string>>> = SLUGS
 
 /** Ruta relativa de la página de servicio, con barra final ('/es/logopeda-neonatal-valencia/'). */
 export function serviceUrl(key: ServiceKey, lang: Lang): string {
