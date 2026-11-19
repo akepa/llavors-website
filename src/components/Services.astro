@@ -26,7 +26,7 @@ const { t, lang } = Astro.props
         </div>
         <h3>{t.s1_title}</h3>
         <p>{t.s1_text}</p>
-        <a href={serviceUrl('neonatal', lang)} class="service-more">{t.services_more}</a>
+        <a href={serviceUrl('neonatal', lang)} class="service-more">{t.services_more}<span class="sr-only">: {t.s1_title}</span></a>
       </div>
       <div class="service-card">
         <div class="service-icon">
@@ -39,7 +39,7 @@ const { t, lang } = Astro.props
         </div>
         <h3>{t.s2_title}</h3>
         <p>{t.s2_text}</p>
-        <a href={serviceUrl('miofuncional', lang)} class="service-more">{t.services_more}</a>
+        <a href={serviceUrl('miofuncional', lang)} class="service-more">{t.services_more}<span class="sr-only">: {t.s2_title}</span></a>
       </div>
       <div class="service-card">
         <div class="service-icon">
@@ -49,7 +49,7 @@ const { t, lang } = Astro.props
         </div>
         <h3>{t.s3_title}</h3>
         <p>{t.s3_text}</p>
-        <a href={serviceUrl('lenguaje', lang)} class="service-more">{t.services_more}</a>
+        <a href={serviceUrl('lenguaje', lang)} class="service-more">{t.services_more}<span class="sr-only">: {t.s3_title}</span></a>
       </div>
     </div>
     <div class="modalities">

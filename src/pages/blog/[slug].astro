@@ -42,10 +42,7 @@ const SITE = 'https://www.llavorslogopedia.com'
 const canonicalPath = `/blog/${entry.data.slug}/`
 const canonicalUrl = `${SITE}${canonicalPath}`
 
-const BASE = '/llavors-website'
-const ogImage = heroImage
-  ? (heroImage.src.startsWith(BASE) ? heroImage.src.slice(BASE.length) : heroImage.src)
-  : undefined
+const ogImage = heroImage?.src
 
 const hreflangs: { ca: string; es?: string } = {
   ca: canonicalUrl,

@@ -69,6 +69,9 @@ export const whatsappUrl = `https://wa.me/${business.phone.replace(/^\+/, '')}`
 export const instagramUrl = business.sameAs.find((u) => u.includes('instagram.com'))!
 export const instagramHandle = `@${instagramUrl.replace(/\/+$/, '').split('/').pop()}`
 
+/** Perfil de Doctoralia (reseñas). */
+export const doctoraliaUrl = DOCTORALIA
+
 /** '09:30' → '9:30' (formato visible del horario). */
 export function formatTime(time: string): string {
   return time.replace(/^0/, '')

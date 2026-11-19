@@ -17,7 +17,7 @@ const DOCTORALIA = 'https://www.doctoralia.es/angela-alonso-millet/logopeda/vale
 const ADDRESS_LABEL = { '/es/': 'Dirección', '/': 'Adreça' };
 
 // Literales que solo pueden estar en src/data/business.ts.
-const SINGLE_SOURCE = ['614337743', '614 33 77 43', 'Calle Chile', 'info@llavorslogopedia'];
+const SINGLE_SOURCE = ['614337743', '614 33 77 43', 'Calle Chile', 'info@llavorslogopedia', 'doctoralia.es/angela-alonso-millet'];
 const HOURS = {
   '/es/': ['Lun 11:00–19:00', 'Mar 11:00–14:00', 'Mié 9:30–14:00', 'Jue 11:00–19:30', 'Vie 9:30–14:00'],
   '/': ['Dl 11:00–19:00', 'Dt 11:00–14:00', 'Dc 9:30–14:00', 'Dj 11:00–19:30', 'Dv 9:30–14:00'],
@@ -111,7 +111,7 @@ for (const route of ['/aviso-legal/', '/es/aviso-legal/', '/privacidad/', '/es/p
   });
 }
 
-test('teléfono, dirección y email solo aparecen en src/data/business.ts', () => {
+test('teléfono, dirección, email y Doctoralia solo aparecen en src/data/business.ts', () => {
   const offenders = [];
   const walk = (dir) => {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
