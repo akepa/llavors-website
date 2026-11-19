@@ -172,6 +172,10 @@ const es = {
   blog_cat_all: 'Todos',
   blog_cta_text: '¿Tienes dudas sobre la lactancia, la alimentación o el desarrollo de tu hijo?',
   blog_cta_btn: 'Reservar la primera cita',
+
+  service_modalities_h2: 'Modalidades',
+  service_price_label: 'Precio orientativo',
+  service_price_from: 'Desde {price} €',
 } as const
 
 export default es

@@ -1,0 +1,17 @@
+---
+import { render } from 'astro:content'
+import ServiceLayout from '../layouts/ServiceLayout.astro'
+import { getServicePaths } from '../utils/services'
+
+export function getStaticPaths() {
+  return getServicePaths('ca')
+}
+
+type Props = Awaited<ReturnType<typeof getServicePaths>>[number]['props']
+
+const { entry, related } = Astro.props as Props
+const { Content } = await render(entry)
+---
+<ServiceLayout entry={entry} lang="ca" related={related}>
+  <Content />
+</ServiceLayout>
