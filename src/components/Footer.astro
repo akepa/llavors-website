@@ -59,7 +59,7 @@ const home = getRelativeLocaleUrl(lang, '/')
       </div>
     </div>
     <div class="footer-bottom">
-      <span>{t.footer_copy}</span>
+      <span>© {new Date().getFullYear()} {t.footer_copy_suffix}</span>
       <div class="footer-legal">
         <a href={getRelativeLocaleUrl(lang, '/privacidad')}>{t.legal1}</a>
         <a href={getRelativeLocaleUrl(lang, '/aviso-legal')}>{t.legal2}</a>

@@ -9,12 +9,15 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      filter: (page) => !page.includes('/draft'),
+      filter: (page) =>
+        !page.includes('/draft') &&
+        !['/privacidad', '/aviso-legal', '/cookies'].some((p) => page.includes(p)),
+      serialize: (item) => ({ ...item, lastmod: new Date().toISOString() }),
       i18n: {
         defaultLocale: 'ca',
         locales: {
-          ca: 'ca-ES-valencia',
-          es: 'es-ES',
+          ca: 'ca',
+          es: 'es',
         },
       },
     }),

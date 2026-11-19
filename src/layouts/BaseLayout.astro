@@ -30,6 +30,7 @@ interface Props {
   }
   rssHref?: string
   hreflangs?: { ca: string; es?: string }
+  noindex?: boolean
 }
 
 const {
@@ -44,6 +45,7 @@ const {
   articleMeta,
   rssHref,
   hreflangs,
+  noindex,
 } = Astro.props
 ---
 <!doctype html>
@@ -63,6 +65,7 @@ const {
       articleMeta={articleMeta}
       rssHref={rssHref}
       hreflangs={hreflangs}
+      noindex={noindex}
     />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T992PQQVQT"></script>
     <script is:inline>
