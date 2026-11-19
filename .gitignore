@@ -27,7 +27,3 @@ pnpm-debug.log*
 .claude/
 
 .aitools/
-!.aitools/specs/
-!.aitools/specs/**
-!.aitools/plans/
-!.aitools/plans/**
