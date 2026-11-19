@@ -13,6 +13,7 @@ const LANGS: Lang[] = ['ca', 'es']
 // Al añadir un servicio: su MDX en los dos idiomas + una entrada aquí.
 const SERVICE_SLUGS: Partial<Record<ServiceKey, Record<Lang, string>>> = {
   neonatal: { ca: 'logopeda-neonatal-valencia', es: 'logopeda-neonatal-valencia' },
+  lactancia: { ca: 'assessora-lactancia-valencia', es: 'asesora-lactancia-valencia' },
 }
 
 /** Ruta relativa de la página de servicio, con barra final ('/es/logopeda-neonatal-valencia/'). */
