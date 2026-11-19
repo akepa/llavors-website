@@ -17,6 +17,12 @@ const UPDATED_ARTICLES = [
     ca: '/blog/introduccio-solids-5-senyals/',
     relatedService: 'lactancia',
   },
+  {
+    key: 'babea',
+    es: '/es/blog/por-que-mi-hijo-babea/',
+    ca: '/blog/per-que-el-meu-fill-bava/',
+    relatedService: 'miofuncional',
+  },
 ];
 
 const SOURCES_H2 = { es: 'Fuentes', ca: 'Fonts' };
