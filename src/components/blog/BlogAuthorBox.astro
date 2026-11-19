@@ -1,0 +1,67 @@
+---
+import { Image } from 'astro:assets'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import aboutImg from '../../assets/angela-about.jpg'
+import type { Lang, Translations } from '../../i18n/index'
+import { business } from '../../data/business'
+
+interface Props {
+  lang: Lang
+  t: Translations
+}
+
+const { lang, t } = Astro.props
+const aboutUrl = getRelativeLocaleUrl(lang, '/') + '#sobre-mi'
+---
+
+<aside class="author-box" data-author-box>
+  <Image
+    class="author-photo"
+    src={aboutImg}
+    alt={business.person.name}
+    width={96}
+    height={96}
+    widths={[96, 192]}
+    sizes="96px"
+    loading="lazy"
+  />
+  <div class="author-info">
+    <p class="author-name">{business.person.name}</p>
+    <p class="author-colegiada">{t.cred_colegiada} {business.colegiada}</p>
+    <ul class="author-creds">
+      <li>{t.cred2}</li>
+      <li>{t.cred3}</li>
+    </ul>
+    <a class="author-link" href={aboutUrl}>{t.nav_sobre}</a>
+  </div>
+</aside>
+
+<style>
+  .author-box {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-top: 40px;
+    padding: 24px;
+    background: var(--pink-pale);
+    border: 1px solid var(--pink-light);
+    border-radius: var(--r);
+  }
+  .author-photo {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    flex-shrink: 0;
+  }
+  .author-info p { margin: 0; }
+  .author-name { font-weight: 700; color: var(--text); font-size: 1.05rem; }
+  .author-colegiada { color: var(--pink); font-weight: 600; font-size: 0.9rem; margin-bottom: 8px !important; }
+  .author-creds { margin: 0 0 10px; padding-left: 18px; color: var(--text-soft); font-size: 0.9rem; }
+  .author-link { font-weight: 600; font-size: 0.9rem; color: var(--pink); text-decoration: none; }
+  .author-link:hover { text-decoration: underline; }
+  @media (max-width: 640px) {
+    .author-box { flex-direction: column; padding: 20px; }
+  }
+</style>
