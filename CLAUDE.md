@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-- `npm run dev` — servidor de desarrollo en `localhost:4321/llavors-website/`
+- `npm run dev` — servidor de desarrollo en `http://localhost:4321/`
 - `npm run build` — build de producción a `./dist/`
 - `npm run preview` — previsualizar el build local
 
@@ -16,7 +16,7 @@ Node.js **no está en el PATH** del entorno de herramientas. Para ejecutar cualq
 $env:PATH = "C:\Program Files\nodejs\;" + $env:PATH; npm run dev
 ```
 
-El servidor arranca en `http://localhost:4321/llavors-website/` en unos 2 segundos. Lanzarlo siempre en background (`run_in_background: true`) y leer el output para confirmar que está listo.
+El servidor arranca en `http://localhost:4321/` en unos 2 segundos. Lanzarlo siempre en background (`run_in_background: true`) y leer el output para confirmar que está listo.
 
 ## Architecture
 
