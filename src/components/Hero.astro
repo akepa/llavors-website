@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets'
+import heroImg from '../assets/angela-hero.jpg'
 import type { Translations } from '../i18n/index'
 
 interface Props {
@@ -6,7 +8,6 @@ interface Props {
 }
 
 const { t } = Astro.props
-const base = import.meta.env.BASE_URL
 ---
 <section class="hero" id="inici">
   <div class="hero-inner">
@@ -38,12 +39,16 @@ const base = import.meta.env.BASE_URL
     </div>
     <div class="hero-photo-wrap">
       <div class="hero-blob" aria-hidden="true"></div>
-      <img
+      <Image
         class="hero-photo"
-        src={`${base}images/angela-hero.jpg`}
+        src={heroImg}
         alt="Àngela Alonso Millet – Logopeda Neonatal"
-        width="480"
-        height="540"
+        width={960}
+        height={1280}
+        widths={[360, 480, 720, 960]}
+        sizes="(max-width: 960px) 320px, 480px"
+        loading="eager"
+        fetchpriority="high"
       />
     </div>
   </div>

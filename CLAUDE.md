@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-- `npm run dev` — servidor de desarrollo en `localhost:4321/llavors-website/`
+- `npm run dev` — servidor de desarrollo en `http://localhost:4321/`
 - `npm run build` — build de producción a `./dist/`
 - `npm run preview` — previsualizar el build local
 
@@ -16,11 +16,11 @@ Node.js **no está en el PATH** del entorno de herramientas. Para ejecutar cualq
 $env:PATH = "C:\Program Files\nodejs\;" + $env:PATH; npm run dev
 ```
 
-El servidor arranca en `http://localhost:4321/llavors-website/` en unos 2 segundos. Lanzarlo siempre en background (`run_in_background: true`) y leer el output para confirmar que está listo.
+El servidor arranca en `http://localhost:4321/` en unos 2 segundos. Lanzarlo siempre en background (`run_in_background: true`) y leer el output para confirmar que está listo.
 
 ## Architecture
 
-Web estática construida con **Astro 6** (TypeScript strict). Se despliega automáticamente a **GitHub Pages** via GitHub Actions en cada push a `master`.
+Web estática construida con **Astro 7** (TypeScript strict). Se despliega automáticamente a **GitHub Pages** via GitHub Actions en cada push a `master`.
 
 ### Estructura de ramas
 
@@ -30,7 +30,7 @@ Web estática construida con **Astro 6** (TypeScript strict). Se despliega autom
 
 ### Slices de desarrollo
 
-El proyecto se desarrolla en slices independientes (ver `.aitools/llavors-dev-plan.md`):
+El proyecto se desarrolló en slices independientes (plan en `plans/` del repo privado `akepa/llavors-ops`). Estado histórico:
 - Slice 0: Infraestructura base ✓
 - Slice 1: Landing estática ✓
 - Slice 2: Reserva de citas (Google Calendar + Apps Script)
@@ -40,14 +40,12 @@ El proyecto se desarrolla en slices independientes (ver `.aitools/llavors-dev-pl
 - Slice 6: Analytics (Plausible)
 - Slice 7: Reseñas dinámicas (requiere migración a Vercel)
 
-### Config importante
-
-`astro.config.mjs` tiene `base: '/llavors-website'` mientras el DNS no esté migrado. El sitio convive con el WordPress en `llavorslogopedia.com`. Al hacer el cambio de DNS: eliminar `base`, cambiar `site` a `'https://llavorslogopedia.com'`, añadir `public/CNAME`.
-
 ### Fuente de verdad del diseño
 
-- Specs de diseño → `.aitools/specs/`
-- Plan de desarrollo → `.aitools/llavors-dev-plan.md`
+Los diseños y planes viven en el repo privado `akepa/llavors-ops`:
+
+- Specs de diseño → `specs/`
+- Planes de desarrollo → `plans/`
 
 ## Idioma
 
