@@ -7,7 +7,7 @@ const ca = {
   nav_cta: 'Reserva la cita',
 
   hero_tag: 'Logopeda Neonatal · Assessora de Lactància',
-  hero_h1: "La <em>tranquil·litat</em> que necessites per a la lactància i l'alimentació del teu bebè",
+  hero_h1: "Logopeda neonatal a València: <em>tranquil·litat</em> per a la lactància i l’alimentació del teu nadó",
   hero_sub: "Sóc l'Àngela. T'acompanye perquè et sentis segura, confiada i pugues gaudir d'aquesta etapa amb el teu bebè, sense pressió i amb molt d'amor.",
   hero_cta1: 'Reserva la primera consulta',
   hero_cta2: 'Escriu-me',

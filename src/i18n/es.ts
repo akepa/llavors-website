@@ -7,7 +7,7 @@ const es = {
   nav_cta: 'Reservar cita',
 
   hero_tag: 'Logopeda Neonatal · Asesora de Lactancia',
-  hero_h1: 'La <em>tranquilidad</em> que necesitas para la lactancia y la alimentación de tu bebé',
+  hero_h1: 'Logopeda neonatal en Valencia: <em>tranquilidad</em> para la lactancia y la alimentación de tu bebé',
   hero_sub: 'Soy Àngela. Te acompaño para que te sientas segura, confiada y puedas disfrutar de esta etapa con tu bebé, sin presión y con mucho amor.',
   hero_cta1: 'Reserva la primera consulta',
   hero_cta2: 'Escríbeme',
