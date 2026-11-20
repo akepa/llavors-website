@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import Header from '../../components/Header.astro'
 import Footer from '../../components/Footer.astro'
+import { business, legalAddress } from '../../data/business'
 import { getTranslations } from '../../i18n/index'
 
 const lang = 'es' as const
@@ -22,8 +23,8 @@ const t = getTranslations(lang)
       <h2>1. Responsable del tratamiento</h2>
       <ul>
         <li><strong>Nombre:</strong> Àngela Alonso Millet</li>
-        <li><strong>Dirección:</strong> Calle Chile, 4 · 46021 Valencia</li>
-        <li><strong>Email:</strong> <a href="mailto:info@llavorslogopedia.com">info@llavorslogopedia.com</a></li>
+        <li><strong>Dirección:</strong> {legalAddress}</li>
+        <li><strong>Email:</strong> <a href={`mailto:${business.email}`}>{business.email}</a></li>
       </ul>
 
       <h2>2. Datos que recogemos y finalidad</h2>
@@ -57,7 +58,7 @@ const t = getTranslations(lang)
         <li><strong>Portabilidad:</strong> recibir sus datos en formato estructurado y de uso común.</li>
         <li><strong>Oposición:</strong> oponerse al tratamiento de sus datos.</li>
       </ul>
-      <p>Para ejercer cualquiera de estos derechos, envíe un correo a <a href="mailto:info@llavorslogopedia.com">info@llavorslogopedia.com</a> indicando el derecho que desea ejercer y adjuntando una copia de su documento de identidad.</p>
+      <p>Para ejercer cualquiera de estos derechos, envíe un correo a <a href={`mailto:${business.email}`}>{business.email}</a> indicando el derecho que desea ejercer y adjuntando una copia de su documento de identidad.</p>
 
       <h2>7. Reclamación ante la autoridad de control</h2>
       <p>Si considera que el tratamiento de sus datos no es conforme a la normativa vigente, puede presentar una reclamación ante la <strong>Agencia Española de Protección de Datos (AEPD)</strong>: <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer">www.aepd.es</a>.</p>

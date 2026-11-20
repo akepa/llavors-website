@@ -45,3 +45,20 @@ export function jsonLd(html) {
   const re = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
   return [...html.matchAll(re)].map((m) => JSON.parse(m[1]));
 }
+
+/**
+ * Rutas JSON ('$.founder.sameAs[2]') de los valores "sucios" de un bloque:
+ * undefined, null, '' y cadenas que delatan una interpolación rota
+ * ('null' exacto o que contienen la palabra 'undefined').
+ */
+export function findDirty(value, path = '$') {
+  if (value === undefined || value === null || value === '') return [path];
+  if (typeof value === 'string') {
+    return value === 'null' || /\bundefined\b/.test(value) ? [path] : [];
+  }
+  if (Array.isArray(value)) return value.flatMap((v, i) => findDirty(v, `${path}[${i}]`));
+  if (typeof value === 'object') {
+    return Object.entries(value).flatMap(([k, v]) => findDirty(v, `${path}.${k}`));
+  }
+  return [];
+}
