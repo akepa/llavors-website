@@ -1,41 +1,58 @@
 ---
+import { business } from '../data/business'
+
 interface Props {
   lang: 'ca' | 'es'
 }
 
 const { lang } = Astro.props
 const isCa = lang === 'ca'
+const { address, geo, person } = business
+const logo = `${business.url}/images/logo.png`
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'MedicalBusiness',
-  name: 'Llavors Logopèdia',
+  '@id': business.id,
+  name: business.name,
+  alternateName: business.alternateName,
   description: isCa
     ? "Logopèdia neonatal, reeducació de les funcions orals i desenvolupament comunicatiu. Atenció a domicili, presencial i online a València i l'Horta."
     : "Logopedia neonatal, reeducación de las funciones orales y desarrollo comunicativo. Atención a domicilio, presencial y online en Valencia y l'Horta.",
-  url: 'https://www.llavorslogopedia.com',
-  telephone: '+34614337743',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Calle Chile, 4',
-    addressLocality: 'Valencia',
-    postalCode: '46021',
-    addressCountry: 'ES',
-  },
-  openingHoursSpecification: [
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Monday',    opens: '11:00', closes: '19:00' },
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Tuesday',   opens: '11:00', closes: '14:00' },
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Wednesday', opens: '09:30', closes: '14:00' },
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Thursday',  opens: '11:00', closes: '19:30' },
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Friday',    opens: '09:30', closes: '14:00' },
-  ],
-  areaServed: ['Valencia', "L'Horta", 'España'],
-  employee: {
+  url: business.url,
+  logo,
+  image: logo,
+  telephone: business.phone,
+  email: business.email,
+  priceRange: business.priceRange,
+  ...(address && {
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: address.street,
+      addressLocality: address.locality,
+      postalCode: address.postalCode,
+      addressCountry: address.country,
+    },
+  }),
+  ...(geo && {
+    geo: { '@type': 'GeoCoordinates', latitude: geo.lat, longitude: geo.lng },
+  }),
+  openingHoursSpecification: business.hours.map(({ day, opens, closes }) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: day,
+    opens,
+    closes,
+  })),
+  areaServed: business.areaServed,
+  sameAs: business.sameAs,
+  founder: {
     '@type': 'Person',
-    name: 'Àngela Alonso Millet',
-    jobTitle: 'Logopeda',
-    url: 'https://www.llavorslogopedia.com',
-    sameAs: [],
+    '@id': business.personId,
+    name: person.name,
+    jobTitle: person.jobTitle,
+    identifier: `Colegiada n.º ${business.colegiada}`,
+    knowsAbout: person.knowsAbout,
+    sameAs: person.sameAs,
   },
   serviceType: isCa
     ? [

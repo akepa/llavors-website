@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
+import { business, legalAddress } from '../data/business'
 import { getTranslations } from '../i18n/index'
 
 const lang = 'ca' as const
@@ -22,8 +23,8 @@ const t = getTranslations(lang)
       <p>En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y del Comercio Electrónico (LSSICE), se facilitan los siguientes datos:</p>
       <ul>
         <li><strong>Titular:</strong> Àngela Alonso Millet</li>
-        <li><strong>Domicilio:</strong> Calle Chile, 4 · 46021 Valencia</li>
-        <li><strong>Email:</strong> <a href="mailto:info@llavorslogopedia.com">info@llavorslogopedia.com</a></li>
+        <li><strong>Domicilio:</strong> {legalAddress}</li>
+        <li><strong>Email:</strong> <a href={`mailto:${business.email}`}>{business.email}</a></li>
         <li><strong>Web:</strong> <a href="https://llavorslogopedia.com">llavorslogopedia.com</a></li>
       </ul>
 

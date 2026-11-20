@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets'
 import aboutImg from '../assets/angela-about.jpg'
 import type { Translations } from '../i18n/index'
+import { business } from '../data/business'
 
 interface Props {
   t: Translations
@@ -33,6 +34,7 @@ const { t } = Astro.props
         <p set:html={t.sobre_p3} />
         <p>{t.sobre_p4}</p>
         <div class="credentials">
+          <div class="credential">{t.cred_colegiada} {business.colegiada}</div>
           <div class="credential">{t.cred1}</div>
           <div class="credential">{t.cred2}</div>
           <div class="credential">{t.cred3}</div>

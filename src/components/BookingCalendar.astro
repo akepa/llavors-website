@@ -1,6 +1,7 @@
 ---
 import type { Translations } from '../i18n/index'
 import type { Lang } from '../i18n/index'
+import { whatsappUrl } from '../data/business'
 
 interface Props {
   t: Translations
@@ -139,14 +140,14 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
         </div>
       </div>
       <p class="inperson-note">
-        {t.res_inperson_note} <a href="https://wa.me/34614337743" target="_blank" rel="noopener noreferrer">{t.res_inperson_link}</a>
+        {t.res_inperson_note} <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">{t.res_inperson_link}</a>
       </p>
     ) : (
       <div class="calendly-wrap">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         <strong>{t.cal_title}</strong>
         <p>{t.cal_text}</p>
-        <a href="https://wa.me/34614337743" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
           {t.cal_btn}
         </a>
       </div>
