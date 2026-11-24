@@ -41,7 +41,6 @@ export const GET: APIRoute = async () => {
     '',
     `- ${person.name}, logopeda colegiada n.º ${business.colegiada}, doble titulada en Logopedia y Magisterio (Educación Infantil).`,
     '- Especializada en disfagia neonatal, prematuridad, asesoría de lactancia y terapia miofuncional.',
-    "- Desde 2019 forma parte de los equipos de Atención Temprana de la Conselleria d'Educació.",
     '',
     '## Servicios',
     '',
