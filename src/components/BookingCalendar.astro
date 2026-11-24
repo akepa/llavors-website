@@ -690,6 +690,7 @@ const apiUrl = import.meta.env.PUBLIC_BOOKING_API_URL ?? ''
         document.getElementById('success-note')!.textContent = i18n.successOnlineNote
         document.getElementById('success-title')!.textContent = i18n.successTitle
         show(successWrap)
+        if (typeof (window as any).gtag === 'function') (window as any).gtag('event', 'reserva_confirmada')
       } else {
         const msg = data.error === 'slot_taken' ? i18n.slotTaken : i18n.error
         errorEl.textContent = msg
