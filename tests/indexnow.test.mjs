@@ -1,0 +1,43 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { readDist } from './helpers.mjs';
+import { KEY, HOST, extractLocs, buildPayload } from '../scripts/indexnow.mjs';
+
+test('la clave de IndexNow son 32 caracteres hexadecimales', () => {
+  assert.match(KEY, /^[0-9a-f]{32}$/);
+});
+
+test('dist/<clave>.txt existe y contiene la propia clave', () => {
+  assert.equal(readDist(`${KEY}.txt`).trim(), KEY);
+});
+
+test('extractLocs lee las URLs del índice y del sitemap generados', () => {
+  const sitemaps = extractLocs(readDist('sitemap-index.xml'));
+  assert.deepEqual(sitemaps, [`https://${HOST}/sitemap-0.xml`]);
+
+  const urls = extractLocs(readDist('sitemap-0.xml'));
+  assert.ok(urls.length > 10, `pocas URLs: ${urls.length}`);
+  assert.ok(urls.every((u) => u.startsWith(`https://${HOST}/`)), 'URL fuera del host');
+  assert.ok(urls.includes(`https://${HOST}/`), 'falta la home');
+});
+
+test('buildPayload arma el cuerpo que pide api.indexnow.org', () => {
+  const urls = [`https://${HOST}/`, `https://${HOST}/es/`];
+  assert.deepEqual(buildPayload(urls), {
+    host: HOST,
+    key: KEY,
+    keyLocation: `https://${HOST}/${KEY}.txt`,
+    urlList: urls,
+  });
+});
+
+test('deploy.yml lanza el job indexnow después de desplegar', () => {
+  const yml = readFileSync(new URL('../.github/workflows/deploy.yml', import.meta.url), 'utf8');
+  const job = yml.split(/\r?\n {2}indexnow:\r?\n/)[1];
+  assert.ok(job, 'falta el job indexnow');
+  assert.match(job, /needs: deploy/);
+  assert.match(job, /actions\/checkout@v4/);
+  assert.match(job, /actions\/setup-node@v4/);
+  assert.match(job, /node scripts\/indexnow\.mjs/);
+});
