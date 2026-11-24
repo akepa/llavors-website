@@ -3,6 +3,7 @@ import { glob } from 'astro/loaders'
 import { z } from 'astro/zod'
 import { BLOG_CATEGORIES } from './data/blog-categories'
 import { SERVICE_KEYS } from './data/service-slugs'
+import { MODALITIES } from './data/modalities'
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/data/blog' }),
@@ -39,7 +40,7 @@ const services = defineCollection({
     description: z.string().min(1),
     h1: z.string().min(1),
     priceFrom: z.number().positive().optional(),
-    modalities: z.array(z.enum(['domicilio', 'consulta', 'online'])).min(1),
+    modalities: z.array(z.enum(MODALITIES)).min(1),
     faqs: z.array(z.object({ q: z.string().min(1), a: z.string().min(1) })).min(3),
     relatedCategory: z.enum(BLOG_CATEGORIES),
   }),

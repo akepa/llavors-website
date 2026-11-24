@@ -1,25 +1,23 @@
 import { getCollection, type CollectionEntry } from 'astro:content'
 import type { Lang } from '../i18n/index'
 import { isLang } from './blog'
-import { SERVICE_SLUGS as SLUGS } from '../data/service-slugs'
+import { SERVICE_SLUGS, SERVICE_KEYS, type ServiceKey } from '../data/service-slugs'
+import { business } from '../data/business'
 
+export type { ServiceKey }
 export type ServiceEntry = CollectionEntry<'services'>
-export type ServiceKey = ServiceEntry['data']['translationKey']
 
-const SITE = 'https://www.llavorslogopedia.com'
 const LANGS: Lang[] = ['ca', 'es']
-const SERVICE_SLUGS: Partial<Record<ServiceKey, Record<Lang, string>>> = SLUGS
 
 /** Ruta relativa de la página de servicio, con barra final ('/es/logopeda-neonatal-valencia/'). */
 export function serviceUrl(key: ServiceKey, lang: Lang): string {
-  const slug = SERVICE_SLUGS[key]?.[lang]
-  if (!slug) throw new Error(`serviceUrl: no hay página de servicio «${key}» (${lang}) en SERVICE_SLUGS`)
+  const slug = SERVICE_SLUGS[key][lang]
   return lang === 'es' ? `/es/${slug}/` : `/${slug}/`
 }
 
 /** URL absoluta de la página de servicio. */
 export function serviceAbsoluteUrl(key: ServiceKey, lang: Lang): string {
-  return `${SITE}${serviceUrl(key, lang)}`
+  return `${business.url}${serviceUrl(key, lang)}`
 }
 
 /** Idioma de la entrada, sacado de su carpeta (id 'ca/logopeda-neonatal'). */
@@ -36,13 +34,13 @@ function assertServiceSlugs(entries: ServiceEntry[]): void {
   for (const entry of entries) {
     const lang = serviceLang(entry)
     const { translationKey: key, slug } = entry.data
-    if (SERVICE_SLUGS[key]?.[lang] !== slug) {
+    if (SERVICE_SLUGS[key][lang] !== slug) {
       throw new Error(
-        `services: ${entry.id} tiene slug «${slug}» pero SERVICE_SLUGS.${key}.${lang} es «${SERVICE_SLUGS[key]?.[lang]}»`,
+        `services: ${entry.id} tiene slug «${slug}» pero SERVICE_SLUGS.${key}.${lang} es «${SERVICE_SLUGS[key][lang]}»`,
       )
     }
   }
-  for (const key of Object.keys(SERVICE_SLUGS) as ServiceKey[]) {
+  for (const key of SERVICE_KEYS) {
     for (const lang of LANGS) {
       const matches = entries.filter((e) => e.data.translationKey === key && serviceLang(e) === lang)
       if (matches.length !== 1) {
