@@ -1,0 +1,193 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import BaseLayout from './BaseLayout.astro'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import BookingCta from '../components/BookingCta.astro'
+import SchemaService from '../components/SchemaService.astro'
+import BlogProse from '../components/blog/BlogProse.astro'
+import BlogRelated from '../components/blog/BlogRelated.astro'
+import { getTranslations, type Lang } from '../i18n/index'
+import { serviceUrl, serviceAbsoluteUrl, type ServiceEntry } from '../utils/services'
+import { MODALITY_ICONS, MODALITY_LABEL_KEY } from '../data/modalities'
+
+interface Props {
+  entry: ServiceEntry
+  lang: Lang
+  related: CollectionEntry<'blog'>[]
+}
+
+const { entry, lang, related } = Astro.props
+const { translationKey: key, title, description, h1, modalities, faqs } = entry.data
+const t = getTranslations(lang)
+
+const canonicalUrl = serviceAbsoluteUrl(key, lang)
+const hreflangs = { ca: serviceAbsoluteUrl(key, 'ca'), es: serviceAbsoluteUrl(key, 'es') }
+const altHrefs = { ca: serviceUrl(key, 'ca'), es: serviceUrl(key, 'es') }
+---
+<BaseLayout lang={lang} title={title} description={description} canonical={canonicalUrl} hreflangs={hreflangs}>
+  <SchemaService slot="head" name={title} description={description} url={canonicalUrl} lang={lang} faqs={faqs} />
+  <Header t={t} lang={lang} altHrefs={altHrefs} />
+  <main>
+    <article>
+      <header class="service-header">
+        <div class="container service-header-content">
+          <span class="section-label">{t.serveis_label}</span>
+          <h1 class="service-h1">{h1}</h1>
+        </div>
+      </header>
+      <div class="service-body container">
+        <BlogProse>
+          <slot />
+        </BlogProse>
+        <aside class="service-facts" aria-labelledby="service-modalities">
+          <h2 id="service-modalities">{t.service_modalities_h2}</h2>
+          <ul class="service-modalities">
+            {modalities.map((m) => (
+              <li class="modality-pill">
+                <svg viewBox="0 0 24 24" aria-hidden="true" set:html={MODALITY_ICONS[m]} />
+                <span>{t[MODALITY_LABEL_KEY[m]]}</span>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
+    </article>
+
+    <section class="service-faq section" aria-labelledby="service-faq-h2">
+      <div class="container">
+        <div class="section-title" style="text-align:center">
+          <span class="section-label">{t.faq_label}</span>
+          <h2 id="service-faq-h2">{t.faq_h2}</h2>
+        </div>
+        <div class="faq-list">
+          {faqs.map((item) => (
+            <details class="faq-item" data-faq-item>
+              <summary class="faq-q">
+                <span>{item.q}</span>
+                <span class="faq-icon" aria-hidden="true">+</span>
+              </summary>
+              <div class="faq-a">{item.a}</div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <div class:list={['service-cta-wrap', 'container', { 'is-last': related.length === 0 }]}>
+      <BookingCta lang={lang} t={t} />
+    </div>
+
+    <BlogRelated entries={related} lang={lang} t={t} />
+  </main>
+  <Footer t={t} lang={lang} />
+</BaseLayout>
+
+<style>
+  .service-header {
+    padding-top: 52px;
+    border-bottom: 1px solid var(--pink-light);
+  }
+  .service-header-content {
+    padding-bottom: 40px;
+    max-width: 800px;
+  }
+  .service-h1 {
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    margin-top: 12px;
+    line-height: 1.2;
+    color: var(--text);
+  }
+  .service-body {
+    padding-top: 48px;
+    padding-bottom: 60px;
+    max-width: 800px;
+  }
+
+  .service-facts {
+    max-width: 720px;
+    margin: 40px auto 0;
+    padding: 32px 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--pink-light);
+    border-radius: var(--r);
+  }
+  .service-facts h2 {
+    font-size: clamp(1.25rem, 3vw, 1.6rem);
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  .service-modalities {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .modality-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg);
+    border: 1.5px solid var(--pink-light);
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray);
+  }
+  .modality-pill svg { width: 17px; height: 17px; stroke: var(--pink); fill: none; stroke-width: 2; flex-shrink: 0; }
+
+  .service-faq { background: var(--bg-dark); }
+  .faq-list { max-width: 740px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid rgba(87, 87, 84, 0.15); }
+  .faq-q {
+    list-style: none;
+    padding: 22px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    transition: color 0.2s;
+  }
+  .faq-q::-webkit-details-marker { display: none; }
+  .faq-q:hover, .faq-item[open] .faq-q { color: var(--pink); }
+  .faq-icon {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s;
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+  .faq-item[open] .faq-icon {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: var(--white);
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    padding-bottom: 20px;
+    font-size: 0.97rem;
+    color: var(--text-soft);
+    line-height: 1.7;
+  }
+
+  .service-cta-wrap { padding: 64px 0 0; max-width: 800px; }
+  .service-cta-wrap.is-last { padding-bottom: 100px; }
+
+  @media (max-width: 640px) {
+    .service-header { padding-top: 32px; }
+    .service-body { padding-top: 32px; padding-bottom: 40px; }
+    .service-facts { padding: 24px 20px; }
+    .modality-pill { width: 100%; justify-content: center; }
+    .service-cta-wrap { padding-top: 40px; }
+  }
+</style>

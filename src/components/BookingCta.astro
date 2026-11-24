@@ -1,0 +1,48 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import type { Lang, Translations } from '../i18n/index'
+import { serviceUrl, type ServiceKey } from '../utils/services'
+
+// Caja «Reserva tu primera consulta» del final de las páginas de servicio y de
+// los artículos del blog. El contenedor exterior (márgenes) lo pone cada layout.
+interface Props {
+  lang: Lang
+  t: Translations
+  /** Si se indica, añade un segundo botón a la página de ese servicio. */
+  service?: ServiceKey
+}
+
+const { lang, t, service } = Astro.props
+const bookingUrl = getRelativeLocaleUrl(lang, '/') + '#reserva'
+---
+<div class="booking-cta">
+  <p>{t.blog_cta_text}</p>
+  <div class="booking-cta-actions">
+    <a href={bookingUrl} class="btn btn-primary">{t.blog_cta_btn}</a>
+    {service && <a href={serviceUrl(service, lang)} class="btn btn-outline-pink">{t.blog_cta_service}</a>}
+  </div>
+</div>
+
+<style>
+  .booking-cta {
+    padding: 40px 36px;
+    background: var(--pink-pale);
+    border: 1px solid var(--pink-light);
+    border-radius: var(--r);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .booking-cta p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+  }
+  .booking-cta-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  @media (max-width: 640px) {
+    .booking-cta { padding: 28px 20px; }
+  }
+</style>

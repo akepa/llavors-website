@@ -31,11 +31,7 @@ const {
 } = Astro.props
 
 const SITE = 'https://www.llavorslogopedia.com'
-const BASE = '/llavors-website'
-
-const rawPath = Astro.url.pathname.startsWith(BASE)
-  ? Astro.url.pathname.slice(BASE.length) || '/'
-  : Astro.url.pathname
+const rawPath = Astro.url.pathname
 
 const resolvedCanonical = canonical ?? `${SITE}${rawPath}`
 const ogImageUrl = `${SITE}${ogImage}`

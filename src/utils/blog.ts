@@ -1,5 +1,6 @@
 import type { CollectionEntry } from 'astro:content'
 import type { Lang, Translations } from '../i18n/index'
+import { BLOG_CATEGORIES } from '../data/blog-categories'
 
 export type BlogEntry = CollectionEntry<'blog'>
 
@@ -9,11 +10,7 @@ export const CATEGORY_LABELS_KEY = {
   'comunicacio-llenguatge': 'blog_cat_comunicacio',
 } as const
 
-export const CATEGORIES = [
-  { key: 'funcions-orals' as const },
-  { key: 'lactancia-alimentacio' as const },
-  { key: 'comunicacio-llenguatge' as const },
-]
+export const CATEGORIES = BLOG_CATEGORIES.map((key) => ({ key }))
 
 export function getCategoryLabel(category: string, t: Translations): string {
   const key = CATEGORY_LABELS_KEY[category as keyof typeof CATEGORY_LABELS_KEY]

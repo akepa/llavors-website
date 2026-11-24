@@ -2,6 +2,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n'
 import { Image } from 'astro:assets'
 import logoImg from '../assets/logo.png'
+import { serviceUrl } from '../utils/services'
 import type { Lang, Translations } from '../i18n/index'
 import {
   business,
@@ -19,7 +20,6 @@ interface Props {
 }
 
 const { t, lang } = Astro.props
-const base = import.meta.env.BASE_URL
 const home = getRelativeLocaleUrl(lang, '/')
 ---
 <footer>
@@ -40,11 +40,11 @@ const home = getRelativeLocaleUrl(lang, '/')
       <div class="footer-col">
         <h4>{t.footer_serveis_h}</h4>
         <ul>
-          <li><a href={home + '#serveis'}>{t.footer_s1}</a></li>
-          <li><a href={home + '#serveis'}>{t.footer_s2}</a></li>
-          <li><a href={home + '#serveis'}>{t.footer_s3}</a></li>
-          <li><a href={home + '#serveis'}>{t.footer_s4}</a></li>
-          <li><a href={home + '#serveis'}>{t.footer_s5}</a></li>
+          <li><a href={serviceUrl('neonatal', lang)}>{t.footer_s1}</a></li>
+          <li><a href={serviceUrl('lactancia', lang)}>{t.footer_s2}</a></li>
+          <li><a href={serviceUrl('miofuncional', lang)}>{t.footer_s3}</a></li>
+          <li><a href={serviceUrl('lenguaje', lang)}>{t.footer_s4}</a></li>
+          <li><a href={serviceUrl('domicilio', lang)}>{t.footer_s5}</a></li>
         </ul>
       </div>
       <div class="footer-col">

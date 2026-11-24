@@ -88,8 +88,6 @@ const ca = {
   faq2_a: 'La primera consulta de valoració dura 30 minuts i es fa online, per videotrucada. Les sessions de seguiment duren entre 45 minuts i 1 hora, depenent de les necessitats del xiquet i la família.',
   faq3_q: 'Quantes sessions es necessiten?',
   faq3_a: "Depèn de cada cas. Algunes famílies noten millores en poques sessions; altres necessiten un acompanyament més prolongat. Sempre establim un pla personalitzat i fem revisions periòdiques per ajustar-lo a l'evolució del xiquet.",
-  faq4_q: "Treballeu amb l'assegurança mèdica?",
-  faq4_a: 'De moment no treballem amb assegurances mèdiques. Oferim atenció privada perquè ens permet dedicar el temps i la qualitat que cada família mereix, sense restriccions ni pressa.',
   faq5_q: 'Feu sessions a domicili?',
   faq5_a: "Sí! Oferim atenció a domicili a València i les poblacions de l'Horta. També tenim consulta presencial a València, i sessions online per a qui preferisca la comoditat de casa seua.",
   faq6_q: 'Com sé si el meu fill necessita logopèdia?',
@@ -98,9 +96,9 @@ const ca = {
   footer_desc: 'Logopèdia neonatal, assessoria de lactància i acompanyament al desenvolupament comunicatiu a València.',
   footer_serveis_h: 'Serveis',
   footer_s1: 'Logopèdia Neonatal',
-  footer_s2: 'Funcions Orals',
-  footer_s3: 'Desenvolupament Comunicatiu',
-  footer_s4: 'Sessions Online',
+  footer_s2: 'Assessoria de Lactància',
+  footer_s3: 'Funcions Orals',
+  footer_s4: 'Desenvolupament Comunicatiu',
   footer_s5: 'Atenció a Domicili',
   footer_nav_h: 'Navegació',
   footer_n1: 'Inici',
@@ -172,6 +170,10 @@ const ca = {
   blog_cat_all: 'Tots',
   blog_cta_text: "Tens dubtes sobre la lactància, l'alimentació o el desenvolupament del teu fill?",
   blog_cta_btn: 'Reserva la primera cita',
+  blog_cta_service: 'Coneix el servici',
+  services_more: 'Més informació',
+
+  service_modalities_h2: 'Modalitats',
 } as const
 
 export default ca

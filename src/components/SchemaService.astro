@@ -1,0 +1,44 @@
+---
+import type { Lang } from '../i18n/index'
+import { business } from '../data/business'
+
+interface Props {
+  name: string
+  description: string
+  url: string
+  lang: Lang
+  faqs: { q: string; a: string }[]
+}
+
+const { name, description, url, lang, faqs } = Astro.props
+
+const service = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name,
+  description,
+  serviceType: lang === 'ca' ? 'Logopèdia' : 'Logopedia',
+  provider: {
+    '@type': 'MedicalBusiness',
+    '@id': business.id,
+    name: business.name,
+    url: business.url,
+  },
+  areaServed: business.areaServed,
+  url,
+  inLanguage: lang,
+}
+
+// Las mismas preguntas y respuestas que se ven en la página (ServiceLayout).
+const faqPage = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+}
+---
+<script type="application/ld+json" set:html={JSON.stringify(service)} />
+<script type="application/ld+json" set:html={JSON.stringify(faqPage)} />

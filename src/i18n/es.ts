@@ -88,8 +88,6 @@ const es = {
   faq2_a: 'La primera consulta de valoración dura 30 minutos y se hace online, por videollamada. Las sesiones de seguimiento duran entre 45 minutos y 1 hora, dependiendo de las necesidades del niño y la familia.',
   faq3_q: '¿Cuántas sesiones se necesitan?',
   faq3_a: 'Depende de cada caso. Algunas familias notan mejoras en pocas sesiones; otras necesitan un acompañamiento más prolongado. Siempre establecemos un plan personalizado y hacemos revisiones periódicas para ajustarlo a la evolución del niño.',
-  faq4_q: '¿Trabajáis con el seguro médico?',
-  faq4_a: 'Por el momento no trabajamos con seguros médicos. Ofrecemos atención privada porque nos permite dedicar el tiempo y la calidad que cada familia merece, sin restricciones ni prisas.',
   faq5_q: '¿Hacéis sesiones a domicilio?',
   faq5_a: "¡Sí! Ofrecemos atención a domicilio en Valencia y los municipios de l'Horta. También tenemos consulta presencial en Valencia, y sesiones online para quien prefiera la comodidad de su casa.",
   faq6_q: '¿Cómo sé si mi hijo necesita logopedia?',
@@ -98,9 +96,9 @@ const es = {
   footer_desc: 'Logopedia neonatal, asesoría de lactancia y acompañamiento al desarrollo comunicativo en Valencia.',
   footer_serveis_h: 'Servicios',
   footer_s1: 'Logopedia Neonatal',
-  footer_s2: 'Funciones Orales',
-  footer_s3: 'Desarrollo Comunicativo',
-  footer_s4: 'Sesiones Online',
+  footer_s2: 'Asesoría de Lactancia',
+  footer_s3: 'Funciones Orales',
+  footer_s4: 'Desarrollo Comunicativo',
   footer_s5: 'Atención a Domicilio',
   footer_nav_h: 'Navegación',
   footer_n1: 'Inicio',
@@ -172,6 +170,10 @@ const es = {
   blog_cat_all: 'Todos',
   blog_cta_text: '¿Tienes dudas sobre la lactancia, la alimentación o el desarrollo de tu hijo?',
   blog_cta_btn: 'Reservar la primera cita',
+  blog_cta_service: 'Conoce el servicio',
+  services_more: 'Más información',
+
+  service_modalities_h2: 'Modalidades',
 } as const
 
 export default es

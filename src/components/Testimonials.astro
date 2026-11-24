@@ -1,5 +1,6 @@
 ---
 import type { Translations } from '../i18n/index'
+import { doctoraliaUrl } from '../data/business'
 
 interface Props {
   t: Translations
@@ -33,7 +34,7 @@ const cards = [
       <div class="doc-stars" aria-hidden="true">★★★★★</div>
       <p class="doc-hook">{t.testi_doc_hook}</p>
       <a
-        href="https://www.doctoralia.es/angela-alonso-millet/logopeda/valencia"
+        href={doctoraliaUrl}
         class="doc-link"
         target="_blank"
         rel="noopener noreferrer"
