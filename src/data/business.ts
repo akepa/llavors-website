@@ -32,7 +32,6 @@ export const business = {
     { day: 'Friday', opens: '09:30', closes: '14:00' },
   ] as { day: Weekday; opens: string; closes: string }[],
   areaServed: ['València', "L'Horta"],
-  priceRange: '€€',
   sameAs: [DOCTORALIA, 'https://www.instagram.com/llavors.de.llet'],
   colegiada: '46666',
   person: {

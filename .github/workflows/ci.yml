@@ -2,7 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [master, "plan2/**"]
+    branches: [master, "plan2/**", "plan2s/**"]
 
 permissions:
   contents: read

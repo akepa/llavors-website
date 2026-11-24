@@ -62,6 +62,7 @@ test("en '/es/' el MedicalBusiness enlaza el negocio, la fundadora y los perfile
   assert.ok(Array.isArray(biz.areaServed), 'areaServed debe ser una lista');
   assert.ok(!biz.areaServed.includes('España'), 'areaServed no debe incluir España');
   assert.deepEqual(biz.founder.sameAs, [DOCTORALIA], 'founder.sameAs solo con perfiles de la persona');
+  assert.ok(!('priceRange' in biz), 'el MedicalBusiness no debe llevar priceRange');
 });
 
 for (const route of ['/es/', '/']) {
