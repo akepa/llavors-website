@@ -46,8 +46,11 @@ for (const art of UPDATED_ARTICLES) {
       assert.ok(box.includes('46666'), 'la caja no contiene 46666');
     });
 
-    test(`${label}: enlaza a la página del servicio ${art.relatedService}`, () => {
-      assert.ok(hrefs(readPage(route)).includes(SERVICES[art.relatedService][lang]));
+    test(`${label}: el cuerpo del artículo enlaza a la página del servicio ${art.relatedService}`, () => {
+      // Solo el texto del artículo: el CTA del final también enlaza al servicio.
+      const body = readPage(route).match(/<div\b[^>]*class="blog-prose"[^>]*>([\s\S]*?)<aside\b[^>]*data-author-box/i)?.[1];
+      assert.ok(body, 'falta el cuerpo del artículo (.blog-prose antes de data-author-box)');
+      assert.ok(hrefs(body).includes(SERVICES[art.relatedService][lang]));
     });
 
     test(`${label}: H2 de fuentes con al menos 2 enlaces externos`, () => {

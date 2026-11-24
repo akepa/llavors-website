@@ -120,7 +120,9 @@ for (const [key, routes] of Object.entries(SERVICES)) {
       assert.equal(hreflangHref(html, lang), url, `hreflang="${lang}"`);
       assert.equal(hreflangHref(html, other(lang)), `${SITE}${alt}`, `hreflang="${other(lang)}"`);
       assert.equal(hreflangHref(html, 'x-default'), `${SITE}${routes.ca}`, 'hreflang="x-default"');
-      assert.ok(html.includes(`href="${alt}"`), `el botón de idioma no enlaza a ${alt}`);
+      const switcher = html.match(/<div\b[^>]*class="lang-switcher"[^>]*>[\s\S]*?<\/div>/)?.[0];
+      assert.ok(switcher, 'falta el selector de idioma (.lang-switcher) en la cabecera');
+      assert.ok(switcher.includes(`href="${alt}"`), `el botón de idioma no enlaza a ${alt}`);
     });
 
     test(`${key} (${lang}): botón a la reserva y artículos del blog en su idioma`, () => {
