@@ -53,7 +53,6 @@ export const GET: APIRoute = async () => {
     `- Atención a domicilio en ${business.areaServed.join(' y ')}.`,
     `- ${presencial}`,
     '- Sesiones online. La primera consulta de valoración es online, dura 30 minutos y es sin compromiso.',
-    '- Atención privada; no se trabaja con seguros médicos.',
     '',
     '## Contacto',
     '',
