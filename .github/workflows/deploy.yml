@@ -15,6 +15,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      changed_urls: ${{ steps.changed.outputs.urls }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,6 +31,10 @@ jobs:
         run: npm run build
         env:
           PUBLIC_BOOKING_API_URL: ${{ secrets.BOOKING_API_URL }}
+      # Antes de desplegar: URLs nuevas o con lastmod distinto respecto al sitemap publicado.
+      - name: URLs cambiadas para IndexNow
+        id: changed
+        run: node scripts/indexnow.mjs --changed dist/sitemap-0.xml
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
@@ -46,8 +52,11 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v4
 
+  # En cada push envía solo lo cambiado (y se salta si no hay nada); lanzado a mano
+  # (workflow_dispatch) envía todo el sitemap publicado.
   indexnow:
-    needs: deploy
+    needs: [build, deploy]
+    if: github.event_name == 'workflow_dispatch' || needs.build.outputs.changed_urls != '[]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -56,3 +65,5 @@ jobs:
           node-version: "22.12"
       - name: Notify IndexNow
         run: node scripts/indexnow.mjs
+        env:
+          INDEXNOW_URLS: ${{ github.event_name != 'workflow_dispatch' && needs.build.outputs.changed_urls || '' }}
