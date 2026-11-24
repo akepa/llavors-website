@@ -2,29 +2,14 @@
 import { defineConfig } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
 import mdx from '@astrojs/mdx'
-import { readFileSync, readdirSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { SERVICE_SLUGS } from './src/data/service-slugs'
+// La config no tiene acceso a astro:content: el frontmatter se lee en lastmod.mjs.
+import { blogSlugs, buildLastmodMap } from './src/data/lastmod.mjs'
 
 const SITE = 'https://www.llavorslogopedia.com'
-const BLOG_DIR = fileURLToPath(new URL('./src/data/blog/', import.meta.url))
 
-/**
- * translationKey → slug de los artículos publicados de un idioma.
- * Lee el frontmatter de src/data/blog/<lang>/*.mdx (la config no tiene acceso a astro:content).
- * @param {'ca' | 'es'} lang
- */
-function blogSlugs(lang) {
-  const slugs = new Map()
-  for (const file of readdirSync(`${BLOG_DIR}${lang}`).filter((f) => /^[^_].*\.mdx?$/.test(f))) {
-    const fm = readFileSync(`${BLOG_DIR}${lang}/${file}`, 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? ''
-    /** @param {string} name */
-    const field = (name) => fm.match(new RegExp(`^${name}:\\s*['"]?([^'"\\r\\n]+?)['"]?\\s*$`, 'm'))?.[1]
-    if (field('draft') === 'true') continue
-    slugs.set(field('translationKey'), field('slug'))
-  }
-  return slugs
-}
+// lastmod determinista por URL; las que no están en el mapa van sin lastmod.
+const lastmods = buildLastmodMap(SITE)
 
 // Páginas con slug distinto en cada idioma (servicios y artículos del blog): el
 // sitemap solo empareja por prefijo de idioma, así que sus alternates se declaran aquí.
@@ -59,7 +44,7 @@ export default defineConfig({
         !['/privacidad', '/aviso-legal', '/cookies'].some((p) => page.includes(p)),
       serialize: (item) => ({
         ...item,
-        lastmod: new Date().toISOString(),
+        ...(lastmods.has(item.url) && { lastmod: lastmods.get(item.url) }),
         ...(alternates.has(item.url) && { links: alternates.get(item.url) }),
       }),
       i18n: {

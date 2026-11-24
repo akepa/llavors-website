@@ -32,8 +32,19 @@ test('buildPayload arma el cuerpo que pide api.indexnow.org', () => {
   });
 });
 
+/** Texto de un workflow de .github/workflows. */
+const workflow = (name) => readFileSync(new URL(`../.github/workflows/${name}`, import.meta.url), 'utf8');
+
+test('ci.yml y el build de deploy.yml clonan el historial completo (fechas de git del sitemap)', () => {
+  const build = workflow('deploy.yml').split(/\r?\n {2}build:\r?\n/)[1]?.split(/\r?\n {2}\w+:\r?\n/)[0];
+  assert.ok(build, 'falta el job build');
+  for (const [name, yml] of [['ci.yml', workflow('ci.yml')], ['deploy.yml (build)', build]]) {
+    assert.match(yml, /actions\/checkout@v4\r?\n\s+with:\r?\n\s+fetch-depth: 0/, `${name} sin fetch-depth: 0`);
+  }
+});
+
 test('deploy.yml lanza el job indexnow después de desplegar', () => {
-  const yml = readFileSync(new URL('../.github/workflows/deploy.yml', import.meta.url), 'utf8');
+  const yml = workflow('deploy.yml');
   const job = yml.split(/\r?\n {2}indexnow:\r?\n/)[1];
   assert.ok(job, 'falta el job indexnow');
   assert.match(job, /needs: deploy/);
